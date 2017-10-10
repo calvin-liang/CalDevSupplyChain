@@ -5,14 +5,14 @@ public enum PermissionName {
 	ACCOUNT_UPDATE("account:update"),
 	ACCOUNT_ADMIN("account:admin");
 
-	private final String perm;
+	private final String name;
 
-	PermissionName(String s) {
-		this.perm = s;
+	PermissionName(String name) {
+		this.name = name;
 	}
 
 	@Override
 	public String toString() {
-		return this.perm;
+		return this.name;
 	}
 }

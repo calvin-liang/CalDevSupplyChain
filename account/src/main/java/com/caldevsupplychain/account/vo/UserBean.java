@@ -1,6 +1,5 @@
 package com.caldevsupplychain.account.vo;
 
-
 import java.util.List;
 
 import lombok.Data;
@@ -14,4 +13,8 @@ public class UserBean {
 	private String password;
 	private String token;
 	private List<RoleName> roles;
+
+	public boolean isAdmin() {
+		return roles.contains(RoleName.ADMIN);
+	}
 }

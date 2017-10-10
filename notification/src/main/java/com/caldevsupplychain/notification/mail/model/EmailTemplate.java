@@ -1,12 +1,18 @@
 package com.caldevsupplychain.notification.mail.model;
 
-import com.caldevsupplychain.common.entity.BaseEntity;
-import com.caldevsupplychain.notification.mail.type.EmailType;
+import java.util.Locale;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Table;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.persistence.*;
-import java.util.Locale;
+import com.caldevsupplychain.common.entity.BaseEntity;
+import com.caldevsupplychain.notification.mail.type.EmailType;
 
 @Data
 @Entity
@@ -31,6 +37,4 @@ public class EmailTemplate extends BaseEntity {
 	@Column(name = "type", nullable = false)
 	@Enumerated(EnumType.STRING)
 	private EmailType type;
-
 }
-

@@ -42,5 +42,4 @@ public class Role {
 	public Role(String name) {
 		this.name = RoleName.valueOf(name);
 	}
-
 }
