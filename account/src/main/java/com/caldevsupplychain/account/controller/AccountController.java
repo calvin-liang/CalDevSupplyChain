@@ -13,8 +13,4 @@ public interface AccountController {
 	ResponseEntity<?> updateUser(String uuid, UserWS userWS);
 
 	ResponseEntity<?> activateAccount(String token);
-
-	ResponseEntity<?> login(UserWS userWS);
-
-	ResponseEntity<?> logout();
 }
