@@ -66,7 +66,6 @@ public class AccountControllerImpl implements AccountController {
 		return new ResponseEntity<Object>(userMapper.userBeansToUserWSs(userBeans.get()), HttpStatus.OK);
 	}
 
-
 	@PostMapping("/signup")
 	public ResponseEntity<?> signup(@RequestParam(required = false, defaultValue = "USER") String role, @Validated @RequestBody UserWS userWS) {
 		BindException errors = new BindException(userWS, "UserWS");
