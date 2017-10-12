@@ -6,17 +6,19 @@ import java.util.UUID;
 
 import javax.transaction.Transactional;
 
+import com.caldevsupplychain.account.util.RoleMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.apache.shiro.authc.credential.PasswordService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.caldevsupplychain.account.model.Role;
 import com.caldevsupplychain.account.model.User;
 import com.caldevsupplychain.account.repository.RoleRepository;
 import com.caldevsupplychain.account.repository.UserRepository;
-import com.caldevsupplychain.account.util.RoleMapper;
 import com.caldevsupplychain.account.util.UserMapper;
 import com.caldevsupplychain.account.vo.UserBean;
 import com.caldevsupplychain.common.type.ErrorCode;
@@ -41,8 +43,8 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	@Transactional
 	public UserBean createUser(UserBean userBean) {
-		Preconditions.checkState(!userBean.getRoles().isEmpty(), "Must assign at least one role when creating a user.");
 
+		Preconditions.checkState(!userBean.getRoles().isEmpty(), "Must assign at least one role when creating a user.");
 		List<Role> roleList = roleRepository.findByName(userBean.getRoles());
 
 		if (roleList == null) {
@@ -62,13 +64,14 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	@Transactional
 	public UserBean updateUser(UserBean userBean) {
+
 		User user = userRepository.findByEmailAddress(userBean.getEmailAddress());
 
 		Preconditions.checkState(user != null, ErrorCode.USER_NOT_FOUND.toString());
 
 		user.setUsername(userBean.getUsername());
 		user.setPassword(passwordService.encryptPassword(userBean.getPassword()));
-		Optional.ofNullable(userBean.getRoles()).ifPresent(roleNames -> user.setRoles(roleMapper.toRoleList(roleNames)));
+		Optional.ofNullable(userBean.getRoles()).ifPresent(roleNames -> user.setRoles(roleMapper.toRoles(roleNames)));
 
 		return userMapper.userToBean(user);
 	}
@@ -107,4 +110,15 @@ public class AccountServiceImpl implements AccountService {
 		}
 		return Optional.empty();
 	}
+
+	// TODO: integration test
+	public Optional<List<UserBean>> getAllUsers() {
+		Page<User> users = userRepository.findAll(new PageRequest(0, Integer.MAX_VALUE));
+		if (users != null) {
+			return Optional.of(userMapper.usersToUserBeans(users.getContent()));
+		}
+		return Optional.empty();
+	}
+
+
 }
