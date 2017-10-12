@@ -1,10 +1,9 @@
 package com.caldevsupplychain.notification.mail.service;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-
+import com.caldevsupplychain.notification.mail.model.EmailTemplate;
+import com.caldevsupplychain.notification.mail.repository.EmailTemplateRepository;
+import com.caldevsupplychain.notification.mail.type.EmailType;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -13,9 +12,8 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import com.caldevsupplychain.notification.mail.model.EmailTemplate;
-import com.caldevsupplychain.notification.mail.repository.EmailTemplateRepository;
-import com.caldevsupplychain.notification.mail.type.EmailType;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 
 @Slf4j
 @Service
@@ -30,6 +28,7 @@ public class EmailServiceImpl implements EmailService {
 	private EmailTemplateRepository emailTemplateRepository;
 	@Autowired
 	private JavaMailSender javaMailSender;
+
 
 	@Async
 	@Override
@@ -57,4 +56,5 @@ public class EmailServiceImpl implements EmailService {
 		helper.setText(emailTemplate.getContent(), true);
 		javaMailSender.send(message);
 	}
+
 }

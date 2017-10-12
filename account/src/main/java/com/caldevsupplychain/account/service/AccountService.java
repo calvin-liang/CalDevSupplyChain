@@ -1,8 +1,10 @@
 package com.caldevsupplychain.account.service;
 
-import java.util.Optional;
 
 import com.caldevsupplychain.account.vo.UserBean;
+
+import java.util.List;
+import java.util.Optional;
 
 public interface AccountService {
 	boolean userExist(String emailAddress);
@@ -18,4 +20,6 @@ public interface AccountService {
 	Optional<UserBean> findByEmailAddress(String emailAddress);
 
 	Optional<UserBean> findByToken(String token);
+
+	Optional<List<UserBean>> getAllUsers();
 }

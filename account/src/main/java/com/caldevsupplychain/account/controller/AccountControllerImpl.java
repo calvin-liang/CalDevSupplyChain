@@ -5,11 +5,13 @@ import java.util.Optional;
 
 import javax.mail.MessagingException;
 
+import com.caldevsupplychain.account.vo.RoleName;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
 import org.springframework.http.HttpStatus;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.caldevsupplychain.account.service.AccountService;
 import com.caldevsupplychain.account.util.UserMapper;
 import com.caldevsupplychain.account.validator.EditUserValidator;
+import com.caldevsupplychain.account.validator.LoginValidator;
 import com.caldevsupplychain.account.validator.SignupValidator;
 import com.caldevsupplychain.account.vo.UserBean;
 import com.caldevsupplychain.common.exception.ApiErrorsExceptionHandler;
@@ -51,6 +54,7 @@ public class AccountControllerImpl implements AccountController {
 
 	/* validators */
 	private SignupValidator signupValidator;
+	private LoginValidator loginValidator;
 	private EditUserValidator editUserValidator;
 
 	/* exception handler */
@@ -59,6 +63,13 @@ public class AccountControllerImpl implements AccountController {
 	/************************************************************************************************
 	 |									Account API													|
 	 ************************************************************************************************/
+	@GetMapping("/users")
+	public ResponseEntity<?> getUsers() {
+		// custommize logic to pass in page search limit
+		Optional<List<UserBean>> userBeans = accountService.getAllUsers();
+		return new ResponseEntity<Object>(userMapper.userBeansToUserWSs(userBeans.get()), HttpStatus.OK);
+	}
+
 	@PostMapping("/signup")
 	public ResponseEntity<?> signup(@RequestParam(required = false, defaultValue = "USER") String role, @Validated @RequestBody UserWS userWS) {
 		BindException errors = new BindException(userWS, "UserWS");
@@ -77,7 +88,7 @@ public class AccountControllerImpl implements AccountController {
 			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.ACCOUNT_EXIST.name(), "Account already registered."), HttpStatus.CONFLICT);
 		}
 
-		UserBean userBean = userMapper.userWSToBean(userWS);
+        UserBean userBean = userMapper.userWSToBean(userWS);
 
 		UserBean user = accountService.createUser(userBean);
 
@@ -104,17 +115,19 @@ public class AccountControllerImpl implements AccountController {
 		}
 
 		Optional<UserBean> user = accountService.findByUuid(uuid);
-		if (!user.isPresent()) {
+
+		Subject subject = SecurityUtils.getSubject();
+
+		if (!subject.getPrincipal().toString().equals(uuid) || !user.isPresent()) {
 			log.error("Error in update user. Fail in finding user's uuid={}", uuid);
 			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.ACCOUNT_NOT_EXIST.name(), "Cannot find user account."), HttpStatus.NOT_FOUND);
 		}
 
-		Subject subject = SecurityUtils.getSubject();
-		if(!user.get().isAdmin() || !subject.getPrincipal().toString().equals(uuid)) {
-			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.PERMISSION_DENIED_ON_ROLE_UPDATE.name(), "Cannot update user information"), HttpStatus.BAD_REQUEST);
+		if(!subject.hasRole(RoleName.ADMIN.name()) && userWS.getRoles() != null) {
+			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.PERMISSION_DENIED_ON_ROLE_UPDATE.name(), "User cannot update role"), HttpStatus.BAD_REQUEST);
 		}
 
-		if(!StringUtils.isNotBlank(userWS.getEmailAddress())) {
+		if(!subject.hasRole(RoleName.ADMIN.name()) && !userWS.getEmailAddress().equals(user.get().getEmailAddress())){
 			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.PERMISSION_DENIED_ON_EMAIL_UPDATE.name(), "User cannot update email address"), HttpStatus.BAD_REQUEST);
 		}
 
