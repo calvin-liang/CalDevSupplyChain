@@ -10,6 +10,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.apache.shiro.authc.credential.PasswordService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.caldevsupplychain.account.model.Role;
@@ -104,6 +106,15 @@ public class AccountServiceImpl implements AccountService {
 		User user = userRepository.findByToken(token);
 		if (user != null) {
 			return Optional.of(userMapper.userToBean(user));
+		}
+		return Optional.empty();
+	}
+
+	// TODO: integration test
+	public Optional<List<UserBean>> getAllUsers() {
+		Page<User> users = userRepository.findAll(new PageRequest(0, Integer.MAX_VALUE));
+		if (users != null) {
+			return Optional.of(userMapper.usersToUserBeans(users.getContent()));
 		}
 		return Optional.empty();
 	}
