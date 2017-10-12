@@ -63,6 +63,13 @@ public class AccountControllerImpl implements AccountController {
 	/************************************************************************************************
 	 |									Account API													|
 	 ************************************************************************************************/
+	@GetMapping("/users")
+	public ResponseEntity<?> getUsers() {
+		// custommize logic to pass in page search limit
+		Optional<List<UserBean>> userBeans = accountService.getAllUsers();
+		return new ResponseEntity<Object>(userMapper.userBeansToUserWSs(userBeans.get()), HttpStatus.OK);
+	}
+
 	@PostMapping("/signup")
 	public ResponseEntity<?> signup(@RequestParam(required = false, defaultValue = "USER") String role, @Validated @RequestBody UserWS userWS) {
 		BindException errors = new BindException(userWS, "UserWS");
@@ -119,7 +126,6 @@ public class AccountControllerImpl implements AccountController {
 		if(!subject.hasRole(RoleName.ADMIN.name()) && userWS.getRoles() != null) {
 			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.PERMISSION_DENIED_ON_ROLE_UPDATE.name(), "User cannot update role"), HttpStatus.BAD_REQUEST);
 		}
-
 
 		if(!subject.hasRole(RoleName.ADMIN.name()) && !userWS.getEmailAddress().equals(user.get().getEmailAddress())){
 			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.PERMISSION_DENIED_ON_EMAIL_UPDATE.name(), "User cannot update email address"), HttpStatus.BAD_REQUEST);
