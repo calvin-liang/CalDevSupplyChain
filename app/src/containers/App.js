@@ -1,12 +1,11 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 
-import { MuiThemeProvider, createMuiTheme} from 'material-ui/styles';
-import {grey, lightBlue, red} from 'material-ui/colors';
-
-import SimpleAppBar from '../components/Bar/HomeBar'
+import HomeAppBar from '../components/AppBar/HomeAppBar'
+import SignupForm from '../components/Form/SignupForm'
 
 import {BASE_API_URL} from '../constants/UrlLink'
+
 
 class App extends Component {
   componentDidMount() {
@@ -19,13 +18,14 @@ class App extends Component {
       .catch(function(error) {
         console.log(error)
       })
-
   }
+
   render() {
     return (
-      <MuiThemeProvider>
-        <SimpleAppBar></SimpleAppBar>
-      </MuiThemeProvider>
+      <div>
+        <HomeAppBar></HomeAppBar>
+        <SignupForm></SignupForm>
+      </div>
     )
   }
 }
