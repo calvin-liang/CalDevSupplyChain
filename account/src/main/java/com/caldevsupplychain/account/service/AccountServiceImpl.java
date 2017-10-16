@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import javax.transaction.Transactional;
 
+import com.google.common.collect.Lists;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -54,11 +55,11 @@ public class AccountServiceImpl implements AccountService {
 		userBean.setToken(UUID.randomUUID().toString());
 		userBean.setPassword(passwordService.encryptPassword(userBean.getPassword()));
 
-		User user = userMapper.userBeanToUser(userBean);
+		User user = userMapper.toUser(userBean);
 
 		userRepository.save(user);
 
-		return userMapper.userToBean(user);
+		return userMapper.toBean(user);
 	}
 
 	@Override
@@ -72,7 +73,7 @@ public class AccountServiceImpl implements AccountService {
 		user.setPassword(passwordService.encryptPassword(userBean.getPassword()));
 		Optional.ofNullable(userBean.getRoles()).ifPresent(roleNames -> user.setRoles(roleMapper.toRoleList(roleNames)));
 
-		return userMapper.userToBean(user);
+		return userMapper.toBean(user);
 	}
 
 	@Override
@@ -87,7 +88,7 @@ public class AccountServiceImpl implements AccountService {
 	public Optional<UserBean> findByUuid(String uuid) {
 		User user = userRepository.findByUuid(uuid);
 		if (user != null) {
-			return Optional.of(userMapper.userToBean(user));
+			return Optional.of(userMapper.toBean(user));
 		}
 		return Optional.empty();
 	}
@@ -96,7 +97,7 @@ public class AccountServiceImpl implements AccountService {
 	public Optional<UserBean> findByEmailAddress(String emailAddress) {
 		User user = userRepository.findByEmailAddress(emailAddress);
 		if (user != null) {
-			return Optional.of(userMapper.userToBean(user));
+			return Optional.of(userMapper.toBean(user));
 		}
 		return Optional.empty();
 	}
@@ -105,16 +106,16 @@ public class AccountServiceImpl implements AccountService {
 	public Optional<UserBean> findByToken(String token) {
 		User user = userRepository.findByToken(token);
 		if (user != null) {
-			return Optional.of(userMapper.userToBean(user));
+			return Optional.of(userMapper.toBean(user));
 		}
 		return Optional.empty();
 	}
 
-	// TODO: integration test
+
 	public Optional<List<UserBean>> getAllUsers() {
 		Page<User> users = userRepository.findAll(new PageRequest(0, Integer.MAX_VALUE));
 		if (users != null) {
-			return Optional.of(userMapper.usersToUserBeans(users.getContent()));
+			return Optional.of(userMapper.usersToBeans(users.getContent()));
 		}
 		return Optional.empty();
 	}

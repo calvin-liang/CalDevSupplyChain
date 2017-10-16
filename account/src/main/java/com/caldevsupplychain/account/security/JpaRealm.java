@@ -48,7 +48,7 @@ public class JpaRealm extends AuthorizingRealm  {
 		String uuid = (String) principals.fromRealm(getName()).iterator().next();
 		UserBean userBean = accountService.findByUuid(uuid).orElse(null);
 
-		User user = userMapper.userBeanToUser(userBean);
+		User user = userMapper.toUser(userBean);
 
 		if (user != null) {
 			SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();

@@ -19,34 +19,14 @@ const styles = theme => ({
   },
 });
 
-const currencies = [
-  {
-    value: 'USD',
-    label: '$',
-  },
-  {
-    value: 'EUR',
-    label: '€',
-  },
-  {
-    value: 'BTC',
-    label: '฿',
-  },
-  {
-    value: 'JPY',
-    label: '¥',
-  },
-];
-
 class SignupForm extends React.Component {
   state = {
-    name: 'Cat in the Hat',
-    age: '',
-    multiline: 'Controlled',
-    currency: 'EUR',
+    username: '',
+    email: '',
+    password: ''
   };
 
-  handleChange = name => event => {
+  handleUpdateUserForm = name => event => {
     this.setState({
       [name]: event.target.value,
     });

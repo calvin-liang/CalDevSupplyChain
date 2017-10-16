@@ -7,7 +7,7 @@ import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 import IconButton from 'material-ui/IconButton';
 import MenuIcon from 'material-ui-icons/Menu';
-import {grey, lightBlue, red, blue} from 'material-ui/colors';
+import {grey, red, blue} from 'material-ui/colors';
 import Paper from 'material-ui/Paper';
 import Grid from 'material-ui/Grid';
 import TextField from 'material-ui/TextField';

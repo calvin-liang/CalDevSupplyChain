@@ -59,11 +59,13 @@ public class AccountControllerImpl implements AccountController {
 	/************************************************************************************************
 	 |									Account API													|
 	 ************************************************************************************************/
+
+	@RequiresPermissions("account:admin")
 	@GetMapping("/users")
 	public ResponseEntity<?> getUsers() {
 		// custommize logic to pass in page search limit
 		Optional<List<UserBean>> userBeans = accountService.getAllUsers();
-		return new ResponseEntity<Object>(userMapper.userBeansToUserWSs(userBeans.get()), HttpStatus.OK);
+		return new ResponseEntity<Object>(userMapper.toWss(userBeans.get()), HttpStatus.OK);
 	}
 
 	@PostMapping("/signup")
@@ -84,7 +86,7 @@ public class AccountControllerImpl implements AccountController {
 			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.ACCOUNT_EXIST.name(), "Account already registered."), HttpStatus.CONFLICT);
 		}
 
-		UserBean userBean = userMapper.userWSToBean(userWS);
+		UserBean userBean = userMapper.toBean(userWS);
 
 		UserBean user = accountService.createUser(userBean);
 
@@ -94,7 +96,9 @@ public class AccountControllerImpl implements AccountController {
 			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.EMAIL_MESSAGING_EXCEPTION.name(), e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
-		return new ResponseEntity<>(userMapper.userBeanToWS(user), HttpStatus.CREATED);
+		log.warn("can i reach here?");
+
+		return new ResponseEntity<>(userMapper.toWS(user), HttpStatus.CREATED);
 	}
 
 	@RequiresPermissions("account:update")
@@ -118,20 +122,20 @@ public class AccountControllerImpl implements AccountController {
 
 		Subject subject = SecurityUtils.getSubject();
 		if(!user.get().isAdmin() || !subject.getPrincipal().toString().equals(uuid)) {
-			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.PERMISSION_DENIED_ON_ROLE_UPDATE.name(), "Cannot update user information"), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.PERMISSION_DENIED_ON_USER_UPDATE.name(), "Cannot update user information"), HttpStatus.BAD_REQUEST);
 		}
 
 		if(!StringUtils.isNotBlank(userWS.getEmailAddress())) {
-			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.PERMISSION_DENIED_ON_EMAIL_UPDATE.name(), "User cannot update email address"), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.PERMISSION_DENIED_ON_EMPTY_EMAIL_UPDATE.name(), "User cannot update email address"), HttpStatus.BAD_REQUEST);
 		}
 
-		UserBean userBean = userMapper.userWSToBean(userWS);
+		UserBean userBean = userMapper.toBean(userWS);
 
 		UserBean updatedUser = accountService.updateUser(userBean);
 
 		log.info("Success in update user={}", updatedUser.toString());
 
-		return new ResponseEntity<>(userMapper.userBeanToWS(updatedUser), HttpStatus.OK);
+		return new ResponseEntity<>(userMapper.toWS(updatedUser), HttpStatus.OK);
 	}
 
 	@GetMapping("/activate/{token}")
@@ -143,6 +147,6 @@ public class AccountControllerImpl implements AccountController {
 		}
 		accountService.activateUser(user.get().getId());
 
-		return new ResponseEntity<>(userMapper.userBeanToWS(user.get()), HttpStatus.OK);
+		return new ResponseEntity<>(userMapper.toWS(user.get()), HttpStatus.OK);
 	}
 }
