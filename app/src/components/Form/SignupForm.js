@@ -1,0 +1,166 @@
+import React from 'react'
+import PropTypes from 'prop-types'
+import { withStyles } from 'material-ui/styles'
+import TextField from 'material-ui/TextField'
+import Typography from 'material-ui/Typography'
+import { blue, red, grey } from 'material-ui/colors'
+import Paper from 'material-ui/Paper'
+import Button from 'material-ui/Button'
+import * as AccountAPI from '../../api/AccountAPI'
+import TokenForm from './TokenForm'
+import emailMask from 'text-mask-addons/dist/emailMask'
+
+const styles = theme => ({
+  root: {
+    display: 'flex',
+    paddingTop: 50,
+    paddingLeft: 100,
+    paddingBottom: 50,
+  },
+  formContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    flexWrap: 'wrap',
+    textAlign: 'center',
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 20,
+    width: 400,
+    height: 350
+  },
+  textField: {
+    backgroundColor: grey[200],
+    borderRadius: 4,
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+
+  },
+  // text field label
+  label: {
+    paddingLeft: 3,
+  },
+  signupButton: {
+    color: 'white',
+    background: blue[500],
+    borderColor: 'black',
+    fontWeight: 400,
+    '&:hover': {
+      background: blue[500]
+    },
+    // width: "100%",
+    width: "95%",
+    height: 50,
+    padding: "10",
+    margin: "auto",
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  // Testing
+  // input: {
+  //   borderBottom: "1px solid",
+  //   borderBottomColor: blue[500],
+  // },
+})
+
+const textFieldBoxStyle = {
+  borderRadius: 'inherit',
+  borderBottomLeftRadius: 0,
+  borderBottomRightRadius: 0,
+  backgroundColor: blue[500],
+  height: 100,
+  width: '100%',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+}
+
+const signupFormHeadlineStyle = {
+  color: 'white',
+}
+
+class SignupForm extends React.Component {
+  state = {
+    username: '',
+    email: '',
+    password: '',
+    // TODO: need to add error state for dynamically error validation during user signup form input
+    // error: '',
+  }
+
+  handleUserSignUpInput = name => event => {
+    // may need to add validation here during user input on form field
+    this.setState({
+      [name]: event.target.value.toLowerCase().replace(/\s+/g, '')
+    })
+  }
+
+  handleFormSubmit = event => {
+    // deep copy
+    let data = {}
+    data["username"] = this.state.username
+    data["emailAddress"] = this.state.email
+    data["password"] = this.state.password
+    // package data to be sent to server (remove these debug message afterward)
+    console.log("before submit user signup form data={}", data);
+    AccountAPI.signup(data).then(res => {
+      // response from server
+      console.log("successfully submit user signup form response data={}", res)
+      // update onCreatedAccount state - show a pop up dialog specify token has been sent to user email address in HomePage
+      this.props.onTokenProcess()
+    })
+    .catch(error => {
+      console.log(error);
+    })
+  }
+
+  render() {
+    const { classes } = this.props
+    return (
+        <div className={classes.root}>
+          <Paper elevation={24} style={{borderRadius: 10}}>
+            <div style={textFieldBoxStyle}>
+              <Typography
+                type="title"
+                gutterBottom
+                style={signupFormHeadlineStyle}
+              >
+                Create Account
+              </Typography>
+            </div>
+            <div>
+              <form className={classes.formContainer} noValidate autoComplete="off">
+                {Object.keys(this.state).filter(s => s !== "error").map(s => {
+                  return (
+                    <TextField
+                      required
+                      key={s}
+                      id={s}
+                      label={s.charAt(0).toUpperCase() + s.slice(1)}
+                      className={classes.textField}
+                      value={this.state[s]}
+                      onChange={this.handleUserSignUpInput(s)}
+                      margin="normal"
+                      labelClassName={classes.label}
+                      // TODO; need to add errorText when dynamically checking user input
+                      // errorText={}
+                    />)
+                })}
+                <Button raised className={classes.signupButton} onClick={this.handleFormSubmit}>
+                  Signup
+                </Button>
+              </form>
+            </div>
+          </Paper>
+        </div>
+    )
+  }
+}
+
+SignupForm.propTypes = {
+  classes: PropTypes.object.isRequired,
+  onTokenProcess: PropTypes.func
+}
+
+export default withStyles(styles)(SignupForm)
