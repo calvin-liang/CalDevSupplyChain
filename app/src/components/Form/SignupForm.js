@@ -40,6 +40,11 @@ const styles = theme => ({
   label: {
     paddingLeft: 3,
   },
+  input: {
+    paddingLeft: 3,
+    //   borderBottom: "1px solid",
+    //   borderBottomColor: blue[500],
+  },
   signupButton: {
     color: 'white',
     background: blue[500],
@@ -63,13 +68,6 @@ const styles = theme => ({
   iconErrorColor: {
     color: red[500]
   }
-
-
-  // Testing
-  // input: {
-  //   borderBottom: "1px solid",
-  //   borderBottomColor: blue[500],
-  // },
 })
 
 const textFieldBoxStyle = {
@@ -164,15 +162,24 @@ class SignupForm extends React.Component {
                       required
                       key={s}
                       id={s}
-                      label={s.charAt(0).toUpperCase() + s.slice(1)}
                       type={s}
-                      className={classes.textField}
-                      value={this.state[s]}
-                      onChange={this.handleUserSignUpInput(s)}
                       margin="normal"
+                      value={this.state[s]}
+                      label={s.charAt(0).toUpperCase() + s.slice(1)}
+                      onChange={this.handleUserSignUpInput(s)}
+                      className={classes.textField}
                       labelClassName={classes.label}
+                      InputClassName={classes.input}
+                      /* depth customization - damn... took me 20mins to figure out this. Goodluck guys for future customization part :)
+                        InputProps={{
+                          disableUnderline: true
+                          className: classes.input
+                        }}
+                      */
+
                       // TODO; need to add errorText when dynamically checking user input
-                      // errorText={}
+                      // errorText = helperText (why MATERIAL UI don't add a more concise migration note!!)
+                      // ref = see the experimented code -> DemoValidationFormFlow.js
                     />
                     <Icon classes={{
                       root: iconColor
