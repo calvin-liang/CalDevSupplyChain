@@ -3,12 +3,13 @@ import PropTypes from 'prop-types'
 import { withStyles } from 'material-ui/styles'
 import TextField from 'material-ui/TextField'
 import Typography from 'material-ui/Typography'
-import { blue, red, grey } from 'material-ui/colors'
+import { blue, red, grey, blueGrey } from 'material-ui/colors'
 import Paper from 'material-ui/Paper'
 import Button from 'material-ui/Button'
 import * as AccountAPI from '../../api/AccountAPI'
 import TokenForm from './TokenForm'
 import emailMask from 'text-mask-addons/dist/emailMask'
+import Icon from 'material-ui/Icon'
 
 const styles = theme => ({
   root: {
@@ -33,9 +34,9 @@ const styles = theme => ({
     borderRadius: 4,
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
-
+    width: '90%',
   },
-  // text field label
+  // text field label styling
   label: {
     paddingLeft: 3,
   },
@@ -47,7 +48,6 @@ const styles = theme => ({
     '&:hover': {
       background: blue[500]
     },
-    // width: "100%",
     width: "95%",
     height: 50,
     padding: "10",
@@ -56,6 +56,14 @@ const styles = theme => ({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  iconBaseColor: {
+    color: grey
+    // can adjust icon -> fontSize: xxx
+  },
+  iconErrorColor: {
+    color: red[500]
+  }
+
 
   // Testing
   // input: {
@@ -80,13 +88,24 @@ const signupFormHeadlineStyle = {
   color: 'white',
 }
 
+const signupFieldStyle = {
+  position: 'relative',
+  display: 'inline-block',
+  width: '100%'
+}
+
+const iconOptions = {
+  username: "account_box",
+  email: "email",
+  password: "lock"
+}
+
 class SignupForm extends React.Component {
   state = {
     username: '',
     email: '',
     password: '',
-    // TODO: need to add error state for dynamically error validation during user signup form input
-    // error: '',
+    error: false,
   }
 
   handleUserSignUpInput = name => event => {
@@ -116,7 +135,14 @@ class SignupForm extends React.Component {
   }
 
   render() {
+
     const { classes } = this.props
+    const { error } = this.state
+
+    /* condition check */
+    // icon color
+    let iconColor = !error ? classes.iconBaseColor : classes.iconErrorColor;
+
     return (
         <div className={classes.root}>
           <Paper elevation={24} style={{borderRadius: 10}}>
@@ -133,11 +159,13 @@ class SignupForm extends React.Component {
               <form className={classes.formContainer} noValidate autoComplete="off">
                 {Object.keys(this.state).filter(s => s !== "error").map(s => {
                   return (
+                  <div key={s} style={signupFieldStyle}>
                     <TextField
                       required
                       key={s}
                       id={s}
                       label={s.charAt(0).toUpperCase() + s.slice(1)}
+                      type={s}
                       className={classes.textField}
                       value={this.state[s]}
                       onChange={this.handleUserSignUpInput(s)}
@@ -145,8 +173,15 @@ class SignupForm extends React.Component {
                       labelClassName={classes.label}
                       // TODO; need to add errorText when dynamically checking user input
                       // errorText={}
-                    />)
+                    />
+                    <Icon classes={{
+                      root: iconColor
+                    }}>
+                      {iconOptions[s]}
+                    </Icon>
+                  </div>)
                 })}
+
                 <Button raised className={classes.signupButton} onClick={this.handleFormSubmit}>
                   Signup
                 </Button>

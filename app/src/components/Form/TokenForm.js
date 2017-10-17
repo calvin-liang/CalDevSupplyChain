@@ -53,6 +53,27 @@ class TokenForm extends React.Component {
   }
 }
 
+// TODO: redirect
+// class MyComponent extends React.Component {
+//   state = {
+//     redirect: false
+//   }
+//
+//   handleSubmit () {
+//     axios.post(/**/)
+//       .then(() => this.setState({ redirect: true }));
+//   }
+//
+//   render () {
+//     const { redirect } = this.state;
+//
+//      if (redirect) {
+//        return <Redirect to='/somewhere'/>;
+//      }
+//
+//      return <RenderYourForm/>;
+// }
+
 TokenForm.propTypes = {
   classes: PropTypes.object.isRequired,
   show: PropTypes.bool,
