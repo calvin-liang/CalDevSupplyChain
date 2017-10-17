@@ -16,7 +16,7 @@ const styles = theme => ({
     display: 'flex',
     paddingTop: 50,
     paddingLeft: 100,
-    paddingBottom: 50,
+    paddingBottom: 50,    
   },
   formContainer: {
     display: 'flex',

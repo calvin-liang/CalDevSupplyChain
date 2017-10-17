@@ -25,7 +25,7 @@ class HomePage extends Component {
     const {sentToken} = this.state
 
     return (
-      <div>
+      <div style={{maxWidth: '100%'}}>
         <HomeAppBar />
         <HomeBanner onTokenProcess={this.handleTokenProcess}/>
         {sentToken &&
