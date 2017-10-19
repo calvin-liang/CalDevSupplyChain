@@ -5,3 +5,7 @@ html, body {
   max-width: 100%;
   overflow-x: hidden;
 }
+
+.flatButtons {
+  margin-left: 300px;
+}

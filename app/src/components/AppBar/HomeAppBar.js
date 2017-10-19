@@ -4,8 +4,10 @@ import { withStyles } from 'material-ui/styles'
 import AppBar from 'material-ui/AppBar'
 import Toolbar from 'material-ui/Toolbar'
 import Typography from 'material-ui/Typography'
-import Button from 'material-ui/Button'
-import { grey, blue } from 'material-ui/colors'
+import IconButton from 'material-ui/IconButton';
+import MenuIcon from 'material-ui-icons/Menu';
+import FormDialog from '../Form/dialog';
+import { grey, blue, red } from 'material-ui/colors'
 
 const styles = theme => ({
   root: {
@@ -20,7 +22,7 @@ const styles = theme => ({
   },
   logoTitle: {
     flex: 1,
-    color: 'inherit'
+    color: 'black',
   },
   // change to Dialog for loginButton
   loginButton: {
@@ -53,12 +55,13 @@ function HomeAppBar(props) {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar className={classes.toolBar}>
+          <IconButton className={classes.menuButton} color="primary" aria-label="Menu">
+            <MenuIcon />
+          </IconButton>
           <Typography type="title" className={classes.logoTitle}>
             CalDevSupplyChain
           </Typography>
-          <Button raised className={classes.loginButton}>
-            Login
-          </Button>
+          <FormDialog></FormDialog>
         </Toolbar>
       </AppBar>
     </div>
