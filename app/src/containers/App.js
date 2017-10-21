@@ -46,7 +46,7 @@ class App extends Component {
           {/* WORKING ONE!!!! */}
           <ActivateAccountProcess
             path="/activating/:token"
-            successDirectTo="/welcomePage"
+            successRedirectTo="/welcomePage"
             failRedirectTo="/"
             onSetupUserInfo={this.handleSetupUserInfo}
             onSetupApiToken={this.handleSetupApiToken}

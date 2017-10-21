@@ -32,6 +32,7 @@ class ActivateAccountProcess extends React.Component {
 
   render() {
 
+    const {successRedirectTo, failRedirectTo} = this.props
     const {isFetching, success} = this.state
     console.log("success status: ", success);
 
@@ -42,10 +43,12 @@ class ActivateAccountProcess extends React.Component {
         }
         return success
         ? <Redirect to={{
-          pathname: '/welcomePage'
+          // pathname: '/welcomePage'
+          pathname: successRedirectTo
         }}/>
         : <Redirect to={{
-          pathname: '/'
+          // pathname: '/'
+          pathname: failRedirectTo
         }}/>
         // return success ? <Redirect to="/welcomePage"/> : <Redirect to="/"/>
       }}/>
