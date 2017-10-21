@@ -2,9 +2,11 @@ package com.caldevsupplychain.account.controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import javax.mail.MessagingException;
 
+import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -41,8 +43,9 @@ import com.google.common.collect.Lists;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/account/v1")
 @AllArgsConstructor
+@Api(value="/api/account/v1", description = "Account API")
+@RequestMapping("/api/account/v1")
 public class AccountControllerImpl implements AccountController {
 
 	private AccountService accountService;
@@ -60,6 +63,7 @@ public class AccountControllerImpl implements AccountController {
 	 |									Account API													|
 	 ************************************************************************************************/
 
+	// TODO: Resume this after testing with FE
 	@RequiresPermissions("account:admin")
 	@GetMapping("/users")
 	public ResponseEntity<?> getUsers() {
@@ -91,13 +95,10 @@ public class AccountControllerImpl implements AccountController {
 		UserBean user = accountService.createUser(userBean);
 
 		try {
-			emailService.sendVerificationTokenEmail(user.getEmailAddress(), user.getToken(), EmailType.REGISTRATION.name());
+			emailService.sendVerificationTokenEmail(user.getEmailAddress(), user.getToken(), EmailType.ACTIVATING.name());
 		} catch (MessagingException e) {
 			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.EMAIL_MESSAGING_EXCEPTION.name(), e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-
-		log.warn("can i reach here?");
-
 		return new ResponseEntity<>(userMapper.toWS(user), HttpStatus.CREATED);
 	}
 
@@ -105,6 +106,8 @@ public class AccountControllerImpl implements AccountController {
 	@PutMapping("/users/{uuid}")
 	public ResponseEntity<?> updateUser(@PathVariable("uuid") String uuid, @Validated @RequestBody UserWS userWS) {
 		BindException errors = new BindException(userWS, "UserWS");
+
+		log.warn("update user account");
 
 		editUserValidator.validate(userWS, errors);
 
@@ -147,6 +150,37 @@ public class AccountControllerImpl implements AccountController {
 		}
 		accountService.activateUser(user.get().getId());
 
+		log.warn("inside activate token user={}", userMapper.toWS(user.get()).toString());
+
 		return new ResponseEntity<>(userMapper.toWS(user.get()), HttpStatus.OK);
 	}
+
+	@PostMapping("/users/{uuid}/forgot_password")
+	public ResponseEntity<?> forgotPassword(@PathVariable String uuid, @Validated @RequestBody UserWS userWS) {
+
+		Optional<UserBean> user = accountService.findByUuid(uuid);
+
+		if (!user.isPresent()) {
+			log.error("Error in user forgot password. Fail in finding user's uuid={}", uuid);
+			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.ACCOUNT_NOT_EXIST.name(), "Cannot find user account."), HttpStatus.NOT_FOUND);
+		}
+
+		if(!userWS.getEmailAddress().equals(user.get().getEmailAddress())){
+			log.error("Error in user forgot password. Fail in find user's email={}", userWS.getEmailAddress());
+			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.ACCOUNT_NOT_EXIST.name(), "Cannot find user email address."), HttpStatus.NOT_FOUND);
+		}
+
+		UserBean userBean = user.get();
+		userBean.setToken(UUID.randomUUID().toString());
+
+		try {
+			emailService.sendVerificationTokenEmail(userBean.getEmailAddress(), userBean.getToken(), EmailType.FORGOT_PASSWORD.name());
+		} catch (MessagingException e) {
+			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.EMAIL_MESSAGING_EXCEPTION.name(), e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		return new ResponseEntity<>(userMapper.toWS(userBean), HttpStatus.OK);
+	}
+
+
 }

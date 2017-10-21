@@ -10,6 +10,7 @@ import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.PasswordService;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.Permission;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
@@ -54,7 +55,14 @@ public class JpaRealm extends AuthorizingRealm  {
 			SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
 			user.getRoles().stream().distinct().forEach(role -> {
 				info.addRole(role.getName().toString());
-				info.addStringPermissions(role.getPermissions().stream().distinct().map(p -> p.getName().toString()).collect(Collectors.toList()));
+				info.addStringPermissions(
+								role.getPermissions()
+								.stream()
+								.distinct()
+								.map(p -> p.getName().toString())
+								.collect(Collectors.toList())
+				);
+
 			});
 			return info;
 		}
