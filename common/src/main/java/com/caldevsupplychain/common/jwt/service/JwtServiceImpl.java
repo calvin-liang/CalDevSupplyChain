@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.xml.ws.Response;
 import java.security.Key;
 import java.util.Date;
 
@@ -53,20 +51,21 @@ public class JwtServiceImpl implements JwtService {
 		return new JWTAuthenticationToken(jwtBean.getUuid(), jwtToken);
 	}
 
-	public HttpHeaders createJwtHeader(HttpHeaders jwtHeaders, String jwtToken){
-		jwtHeaders.set(AUTH_HEADER, BEARER + " " + jwtToken);
-		return jwtHeaders;
+	public HttpHeaders createJwtHeader(String jwtToken){
+		HttpHeaders headers = new HttpHeaders();
+		headers.set(AUTH_HEADER, BEARER + " " + jwtToken);
+		return headers;
 	}
 
-	public void verifyJwtToken(String uuid, String jwtToken) throws JwtException {
+	public void verifyJwtToken(String uuid, String jwtTokenObj) throws JwtException {
+
+		String jwtToken = jwtTokenObj.replace(BEARER, "");
 
 		Claims claims = Jwts.parser()
 				.requireId(uuid)
 				.setSigningKey(key)
 				.parseClaimsJws(jwtToken)
 				.getBody();
-
-		log.warn("can I reach here verifyJwtToken");
 
 		long currentTime = System.currentTimeMillis();
 		boolean checkIntegrity = claims.getId().equals(uuid);
@@ -76,37 +75,4 @@ public class JwtServiceImpl implements JwtService {
 			throw new JwtException("JSON Web Token Authentication Fail.");
 		}
 	}
-
-	// TODO: resume this if annotation type not working
-//	public boolean verifyJwtToken(String uuid, String jwtToken) {
-//
-//		try {
-//			Claims claims = Jwts.parser()
-//					.requireId(uuid)
-//					.setSigningKey(key)
-//					.parseClaimsJws(jwtToken)
-//					.getBody();
-//
-//			log.warn("can I reach here verifyJwtToken");
-//
-//			long currentTime = System.currentTimeMillis();
-//			boolean checkIntegrity = claims.getId().equals(uuid);
-//			boolean checkTimeRange = claims.getNotBefore().getTime() <= currentTime && currentTime < claims.getExpiration().getTime();
-//
-//			log.warn("currentTime={}", currentTime);
-//			log.warn("checkIntegrity={}", checkIntegrity);
-//			log.warn("checkTimeRange={}", checkTimeRange);
-//
-//			// check scope
-//			return checkIntegrity && checkTimeRange;
-//
-//		}
-//		catch (JwtException e) {
-//			log.error("JWT token verification error={}", e.getMessage());
-//			return false;
-//		}
-//	}
-
-
-
 }

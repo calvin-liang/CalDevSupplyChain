@@ -11,10 +11,9 @@ public interface JwtService {
 
 	JWTAuthenticationToken createJwtToken(JwtBean jwtBean);
 
-//	boolean verifyJwtToken(String uuid, String jwtToken);
 	void verifyJwtToken(String uuid, String jwtToken);
 
-	HttpHeaders createJwtHeader(HttpHeaders jwtHeaders, String jwtToken);
+	HttpHeaders createJwtHeader(String jwtToken);
 
 	String getAuthHeader();
 

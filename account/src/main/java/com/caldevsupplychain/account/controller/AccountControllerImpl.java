@@ -66,70 +66,8 @@ public class AccountControllerImpl implements AccountController {
 	@GetMapping("/demo")
 	@RequiresAuthentication
 	@RequiresJwtAuthentication
-	public String demo() {
-		// TODO: can't reach here after @RequiresJwtAuthentication
-		return "SUCCESS JWT Authorization";
-	}
-
-	@PostMapping("/login")
-	public ResponseEntity<?> login(@Validated @RequestBody UserWS userWS) {
-
-		Optional<UserBean> user = accountService.findByEmailAddress(userWS.getEmailAddress());
-
-		// first check if user account exists or not
-		if (!user.isPresent()) {
-			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.LOGIN_INVALID.name(), "Invalid Login"), HttpStatus.UNAUTHORIZED);
-		}
-
-		Subject subject = SecurityUtils.getSubject();
-
-		// Apache Shiro authentication check
-		if (!subject.isAuthenticated()) {
-			UsernamePasswordToken token = new UsernamePasswordToken(userWS.getEmailAddress(), userWS.getPassword());
-
-			try {
-				subject.login(token);
-			} catch (AuthenticationException e) {
-				log.error("Error in login. User fail to login. user={}", user.toString());
-				return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.LOGIN_INVALID.name(), e.getMessage()), HttpStatus.UNAUTHORIZED);
-			}
-		}
-
-		log.info("Success in user login. user={}", user.toString());
-
-		JwtBean jwtBean = jwtMapper.toBean(user.get());
-		JWTAuthenticationToken jwtObj = jwtService.createJwtToken(jwtBean);
-
-		log.info("Success create jwt token. jwtToken={}", jwtObj.getToken());
-
-		return new ResponseEntity<>(jwtService.createJwtHeader(new HttpHeaders(), jwtObj.getToken()), HttpStatus.OK);
-	}
-
-	@GetMapping("/logout")
-	public ResponseEntity<?> logout() {
-		Subject subject = SecurityUtils.getSubject();
-
-		Optional<UserBean> user = accountService.findByUuid(subject.getPrincipal().toString());
-
-		if (!user.isPresent()) {
-			log.error("Error in logout. User fail to logout. user={}", user.toString());
-			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.LOGOUT_INVALID.name(), "Logout Invalid"), HttpStatus.BAD_REQUEST);
-		}
-
-		log.info("Success in user logout. user={}", user.toString());
-
-		// logout
-		subject.logout();
-
-		return new ResponseEntity<>(userMapper.toWS(user.get()), HttpStatus.OK);
-	}
-
-	@RequiresPermissions("account:admin")
-	@GetMapping("/users")
-	public ResponseEntity<?> getUsers() {
-		// custommize logic to pass in page search limit
-		Optional<List<UserBean>> userBeans = accountService.getAllUsers();
-		return new ResponseEntity<Object>(userMapper.toWss(userBeans.get()), HttpStatus.OK);
+	public ResponseEntity<?> demo() {
+		return new ResponseEntity<>("SUCCESS JWT Authorization", HttpStatus.OK);
 	}
 
 	@PostMapping("/signup")
@@ -162,8 +100,114 @@ public class AccountControllerImpl implements AccountController {
 		return new ResponseEntity<>(userMapper.toWS(user), HttpStatus.CREATED);
 	}
 
-	@RequiresPermissions("account:update")
+	@GetMapping("/activate/{token}")
+	public ResponseEntity<?> activateAccount(@PathVariable("token") String token) {
+		Optional<UserBean> user = accountService.findByToken(token);
+
+		if (!user.isPresent()) {
+			return new ResponseEntity<Object>(new ApiErrorsWS(ErrorCode.INVALID_TOKEN.name(), "Invalid Token."), HttpStatus.BAD_REQUEST);
+		}
+		accountService.activateUser(user.get().getId());
+
+		// TODO: need to tell FE to redirect to /login page after activate signup token
+		return new ResponseEntity<>(userMapper.toWS(user.get()), HttpStatus.OK);
+	}
+
+	@PostMapping("/login")
+	public ResponseEntity<?> login(@Validated @RequestBody UserWS userWS) {
+
+		Optional<UserBean> user = accountService.findByEmailAddress(userWS.getEmailAddress());
+
+		if (!user.isPresent()) {
+			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.LOGIN_INVALID.name(), "Invalid Login"), HttpStatus.UNAUTHORIZED);
+		}
+
+		Subject subject = SecurityUtils.getSubject();
+
+		// Apache Shiro authentication check for 1st login
+		if (!subject.isAuthenticated()) {
+			UsernamePasswordToken token = new UsernamePasswordToken(userWS.getEmailAddress(), userWS.getPassword());
+
+			try {
+				subject.login(token);
+			} catch (AuthenticationException e) {
+				log.error("Error in login. User fail to login. user={}", user.toString());
+				return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.LOGIN_INVALID.name(), e.getMessage()), HttpStatus.UNAUTHORIZED);
+			}
+		}
+
+		log.info("Success in user login. user={}", user.toString());
+
+		UserBean userBean = user.get();
+		JwtBean jwtBean = jwtMapper.toBean(userBean);
+		JWTAuthenticationToken jwtObj = jwtService.createJwtToken(jwtBean);
+
+		log.info("Success create jwt token. jwtToken={}", jwtObj.getToken());
+
+		return new ResponseEntity<>(userMapper.toWS(userBean), jwtService.createJwtHeader(jwtObj.getToken()), HttpStatus.OK);
+	}
+
+
+	@GetMapping("/logout")
+	@RequiresAuthentication
+	public ResponseEntity<?> logout() {
+		Subject subject = SecurityUtils.getSubject();
+
+		Optional<UserBean> user = accountService.findByUuid(subject.getPrincipal().toString());
+
+		if (!user.isPresent()) {
+			log.error("Error in logout. User fail to logout. user={}", user.toString());
+			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.LOGOUT_INVALID.name(), "Logout Invalid"), HttpStatus.BAD_REQUEST);
+		}
+
+		log.info("Success in user logout. user={}", user.toString());
+
+		subject.logout();
+
+		return new ResponseEntity<>(userMapper.toWS(user.get()), HttpStatus.OK);
+	}
+
+	@PostMapping("/users/{uuid}/forgot_password")
+	public ResponseEntity<?> forgotPassword(@PathVariable String uuid, @Validated @RequestBody UserWS userWS) {
+
+		Optional<UserBean> user = accountService.findByUuid(uuid);
+
+		if (!user.isPresent()) {
+			log.error("Error in user forgot password. Fail in finding user's uuid={}", uuid);
+			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.ACCOUNT_NOT_EXIST.name(), "Cannot find user account."), HttpStatus.NOT_FOUND);
+		}
+
+		if(!userWS.getEmailAddress().equals(user.get().getEmailAddress())){
+			log.error("Error in user forgot password. Fail in find user's email={}", userWS.getEmailAddress());
+			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.ACCOUNT_NOT_EXIST.name(), "Cannot find user email address."), HttpStatus.NOT_FOUND);
+		}
+
+		UserBean userBean = user.get();
+		userBean.setToken(UUID.randomUUID().toString());
+
+		try {
+			emailService.sendVerificationTokenEmail(userBean.getEmailAddress(), userBean.getToken(), EmailType.FORGOT_PASSWORD.name());
+		} catch (MessagingException e) {
+			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.EMAIL_MESSAGING_EXCEPTION.name(), e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		return new ResponseEntity<>(userMapper.toWS(userBean), HttpStatus.OK);
+	}
+
+	@GetMapping("/users")
+	@RequiresAuthentication
+	@RequiresJwtAuthentication
+	@RequiresPermissions("account:admin")
+	public ResponseEntity<?> getUsers(@RequestHeader HttpHeaders headers) {
+		// TODO: may need to custommize logic to pass in page search limit
+		Optional<List<UserBean>> userBeans = accountService.getAllUsers();
+		return new ResponseEntity<Object>(userMapper.toWss(userBeans.get()), HttpStatus.OK);
+	}
+
 	@PutMapping("/users/{uuid}")
+	@RequiresAuthentication
+	@RequiresJwtAuthentication
+	@RequiresPermissions("account:update")
 	public ResponseEntity<?> updateUser(@PathVariable("uuid") String uuid, @Validated @RequestBody UserWS userWS) {
 		BindException errors = new BindException(userWS, "UserWS");
 
@@ -200,49 +244,4 @@ public class AccountControllerImpl implements AccountController {
 
 		return new ResponseEntity<>(userMapper.toWS(updatedUser), HttpStatus.OK);
 	}
-
-	@GetMapping("/activate/{token}")
-	public ResponseEntity<?> activateAccount(@PathVariable("token") String token) {
-		Optional<UserBean> user = accountService.findByToken(token);
-
-		if (!user.isPresent()) {
-			return new ResponseEntity<Object>(new ApiErrorsWS(ErrorCode.INVALID_TOKEN.name(), "Invalid Token."), HttpStatus.BAD_REQUEST);
-		}
-		accountService.activateUser(user.get().getId());
-
-		// TODO: after use email activation token, need to generate JWT token too, but wait for JWt bug fix first in ExceptionHandling and able to proceed to next method
-
-		log.warn("inside activate token user={}", userMapper.toWS(user.get()).toString());
-
-		return new ResponseEntity<>(userMapper.toWS(user.get()), HttpStatus.OK);
-	}
-
-	@PostMapping("/users/{uuid}/forgot_password")
-	public ResponseEntity<?> forgotPassword(@PathVariable String uuid, @Validated @RequestBody UserWS userWS) {
-
-		Optional<UserBean> user = accountService.findByUuid(uuid);
-
-		if (!user.isPresent()) {
-			log.error("Error in user forgot password. Fail in finding user's uuid={}", uuid);
-			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.ACCOUNT_NOT_EXIST.name(), "Cannot find user account."), HttpStatus.NOT_FOUND);
-		}
-
-		if(!userWS.getEmailAddress().equals(user.get().getEmailAddress())){
-			log.error("Error in user forgot password. Fail in find user's email={}", userWS.getEmailAddress());
-			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.ACCOUNT_NOT_EXIST.name(), "Cannot find user email address."), HttpStatus.NOT_FOUND);
-		}
-
-		UserBean userBean = user.get();
-		userBean.setToken(UUID.randomUUID().toString());
-
-		try {
-			emailService.sendVerificationTokenEmail(userBean.getEmailAddress(), userBean.getToken(), EmailType.FORGOT_PASSWORD.name());
-		} catch (MessagingException e) {
-			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.EMAIL_MESSAGING_EXCEPTION.name(), e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-
-		return new ResponseEntity<>(userMapper.toWS(userBean), HttpStatus.OK);
-	}
-
-
 }

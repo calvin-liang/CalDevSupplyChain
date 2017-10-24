@@ -14,11 +14,13 @@ public interface AccountService {
 
 	void activateUser(long id);
 
+	Optional<List<UserBean>> getAllUsers();
+
 	Optional<UserBean> findByUuid(String uuid);
 
 	Optional<UserBean> findByEmailAddress(String emailAddress);
 
 	Optional<UserBean> findByToken(String token);
 
-	Optional<List<UserBean>> getAllUsers();
+
 }
