@@ -12,6 +12,8 @@ public interface AccountService {
 
 	UserBean updateUser(UserBean userBean);
 
+	UserBean setPassCode(UserBean userBean);
+
 	void activateUser(long id);
 
 	Optional<List<UserBean>> getAllUsers();

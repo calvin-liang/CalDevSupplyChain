@@ -40,6 +40,14 @@ public class AccountServiceImpl implements AccountService {
 
 	@Override
 	@Transactional
+	public UserBean setPassCode(UserBean userBean) {
+		User user = userMapper.toUser(userBean);
+		user.setToken(UUID.randomUUID().toString());
+		return userMapper.toBean(user);
+	}
+
+	@Override
+	@Transactional
 	public UserBean createUser(UserBean userBean) {
 		Preconditions.checkState(!userBean.getRoles().isEmpty(), "Must assign at least one role when creating a user.");
 
@@ -58,6 +66,7 @@ public class AccountServiceImpl implements AccountService {
 
 		return userMapper.toBean(user);
 	}
+
 
 	@Override
 	@Transactional

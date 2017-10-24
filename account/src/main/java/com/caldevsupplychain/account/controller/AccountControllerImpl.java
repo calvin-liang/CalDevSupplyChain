@@ -21,14 +21,16 @@ import com.google.common.collect.Lists;
 import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.bytebuddy.utility.RandomString;
+import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.crypto.RandomNumberGenerator;
 import org.apache.shiro.subject.Subject;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
@@ -63,13 +65,6 @@ public class AccountControllerImpl implements AccountController {
 	/************************************************************************************************
 	 |									Account API													|
 	 ************************************************************************************************/
-	@GetMapping("/demo")
-	@RequiresAuthentication
-	@RequiresJwtAuthentication
-	public ResponseEntity<?> demo() {
-		return new ResponseEntity<>("SUCCESS JWT Authorization", HttpStatus.OK);
-	}
-
 	@PostMapping("/signup")
 	public ResponseEntity<?> signup(@RequestParam(required = false, defaultValue = "USER") String role, @Validated @RequestBody UserWS userWS) {
 		BindException errors = new BindException(userWS, "UserWS");
@@ -178,12 +173,12 @@ public class AccountControllerImpl implements AccountController {
 		}
 
 		if(!userWS.getEmailAddress().equals(user.get().getEmailAddress())){
-			log.error("Error in user forgot password. Fail in find user's email={}", userWS.getEmailAddress());
+			log.error("Error in user forgot password. Fail in finding user's email={}", userWS.getEmailAddress());
 			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.ACCOUNT_NOT_EXIST.name(), "Cannot find user email address."), HttpStatus.NOT_FOUND);
 		}
 
 		UserBean userBean = user.get();
-		userBean.setToken(UUID.randomUUID().toString());
+		userBean = accountService.setPassCode(userBean);
 
 		try {
 			emailService.sendVerificationTokenEmail(userBean.getEmailAddress(), userBean.getToken(), EmailType.FORGOT_PASSWORD.name());
@@ -194,11 +189,38 @@ public class AccountControllerImpl implements AccountController {
 		return new ResponseEntity<>(userMapper.toWS(userBean), HttpStatus.OK);
 	}
 
+	@PostMapping("/users/{uuid}/reset_password")
+	public ResponseEntity<?> resetPassword(@PathVariable String uuid, @Validated @RequestBody UserWS userWS) {
+		Optional<UserBean> user = accountService.findByUuid(uuid);
+
+		if (!user.isPresent()) {
+			log.error("Error in user reset password. Fail in finding user's uuid={}", uuid);
+			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.ACCOUNT_NOT_EXIST.name(), "Cannot find user account."), HttpStatus.NOT_FOUND);
+		}
+
+		if(!userWS.getEmailAddress().equals(user.get().getEmailAddress())){
+			log.error("Error in user reset password. Fail in finding user's email={}", userWS.getEmailAddress());
+			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.ACCOUNT_NOT_EXIST.name(), "Cannot find user email address."), HttpStatus.NOT_FOUND);
+		}
+
+		if(StringUtils.isEmpty(userWS.getPassword())){
+			log.error("Error in user reset password. The user password field cannot be empty.");
+			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.PASSWORD_EMPTY.name(), "Password field cannot empty."), HttpStatus.BAD_REQUEST);
+		}
+
+		UserBean userBean = userMapper.toBean(userWS);
+
+		UserBean updatedUser = accountService.updateUser(userBean);
+
+		return new ResponseEntity<>(userMapper.toWS(updatedUser), HttpStatus.OK);
+	}
+
+
 	@GetMapping("/users")
 	@RequiresAuthentication
 	@RequiresJwtAuthentication
 	@RequiresPermissions("account:admin")
-	public ResponseEntity<?> getUsers(@RequestHeader HttpHeaders headers) {
+	public ResponseEntity<?> getUsers() {
 		// TODO: may need to custommize logic to pass in page search limit
 		Optional<List<UserBean>> userBeans = accountService.getAllUsers();
 		return new ResponseEntity<Object>(userMapper.toWss(userBeans.get()), HttpStatus.OK);
