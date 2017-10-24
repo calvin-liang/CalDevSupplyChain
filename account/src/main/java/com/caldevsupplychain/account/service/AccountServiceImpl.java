@@ -32,6 +32,7 @@ public class AccountServiceImpl implements AccountService {
 	private UserMapper userMapper;
 	private RoleMapper roleMapper;
 
+
 	@Override
 	public boolean userExist(String emailAddress) {
 		return userRepository.findByEmailAddress(emailAddress) != null;
@@ -77,7 +78,7 @@ public class AccountServiceImpl implements AccountService {
 	public void activateUser(long id) {
 		User user = userRepository.findOne(id);
 		Preconditions.checkState(user != null, "[activateUser Error]: User with id %s not found.", id);
-//		user.setToken(null);
+		user.setToken(null);
 	}
 
 	@Override

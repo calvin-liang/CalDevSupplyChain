@@ -31,7 +31,7 @@ class HomePage extends Component {
     return (
       <div style={{maxWidth: '100%'}}>
         <HomeAppBar />
-        <HomeBanner
+        <HomeBanner                  
           onTokenProcess={this.handleTokenProcess}
           onSetupUserInfo={this.props.onSetupUserInfo}
         />
@@ -41,7 +41,7 @@ class HomePage extends Component {
             onTokenProcess={this.handleTokenProcess}
           >
           </TokenForm>
-        }      
+        }
       </div>
     )
   }

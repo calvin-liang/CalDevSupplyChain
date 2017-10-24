@@ -1,14 +1,18 @@
 package com.caldevsupplychain.account.config;
 
 import com.caldevsupplychain.account.security.JpaRealm;
+import com.caldevsupplychain.account.security.JwtRealm;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.Authenticator;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
 import org.apache.shiro.authc.credential.PasswordMatcher;
 import org.apache.shiro.authc.credential.PasswordService;
+import org.apache.shiro.authc.pam.ModularRealmAuthenticator;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.cache.MemoryConstrainedCacheManager;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
+import org.apache.shiro.spring.config.AbstractShiroConfiguration;
 import org.apache.shiro.spring.web.config.DefaultShiroFilterChainDefinition;
 import org.apache.shiro.spring.web.config.ShiroFilterChainDefinition;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
@@ -18,16 +22,28 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 @Configuration
 @EnableAutoConfiguration
-public class ShiroConfig {
+public class ShiroConfig extends AbstractShiroConfiguration {
 
-	@Bean
-	public Realm realm() {
+	@Bean(name = "Realm")
+	public Realm jpaRealm() {
 		JpaRealm jpaRealm = new JpaRealm();
+		jpaRealm.setName("Realm");
 		jpaRealm.setCredentialsMatcher(credentialsMatcher());
 		jpaRealm.setCachingEnabled(true);
 		return jpaRealm;
+	}
+
+	@Bean(name = "JwtRealm")
+	public Realm jwtRealm() {
+		JwtRealm jwtRealm = new JwtRealm();
+		jwtRealm.setName("JwtRealm");
+		jwtRealm.setCachingEnabled(true);
+		return jwtRealm;
 	}
 
 	@Bean
@@ -45,9 +61,25 @@ public class ShiroConfig {
 	@Bean
 	public DefaultWebSecurityManager securityManager() {
 		DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-		securityManager.setRealm(realm());
+
+		// TODO: resume after test
+//		securityManager.setRealm(jwtRealm());
+//		securityManager.setRealm(jpaRealm());
+
+		// TODO: delete after test
+		securityManager.setAuthenticator(authenticator());
 		SecurityUtils.setSecurityManager(securityManager);
 		return securityManager;
+	}
+
+	// TODO: may need to delete it
+	public Authenticator authenticator() {
+		ModularRealmAuthenticator modularRealmAuthenticator = new ModularRealmAuthenticator();
+		Collection<Realm> realms = new ArrayList<Realm>(1);
+		realms.add(jwtRealm());
+		realms.add(jpaRealm());
+		modularRealmAuthenticator.setRealms(realms);
+		return modularRealmAuthenticator;
 	}
 
 	@Bean
@@ -58,6 +90,7 @@ public class ShiroConfig {
 	private PasswordMatcher credentialsMatcher() {
 		PasswordMatcher credentialsMatcher = new PasswordMatcher();
 		credentialsMatcher.setPasswordService(new DefaultPasswordService());
+
 		return credentialsMatcher;
 	}
 

@@ -42,15 +42,12 @@ class ActivateAccountProcess extends React.Component {
           return <div>Fetching...</div>
         }
         return success
-        ? <Redirect to={{
-          // pathname: '/welcomePage'
+        ? <Redirect to={{          
           pathname: successRedirectTo
         }}/>
         : <Redirect to={{
-          // pathname: '/'
           pathname: failRedirectTo
         }}/>
-        // return success ? <Redirect to="/welcomePage"/> : <Redirect to="/"/>
       }}/>
     )
   }

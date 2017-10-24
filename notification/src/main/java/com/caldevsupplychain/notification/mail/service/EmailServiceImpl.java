@@ -22,7 +22,7 @@ import com.caldevsupplychain.notification.mail.type.EmailType;
 @PropertySource("classpath:link.properties")
 public class EmailServiceImpl implements EmailService {
 
-	private final String TOKEN_PLACEHOLDER = "{token}";
+	private final static String TOKEN_PLACEHOLDER = "{token}";
 
 	@Autowired
 	private Environment env;

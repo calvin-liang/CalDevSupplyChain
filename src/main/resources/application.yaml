@@ -26,3 +26,12 @@ spring:
 
 cors:
   url: http://localhost:3000
+
+
+jwt:
+  header:
+    issuer: caldevsupplychain
+    token-prefix: Bearer
+    auth: Authorization
+    expire-time-range: 3600000
+

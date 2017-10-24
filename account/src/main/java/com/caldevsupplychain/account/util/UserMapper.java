@@ -7,11 +7,12 @@ import com.caldevsupplychain.account.model.User;
 import com.caldevsupplychain.account.vo.UserBean;
 import com.caldevsupplychain.common.ws.account.UserWS;
 import org.mapstruct.Named;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Mapper(config = MapperBaseConfig.class, uses = {RoleMapper.class})
+@Component
 public interface UserMapper {
 
 	@Named("wsToBean")

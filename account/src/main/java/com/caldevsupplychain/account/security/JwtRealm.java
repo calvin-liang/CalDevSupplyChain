@@ -1,51 +1,52 @@
 package com.caldevsupplychain.account.security;
 
-import java.util.stream.Collectors;
-
+import com.caldevsupplychain.account.model.User;
+import com.caldevsupplychain.account.service.AccountService;
+import com.caldevsupplychain.account.util.UserMapper;
+import com.caldevsupplychain.account.vo.UserBean;
+import com.caldevsupplychain.common.jwt.service.JwtService;
+import com.caldevsupplychain.common.jwt.token.JWTAuthenticationToken;
 import lombok.extern.slf4j.Slf4j;
-
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.authc.credential.PasswordService;
 import org.apache.shiro.authz.AuthorizationInfo;
-import org.apache.shiro.authz.Authorizer;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.caldevsupplychain.account.model.User;
-import com.caldevsupplychain.account.service.AccountService;
-import com.caldevsupplychain.account.util.UserMapper;
-import com.caldevsupplychain.account.vo.UserBean;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
-public class JpaRealm extends AuthorizingRealm {
+public class JwtRealm extends AuthorizingRealm  {
+
 
 	@Autowired
 	private AccountService accountService;
 	@Autowired
-	private PasswordService passwordService;
+	private JwtService jwtService;
 	@Autowired
 	private UserMapper userMapper;
 
-	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken) {
-		UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
+	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) {
+		JWTAuthenticationToken jwtToken = (JWTAuthenticationToken) token;
 
-		UserBean user = accountService.findByEmailAddress(token.getUsername()).orElse(null);
+		UserBean userBean = accountService.findByUuid(jwtToken.getUuid()).orElse(null);
+		User user = userMapper.toUser(userBean);
 
-		if (user != null && passwordService.passwordsMatch(token.getPassword(), user.getPassword())) {
-			return new SimpleAuthenticationInfo(user.getUuid(), user.getPassword(), getName());
-		}
+		// TODO: if this not work change back verifyJwtToken return boolean type
+//		if (user != null && jwtService.verifyJwtToken(user.getUuid(), jwtToken.getToken())) {
+//			return new SimpleAuthenticationInfo(user.getUuid(), jwtToken.getToken() , getName());
+//		}
 
 		return null;
 	}
 
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
+
 		String uuid = (String) principals.fromRealm(getName()).iterator().next();
 		UserBean userBean = accountService.findByUuid(uuid).orElse(null);
 
