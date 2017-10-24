@@ -7,8 +7,7 @@ public enum ErrorCode {
 	UNAUTHORIZATION,
 
 	/* Jwt error code */
-	JWT_EMPTY,
-	JWT_INVALID,
+	JWT_EXCEPTION,
 
 	ACCOUNT_EXIST,
 	ACCOUNT_NOT_EXIST,

@@ -25,15 +25,14 @@ public class ApiErrorsExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler({JwtException.class})
 	public ResponseEntity<?> handleJwtAuthenticationException(JwtException e){
-		log.error("Error Cause={}", e.getCause().toString());
-		return new ResponseEntity<Object>(new ApiErrorsWS(ErrorCode.JWT_EMPTY.name(), e.getMessage()), HttpStatus.UNAUTHORIZED);
+		log.error("Error Cause={}", e.getStackTrace());
+		return new ResponseEntity<Object>(new ApiErrorsWS(ErrorCode.JWT_EXCEPTION.name(), e.getMessage()), HttpStatus.UNAUTHORIZED);
 	}
 
 	@ExceptionHandler({ShiroException.class})
 	public ResponseEntity<?> handleAuthenticationException(ShiroException e){
 
-		// useful for debug, show internal cause in server side, and hiding the details to client side
-		log.error("Error Cause={}", e.getCause().toString());
+		log.error("Error Cause={}", e.getStackTrace());
 
 		if(e instanceof UnauthenticatedException){
 			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.UNAUTHENTICATION.name(), e.getMessage()), HttpStatus.UNAUTHORIZED);

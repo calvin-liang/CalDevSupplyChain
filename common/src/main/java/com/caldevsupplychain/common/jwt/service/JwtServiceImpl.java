@@ -77,6 +77,7 @@ public class JwtServiceImpl implements JwtService {
 		}
 	}
 
+	// TODO: resume this if annotation type not working
 //	public boolean verifyJwtToken(String uuid, String jwtToken) {
 //
 //		try {
