@@ -1,7 +1,6 @@
 package com.caldevsupplychain.account.config;
 
 import com.caldevsupplychain.account.security.JpaRealm;
-import com.caldevsupplychain.account.security.JwtRealm;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.Authenticator;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
@@ -38,14 +37,6 @@ public class ShiroConfig extends AbstractShiroConfiguration {
 		return jpaRealm;
 	}
 
-	@Bean(name = "JwtRealm")
-	public Realm jwtRealm() {
-		JwtRealm jwtRealm = new JwtRealm();
-		jwtRealm.setName("JwtRealm");
-		jwtRealm.setCachingEnabled(true);
-		return jwtRealm;
-	}
-
 	@Bean
 	public ShiroFilterChainDefinition shiroFilterChainDefinition() {
 		DefaultShiroFilterChainDefinition chainDefinition = new DefaultShiroFilterChainDefinition();
@@ -61,22 +52,15 @@ public class ShiroConfig extends AbstractShiroConfiguration {
 	@Bean
 	public DefaultWebSecurityManager securityManager() {
 		DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-
-		// TODO: resume after test
-//		securityManager.setRealm(jwtRealm());
-//		securityManager.setRealm(jpaRealm());
-
-		// TODO: delete after test
 		securityManager.setAuthenticator(authenticator());
 		SecurityUtils.setSecurityManager(securityManager);
 		return securityManager;
 	}
 
-	// TODO: may need to delete it
+	@Bean
 	public Authenticator authenticator() {
 		ModularRealmAuthenticator modularRealmAuthenticator = new ModularRealmAuthenticator();
 		Collection<Realm> realms = new ArrayList<Realm>(1);
-		realms.add(jwtRealm());
 		realms.add(jpaRealm());
 		modularRealmAuthenticator.setRealms(realms);
 		return modularRealmAuthenticator;
@@ -87,7 +71,8 @@ public class ShiroConfig extends AbstractShiroConfiguration {
 		return new DefaultPasswordService();
 	}
 
-	private PasswordMatcher credentialsMatcher() {
+	@Bean
+	public PasswordMatcher credentialsMatcher() {
 		PasswordMatcher credentialsMatcher = new PasswordMatcher();
 		credentialsMatcher.setPasswordService(new DefaultPasswordService());
 
