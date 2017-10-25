@@ -10,6 +10,7 @@ import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.PasswordService;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.Authorizer;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
@@ -23,7 +24,7 @@ import com.caldevsupplychain.account.vo.UserBean;
 
 @Slf4j
 @Component
-public class JpaRealm extends AuthorizingRealm  {
+public class JpaRealm extends AuthorizingRealm {
 
 	@Autowired
 	private AccountService accountService;
@@ -48,13 +49,20 @@ public class JpaRealm extends AuthorizingRealm  {
 		String uuid = (String) principals.fromRealm(getName()).iterator().next();
 		UserBean userBean = accountService.findByUuid(uuid).orElse(null);
 
-		User user = userMapper.userBeanToUser(userBean);
+		User user = userMapper.toUser(userBean);
 
 		if (user != null) {
 			SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
 			user.getRoles().stream().distinct().forEach(role -> {
 				info.addRole(role.getName().toString());
-				info.addStringPermissions(role.getPermissions().stream().distinct().map(p -> p.getName().toString()).collect(Collectors.toList()));
+				info.addStringPermissions(
+						role.getPermissions()
+								.stream()
+								.distinct()
+								.map(p -> p.getName().toString())
+								.collect(Collectors.toList())
+				);
+
 			});
 			return info;
 		}

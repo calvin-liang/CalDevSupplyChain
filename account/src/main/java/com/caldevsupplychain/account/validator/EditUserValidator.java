@@ -8,7 +8,7 @@ import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 import com.caldevsupplychain.common.type.ErrorCode;
-import com.caldevsupplychain.common.ws.account.UserWS;
+import com.caldevsupplychain.account.vo.UserWS;
 
 @Component
 @Slf4j

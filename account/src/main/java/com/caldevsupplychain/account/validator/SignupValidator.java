@@ -9,7 +9,7 @@ import org.springframework.validation.Validator;
 
 import com.caldevsupplychain.common.type.ErrorCode;
 import com.caldevsupplychain.common.validator.EmailValidator;
-import com.caldevsupplychain.common.ws.account.UserWS;
+import com.caldevsupplychain.account.vo.UserWS;
 
 @Component
 public class SignupValidator implements Validator {
