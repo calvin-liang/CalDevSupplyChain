@@ -178,6 +178,7 @@ public class AccountControllerImpl implements AccountController {
 		}
 
 		UserBean userBean = user.get();
+
 		userBean = accountService.setPassCode(userBean);
 
 		try {
@@ -208,7 +209,9 @@ public class AccountControllerImpl implements AccountController {
 			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.PASSWORD_EMPTY.name(), "Password field cannot empty."), HttpStatus.BAD_REQUEST);
 		}
 
-		UserBean userBean = userMapper.toBean(userWS);
+		UserBean userBean = user.get();
+
+		userBean.setPassword(userWS.getPassword());
 
 		UserBean updatedUser = accountService.updateUser(userBean);
 
