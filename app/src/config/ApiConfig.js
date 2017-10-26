@@ -4,8 +4,6 @@ const hostname = window && window.location && window.location.hostname || proces
 
 let apiRoot;
 
-console.log("protocol: ", protocol)
-
 if(hostname === process.env.REACT_APP_API_LOCAL_HOST){
 
   apiRoot = `${protocol}//${hostname}:${process.env.REACT_APP_API_LOCAL_SERVER_PORT}/api/${apiVersion}`
