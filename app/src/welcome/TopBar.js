@@ -22,12 +22,9 @@ const styles = theme => ({
     flex: 1,
     color: 'inherit'
   },
-  // change to Dialog for loginButton
+
   loginButton: {
-    color: 'white',
-    background: blue[500],
     borderColor: 'black',
-    fontWeight: 400,
     '&:hover': {
       background: blue[500]
     }
@@ -47,17 +44,20 @@ const styles = theme => ({
   }
 })
 
-function HomeAppBar(props) {
+function TopBar(props) {
   const { classes } = props
   return (
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar className={classes.toolBar}>
-          {/* <Typography type="title" className={classes.logoTitle}>
-            CalDevSupplyChain
-          </Typography> */}
-          <Button raised className={classes.loginButton}>
-            Login
+          <Button href="/" className={classes.loginButton}>
+            My Orders
+          </Button>
+          <Button href="/" className={classes.loginButton}>
+            Manufacturers
+          </Button>
+          <Button href="/" className={classes.loginButton}>
+            Designers
           </Button>
         </Toolbar>
       </AppBar>
@@ -65,8 +65,8 @@ function HomeAppBar(props) {
   )
 }
 
-HomeAppBar.propTypes = {
+TopBar.propTypes = {
   classes: PropTypes.object.isRequired
 }
 
-export default withStyles(styles)(HomeAppBar)
+export default withStyles(styles)(TopBar)
