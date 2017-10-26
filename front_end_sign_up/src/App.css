@@ -1,0 +1,74 @@
+.App {
+  /*text-align: center;*/
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 80px;
+}
+
+.App-header {
+  background-color: #222;
+  height: 150px;
+  padding: 20px;
+  color: white;
+}
+
+.App-title {
+  font-size: 1.5em;
+}
+
+.App-intro {
+  font-size: large;
+}
+
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.name {
+  margin-left: 500px;
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+.name input[type=text] {
+  width: 20%;
+}
+
+.email {
+  margin-left: 500px;
+  padding-bottom: 30px;
+}
+
+.email input[type=text] {
+  width: 45.4%;
+}
+
+.sign_up_button {
+  padding-top: 28px;
+  margin-left: 0px;
+}
+
+.form-row {
+  margin-left: 700px;
+}
+
+.password {
+  margin-left: 500px;
+  padding-bottom: 30px;
+}
+
+.password input[type=text] {
+  width: 48.8%;
+}
+
+.flatButtons {
+  margin-left: 300px;
+}
+
+.t {
+  width: 300px;
+  margin: auto;
+}
