@@ -10,5 +10,5 @@ export const signup = (signUpFormInput) => {
 }
 
 export const activateAccount = (token) => {
-  return axios.get(`${BASE_API_URL}/account/v1/active/${token}`)
+  return axios.get(`${BASE_API_URL}/account/v1/activate/${token}`)
 }

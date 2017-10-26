@@ -16,7 +16,7 @@ const styles = theme => ({
     display: 'flex',
     paddingTop: 50,
     paddingLeft: 100,
-    paddingBottom: 50,    
+    paddingBottom: 50,
   },
   formContainer: {
     display: 'flex',
@@ -98,12 +98,55 @@ const iconOptions = {
   password: "lock"
 }
 
+const errors = {
+  error: false,
+  errorText: null,
+  errorField: null,
+}
+
+const errorGroup = {
+  "username": errors,
+  "email": errors,
+  "password": errors,
+}
+
 class SignupForm extends React.Component {
   state = {
     username: '',
     email: '',
     password: '',
-    error: false,
+    errorGroup: errorGroup,
+  }
+
+  /* error handling need to check */
+  resetError = (field) => {
+    this.setState({
+      ...this.state.errorGroup,
+      [field]: {
+        ...this.state.errorGroup[field],
+          error: false,
+          errorText: null,
+          errorField: null
+        }
+      })
+  }
+
+  setError = (error, text, field) => {
+    this.setState({
+      ...this.state.errorGroup,
+      [field]: {
+        ...this.state.errorGroup[field],
+          error: error,
+          errorText: text,
+          errorField: field
+        }
+      })
+  }
+
+
+  validateEmailPattern = email => {
+    let emailPattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return email.match(emailPattern);
   }
 
   handleUserSignUpInput = name => event => {
@@ -114,18 +157,28 @@ class SignupForm extends React.Component {
   }
 
   handleFormSubmit = event => {
+    const {username, email, password} = this.state
+    // validate form input field
+    if(!this.validateEmailPattern(email)){
+      console.log("NOT VALID email");
+      console.log(email);
+    }
+    else {
+      console.log("valid email");
+    }
+
     // deep copy
     let data = {}
     data["username"] = this.state.username
     data["emailAddress"] = this.state.email
     data["password"] = this.state.password
-    // package data to be sent to server (remove these debug message afterward)
-    console.log("before submit user signup form data={}", data);
+
+    // for testing purpose, delete later
+    this.props.onTokenProcess()
+
     AccountAPI.signup(data).then(res => {
-      // response from server
-      console.log("successfully submit user signup form response data={}", res)
-      // update onCreatedAccount state - show a pop up dialog specify token has been sent to user email address in HomePage
-      this.props.onTokenProcess()
+      console.log("SignupForm.js - handleFormSubmit method check res: ", res);
+      this.props.onSetupUserInfo(res.data);
     })
     .catch(error => {
       console.log(error);
@@ -155,7 +208,7 @@ class SignupForm extends React.Component {
             </div>
             <div>
               <form className={classes.formContainer} noValidate autoComplete="off">
-                {Object.keys(this.state).filter(s => s !== "error").map(s => {
+                {Object.keys(this.state).filter(s => s !== "errorGroup").map(s => {
                   return (
                   <div key={s} style={signupFieldStyle}>
                     <TextField
@@ -202,7 +255,9 @@ class SignupForm extends React.Component {
 
 SignupForm.propTypes = {
   classes: PropTypes.object.isRequired,
-  onTokenProcess: PropTypes.func
+  onTokenProcess: PropTypes.func,
+  onSetupUserInfo: PropTypes.func,
 }
+
 
 export default withStyles(styles)(SignupForm)
