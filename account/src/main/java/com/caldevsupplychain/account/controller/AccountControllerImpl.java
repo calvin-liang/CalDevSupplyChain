@@ -38,8 +38,8 @@ import java.util.UUID;
 @Slf4j
 @RestController
 @AllArgsConstructor
-@Api(value="/api/account/v1", description = "Account API")
-@RequestMapping("/api/account/v1")
+@Api(value="/api/v1/account", description = "Account API")
+@RequestMapping("/api/v1/account")
 public class AccountControllerImpl implements AccountController {
 
 	private AccountService accountService;

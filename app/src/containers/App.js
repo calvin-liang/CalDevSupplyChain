@@ -4,7 +4,6 @@ import WelcomePage from './WelcomePage'
 import ActivateAccountProcess from '../process/ActivateAccountProcess'
 import { Switch, Route } from 'react-router-dom'
 import * as AccountAPI from '../api/AccountAPI'
-import { BASE_API_URL } from '../constants/UrlLink'
 
 class App extends Component {
 
@@ -20,14 +19,11 @@ class App extends Component {
 
   handleSetupApiToken = (token) => {
     this.setState({apiToken: token})
-
   }
 
   render() {
 
     const {user} = this.state
-
-    console.log(this.state.user);
 
     return (
         <Switch>
@@ -42,7 +38,6 @@ class App extends Component {
               user={user}
             />
           }/>
-          {/* WORKING ONE!!!! */}
           <ActivateAccountProcess
             path="/activating/:token"
             successRedirectTo="/welcomePage"
@@ -50,22 +45,9 @@ class App extends Component {
             onSetupUserInfo={this.handleSetupUserInfo}
             onSetupApiToken={this.handleSetupApiToken}
           />
-
-          {/* Buggy */}
-          {/* <ActivateAccountRoute
-            path="/activating/:token"
-            onSetupApiToken={this.handleSetupApiToken}
-            onSetupUserInfo={this.handleSetupUserInfo}
-            // successDirectTo="welcomePage"
-            component={WelcomePage}
-            failRedirectTo="/"
-          /> */}
-
         </Switch>
     )
   }
 }
-
-{/* <Redirect to={`/activating/${uuid}`}/> */}
 
 export default App

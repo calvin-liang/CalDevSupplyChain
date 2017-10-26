@@ -16,7 +16,7 @@ class ActivateAccountProcess extends React.Component {
   componentDidMount(){
     const {onSetupUserInfo, onSetupApiToken} = this.props
     const {token} = this.props.computedMatch.params
-
+    
     AccountAPI.activateAccount(token)
     .then(res => {
       onSetupApiToken(token)
@@ -33,21 +33,12 @@ class ActivateAccountProcess extends React.Component {
 
     const {successRedirectTo, failRedirectTo} = this.props
     const {isFetching, success} = this.state
-    console.log("success status: ", success);
 
     return (
       <Route {...this.props} render={(props) => {
         if(isFetching){
           return <div>Fetching...</div>
         }
-        // return success
-        // ? <Redirect to={{
-        //   pathname: successRedirectTo
-        // }}/>
-        // : <Redirect to={{
-        //
-        //   pathname: failRedirectTo
-        // }}/>
         return success ? <Redirect to={successRedirectTo}/> : <Redirect to={failRedirectTo}/>
       }}/>
     )

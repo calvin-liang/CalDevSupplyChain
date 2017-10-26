@@ -6,6 +6,7 @@ import javax.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -16,12 +17,17 @@ import org.springframework.stereotype.Service;
 import com.caldevsupplychain.notification.mail.model.EmailTemplate;
 import com.caldevsupplychain.notification.mail.repository.EmailTemplateRepository;
 import com.caldevsupplychain.notification.mail.type.EmailType;
+import org.springframework.validation.annotation.Validated;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 @Slf4j
 @Service
 @PropertySource("classpath:link.properties")
 public class EmailServiceImpl implements EmailService {
 
+	private final String ROOT_URL = "{rootURL}";
 	private final String TOKEN_PLACEHOLDER = "{token}";
 
 	@Autowired
@@ -30,6 +36,16 @@ public class EmailServiceImpl implements EmailService {
 	private EmailTemplateRepository emailTemplateRepository;
 	@Autowired
 	private JavaMailSender javaMailSender;
+
+	@Value("${api.fe-port}")
+	String clientPort;
+
+	@Value("${api.protocol}")
+	String protocol;
+
+	@Value("${api.mode}")
+	String apiMode;
+
 
 	@Async
 	@Override
@@ -42,7 +58,11 @@ public class EmailServiceImpl implements EmailService {
 		EmailTemplate emailTemplate = emailTemplateRepository.findByType(EmailType.valueOf(type));
 		emailTemplate.setToEmail(targetEmailAddress);
 		emailTemplate.setFromEmail(env.getProperty("ADMIN_EMAIL_ADDRESS"));
-		emailTemplate.setContent(emailTemplate.getContent().replace(TOKEN_PLACEHOLDER, token));
+
+		String content = emailTemplate.getContent();
+		content = content.contains(ROOT_URL) ? content.replace(ROOT_URL, getRootURL()).replace(TOKEN_PLACEHOLDER, token) : content.replace(TOKEN_PLACEHOLDER, token);
+		emailTemplate.setContent(content);
+
 		sendMimeMessage(emailTemplate);
 	}
 
@@ -55,6 +75,26 @@ public class EmailServiceImpl implements EmailService {
 		helper.setTo(emailTemplate.getToEmail());
 		helper.setFrom(emailTemplate.getFromEmail());
 		helper.setText(emailTemplate.getContent(), true);
+
 		javaMailSender.send(message);
+	}
+
+	public String getRootURL(){
+		InetAddress ip;
+		String root = null;
+
+		try {
+			ip = apiMode.equals("dev") ? InetAddress.getLoopbackAddress() : InetAddress.getLocalHost();
+
+			String hostname = ip.getHostName();
+
+			root = hostname.equals("localhost") ? hostname + ":" + clientPort : hostname;
+
+			root = protocol + "://" + root;
+
+		} catch (UnknownHostException e) {
+			log.error("Error in EmailServiceImpl. Unknown host error message={}", e.getMessage());
+		}
+		return root;
 	}
 }
