@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import HomePage from './HomePage'
 import LoginPage from './LoginPage'
+import MyOrderPage from './MyOrderPage'
 // import { ActivateAccountRoute } from '../routes/Routes'
 import { Switch, Route } from 'react-router-dom'
 import * as AccountAPI from '../api/AccountAPI'
@@ -23,6 +24,12 @@ class App extends Component {
                     // user={user}
                 />
             }/>
+              <Route path="/myorderPage" render={() =>
+                  <MyOrderPage
+                      // user={user}
+                      // onSetupUserInfo={this.handleSetupUserInfo}
+                  />
+              }/>
               {/* WORKING ONE!!!! */}
 
               {/* Buggy */}
