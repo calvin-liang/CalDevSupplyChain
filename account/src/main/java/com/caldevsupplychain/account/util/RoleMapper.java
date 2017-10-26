@@ -5,10 +5,12 @@ import com.caldevsupplychain.account.repository.RoleRepository;
 import com.caldevsupplychain.account.vo.RoleName;
 import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Mapper(config = MapperBaseConfig.class)
+@Component
 public abstract class RoleMapper {
 
 	@Autowired
@@ -21,7 +23,6 @@ public abstract class RoleMapper {
 		return roleName != null ? roleRepository.findByName(roleName) : null;
 	}
 
-	// for reuse purpose
 	public abstract List<RoleName> toRoleNameList(List<Role> roles);
 	public abstract List<Role> toRoleList(List<RoleName> roleNames);
 }

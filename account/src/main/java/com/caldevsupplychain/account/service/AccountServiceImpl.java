@@ -23,7 +23,6 @@ import com.caldevsupplychain.account.util.UserMapper;
 import com.caldevsupplychain.account.vo.UserBean;
 import com.caldevsupplychain.common.type.ErrorCode;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
 
 @Slf4j
 @Service
@@ -53,13 +52,14 @@ public class AccountServiceImpl implements AccountService {
 		}
 
 		userBean.setToken(UUID.randomUUID().toString());
+
 		userBean.setPassword(passwordService.encryptPassword(userBean.getPassword()));
 
-		User user = userMapper.userBeanToUser(userBean);
+		User user = userMapper.toUser(userBean);
 
 		userRepository.save(user);
 
-		return userMapper.userToBean(user);
+		return userMapper.toBean(user);
 	}
 
 	@Override
@@ -69,11 +69,16 @@ public class AccountServiceImpl implements AccountService {
 
 		Preconditions.checkState(user != null, ErrorCode.USER_NOT_FOUND.toString());
 
-		user.setUsername(userBean.getUsername());
-		user.setPassword(passwordService.encryptPassword(userBean.getPassword()));
+		// make it Optional.ofNullable because it give flexibility to different fields that going to be updated
+		Optional.ofNullable(userBean.getUsername()).ifPresent(username -> user.setUsername(username));
+
+		Optional.ofNullable(userBean.getPassword()).ifPresent(password -> user.setPassword(passwordService.encryptPassword(password)));
+
+		Optional.ofNullable(userBean.getToken()).ifPresent(token -> user.setToken(token));
+
 		Optional.ofNullable(userBean.getRoles()).ifPresent(roleNames -> user.setRoles(roleMapper.toRoleList(roleNames)));
 
-		return userMapper.userToBean(user);
+		return userMapper.toBean(user);
 	}
 
 	@Override
@@ -88,7 +93,7 @@ public class AccountServiceImpl implements AccountService {
 	public Optional<UserBean> findByUuid(String uuid) {
 		User user = userRepository.findByUuid(uuid);
 		if (user != null) {
-			return Optional.of(userMapper.userToBean(user));
+			return Optional.of(userMapper.toBean(user));
 		}
 		return Optional.empty();
 	}
@@ -97,7 +102,7 @@ public class AccountServiceImpl implements AccountService {
 	public Optional<UserBean> findByEmailAddress(String emailAddress) {
 		User user = userRepository.findByEmailAddress(emailAddress);
 		if (user != null) {
-			return Optional.of(userMapper.userToBean(user));
+			return Optional.of(userMapper.toBean(user));
 		}
 		return Optional.empty();
 	}
@@ -106,16 +111,13 @@ public class AccountServiceImpl implements AccountService {
 	public Optional<UserBean> findByToken(String token) {
 		User user = userRepository.findByToken(token);
 		if (user != null) {
-			return Optional.of(userMapper.userToBean(user));
+			return Optional.of(userMapper.toBean(user));
 		}
 		return Optional.empty();
 	}
 
 	public List<UserBean> getAllUsers() {
 		Page<User> users = userRepository.findAll(new PageRequest(0, Integer.MAX_VALUE));
-		if (users != null) {
-			return userMapper.usersToUserBeans(users.getContent());
-		}
-		return Lists.newArrayList();
+		return userMapper.usersToBeans(users.getContent());
 	}
 }

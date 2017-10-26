@@ -1,4 +1,4 @@
-package com.caldevsupplychain.common.ws.account;
+package com.caldevsupplychain.account.vo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

@@ -1,8 +1,19 @@
 package com.caldevsupplychain.common.type;
 
 public enum ErrorCode {
+
+	/* Shiro exception error code */
+	UNAUTHENTICATION,
+	UNAUTHORIZATION,
+
+	/* Jwt error code */
+	JWT_EXCEPTION,
+
 	ACCOUNT_EXIST,
 	ACCOUNT_NOT_EXIST,
+
+	LOGIN_INVALID,
+	LOGOUT_INVALID,
 
 	USERNAME_EMPTY,
 	USER_NOT_FOUND,
@@ -15,7 +26,7 @@ public enum ErrorCode {
 
 	INVALID_TOKEN,
 
-	// delete later for testing
-	PERMISSION_DENIED_ON_EMAIL_UPDATE,
-	PERMISSION_DENIED_ON_ROLE_UPDATE
+	PERMISSION_DENIED_ON_EMPTY_EMAIL_UPDATE,
+	PERMISSION_DENIED_ON_USER_UPDATE,
+
 }

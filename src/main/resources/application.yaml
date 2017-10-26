@@ -5,6 +5,8 @@ flyway:
   enabled: true
 
 spring:
+  aop:
+    auto: true
   datasource:
     url: jdbc:mysql://localhost:3306/supply_chain
     username: root
@@ -23,6 +25,13 @@ spring:
     serialization:
       write_dates_as_timestamps: false
 
-
 cors:
   url: http://localhost:3000
+
+jwt:
+  header:
+    issuer: caldevsupplychain
+    token-prefix: Bearer
+    auth: Authorization
+    expire-time-range: 3600000
+
