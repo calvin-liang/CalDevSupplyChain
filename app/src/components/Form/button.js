@@ -19,8 +19,8 @@ function FlatButtons(props) {
     return (
         <div>
             {/*<Button className={classes.button}>Default</Button>*/}
-            <Button color="primary" className={classes.button}>
-                forgot password?
+            <Button href="/loginPage" color="primary" className={classes.button}>
+                login
             </Button>
             {/*<Button color="accent" className={classes.button}>*/}
             {/*Accent*/}

@@ -19,7 +19,11 @@ import {
 
 const Public = () => <h3>Public</h3>
 
+
+
 export default class FormDialog extends React.Component {
+
+
     state = {
         open: false,
     };
@@ -32,15 +36,13 @@ export default class FormDialog extends React.Component {
         this.setState({ open: false });
     };
 
-    login() {
-        // history.push('/new-location');
-    }
-
     render() {
         return (
             <div>
                 <Button raised color="primary" onClick={this.handleClickOpen}>log in</Button>
-                <Dialog open={this.state.open} onRequestClose={this.handleRequestClose}>
+                <Dialog
+                    open={this.state.open}
+                    onRequestClose={this.handleRequestClose}>
                     <DialogTitle>Welcome back!</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
@@ -62,19 +64,15 @@ export default class FormDialog extends React.Component {
                             type="password"
                             fullWidth
                         />
-                        <div className= "flatButtons">
-                            <FlatButtons></FlatButtons>
-                        </div>
+
                     </DialogContent>
                     <DialogActions>
+                        <div className= "cancelButtons">
                         <Button onClick={this.handleRequestClose} color="primary">
                             Cancel
                         </Button>
-
-                        <Button onClick={this.login} color="primary">
-                            Log in
-                        </Button>
-
+                        </div>
+                            <FlatButtons></FlatButtons>
                     </DialogActions>
                 </Dialog>
             </div>
