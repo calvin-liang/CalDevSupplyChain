@@ -1,0 +1,72 @@
+import React from 'react'
+import PropTypes from 'prop-types'
+import { withStyles } from 'material-ui/styles'
+import AppBar from 'material-ui/AppBar'
+import Toolbar from 'material-ui/Toolbar'
+import Typography from 'material-ui/Typography'
+import Button from 'material-ui/Button'
+import { grey, blue } from 'material-ui/colors'
+
+const styles = theme => ({
+  root: {
+    width: '100%'
+  },
+  flex: {
+    flex: 1
+  },
+  toolBar: {
+    backgroundColor: grey[100],
+    color: 'black'
+  },
+  logoTitle: {
+    flex: 1,
+    color: 'inherit'
+  },
+
+  loginButton: {
+    borderColor: 'black',
+    '&:hover': {
+      background: blue[500]
+    }
+  },
+  paper: {
+    padding: 16,
+    textAlign: 'center'
+  },
+  container: {
+    display: 'flex',
+    flexWrap: 'wrap'
+  },
+  textField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    width: 200
+  }
+})
+
+function TopBar(props) {
+  const { classes } = props
+  return (
+    <div className={classes.root}>
+      <AppBar position="static">
+        <Toolbar className={classes.toolBar}>
+          <Button href="/" className={classes.loginButton}>
+            My Orders
+          </Button>
+          <Button href="/" className={classes.loginButton}>
+            Manufacturers
+          </Button>
+          <Button href="/" className={classes.loginButton}>
+            Designers
+          </Button>
+        </Toolbar>
+      </AppBar>
+    </div>
+  )
+}
+
+TopBar.propTypes = {
+  classes: PropTypes.object.isRequired
+}
+
+export default withStyles(styles)(TopBar)
