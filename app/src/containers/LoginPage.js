@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import AppBar from 'material-ui/AppBar';
 import AppBarExampleIcon from '../components/AppBar/LoginAppBar';
-import Background from '/Users/liusongyu/Desktop/FE/CalDevSupplyChain/app/src/blue-background.jpg';
+//import Background from '/Users/liusongyu/Desktop/FE/CalDevSupplyChain/app/src/blue-background.jpg';
+import Background from '../asset/img/blue-background.jpg';
 var sectionStyle = {
     width: "100%",
     height: "1000px",
