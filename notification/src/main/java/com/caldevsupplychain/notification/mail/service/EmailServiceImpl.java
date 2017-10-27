@@ -1,11 +1,9 @@
 package com.caldevsupplychain.notification.mail.service;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import javax.servlet.http.HttpServletRequest;
-
+import com.caldevsupplychain.notification.mail.model.EmailTemplate;
+import com.caldevsupplychain.notification.mail.repository.EmailTemplateRepository;
+import com.caldevsupplychain.notification.mail.type.EmailType;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -14,18 +12,12 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-
-import com.caldevsupplychain.notification.mail.model.EmailTemplate;
-import com.caldevsupplychain.notification.mail.repository.EmailTemplateRepository;
-import com.caldevsupplychain.notification.mail.type.EmailType;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.InetAddress;
-import java.net.URI;
-import java.net.UnknownHostException;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
 @Service
