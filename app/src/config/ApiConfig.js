@@ -5,11 +5,9 @@ const hostname = window && window.location && window.location.hostname || proces
 let apiRoot;
 
 if(hostname === process.env.REACT_APP_API_LOCAL_HOST){
-
-  apiRoot = `${protocol}//${hostname}:${process.env.REACT_APP_API_LOCAL_SERVER_PORT}/api/${apiVersion}`
+  apiRoot = `${protocol}//${process.env.REACT_APP_API_LOCAL_SERVER_URL}/api/${apiVersion}`
 }
 else {
   apiRoot = `${protocol}//${hostname}/api/${apiVersion}`
 }
-
 export const API_ROOT = apiRoot

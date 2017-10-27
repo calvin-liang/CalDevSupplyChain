@@ -2,6 +2,7 @@ package com.caldevsupplychain.notification.mail.service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,8 +19,12 @@ import com.caldevsupplychain.notification.mail.model.EmailTemplate;
 import com.caldevsupplychain.notification.mail.repository.EmailTemplateRepository;
 import com.caldevsupplychain.notification.mail.type.EmailType;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.InetAddress;
+import java.net.URI;
 import java.net.UnknownHostException;
 
 @Slf4j
@@ -42,10 +47,6 @@ public class EmailServiceImpl implements EmailService {
 
 	@Value("${api.protocol}")
 	String protocol;
-
-	@Value("${api.mode}")
-	String apiMode;
-
 
 	@Async
 	@Override
@@ -80,21 +81,12 @@ public class EmailServiceImpl implements EmailService {
 	}
 
 	public String getRootURL(){
-		InetAddress ip;
-		String root = null;
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+		String url = request.getRequestURL().toString().replace(request.getRequestURI(), "");
 
-		try {
-			ip = apiMode.equals("dev") ? InetAddress.getLoopbackAddress() : InetAddress.getLocalHost();
-
-			String hostname = ip.getHostName();
-
-			root = hostname.equals("localhost") ? hostname + ":" + clientPort : hostname;
-
-			root = protocol + "://" + root;
-
-		} catch (UnknownHostException e) {
-			log.error("Error in EmailServiceImpl. Unknown host error message={}", e.getMessage());
+		if(url.contains("localhost")){
+			url = url.replace(Integer.toString(request.getServerPort()), clientPort);
 		}
-		return root;
+		return url;
 	}
 }

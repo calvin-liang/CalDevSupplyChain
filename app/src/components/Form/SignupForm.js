@@ -173,7 +173,7 @@ class SignupForm extends React.Component {
     data["emailAddress"] = this.state.email
     data["password"] = this.state.password
 
-    // for testing purpose, delete later
+    // should actually add validation check before calling this method
     this.props.onTokenProcess()
 
     AccountAPI.signup(data).then(res => {
@@ -193,7 +193,7 @@ class SignupForm extends React.Component {
     /* condition check */
     // icon color
     let iconColor = !error ? classes.iconBaseColor : classes.iconErrorColor;
-
+    
     return (
         <div className={classes.root}>
           <Paper elevation={24} style={{borderRadius: 10}}>

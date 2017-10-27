@@ -36,7 +36,6 @@ jwt:
     expire-time-range: 3600000
 
 api:
-  mode: dev
   version: v1
   fe-port: 3000
   protocol: http
