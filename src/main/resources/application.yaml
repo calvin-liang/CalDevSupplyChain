@@ -35,3 +35,7 @@ jwt:
     auth: Authorization
     expire-time-range: 3600000
 
+api:
+  version: v1
+  fe-port: 3000
+  protocol: http

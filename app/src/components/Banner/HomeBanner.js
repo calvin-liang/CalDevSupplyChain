@@ -50,11 +50,13 @@ const awardsImageStyle = {
 
 let awardsIdentifier = [awards1, awards2, awards3]
 
+
 // TODO: add star icon on top of awards
 // const StarIcon = () => <Icon color={yellow[500]}>star_rate</Icon>
+
 class HomeBanner extends React.Component {
   render() {
-    const {classes, onTokenProcess} = this.props
+    const {classes, onTokenProcess, onSetupUserInfo} = this.props
     return (
       <div style={imageContainer}>
         <div style={homeBannerImgStyle}>
@@ -93,7 +95,10 @@ class HomeBanner extends React.Component {
                 </Grid>
               </Grid>
               <Grid item xs={12} sm={6} key="signup-grid">
-                  <SignupForm onTokenProcess={onTokenProcess}/>
+                  <SignupForm
+                    onTokenProcess={onTokenProcess}
+                    onSetupUserInfo={onSetupUserInfo}
+                  />
               </Grid>
             </Grid>
           </div>
@@ -105,9 +110,8 @@ class HomeBanner extends React.Component {
 
 HomeBanner.propTypes = {
   classes: PropTypes.object.isRequired,
-  onTokenProcess: PropTypes.func
+  onTokenProcess: PropTypes.func,
+  onSetupUserInfo: PropTypes.func
 }
-
-
 
 export default withStyles(styles)(HomeBanner)
