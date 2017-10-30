@@ -24,12 +24,13 @@ class App extends Component {
                     // user={user}
                 />
             }/>
-              <Route path="/myorderPage" render={() =>
-                  <MyOrderPage
+            <Route path="/myorderPage" render={() =>
+                <MyOrderPage
                       // user={user}
                       // onSetupUserInfo={this.handleSetupUserInfo}
-                  />
-              }/>
+                />
+            }/>
+
               {/* WORKING ONE!!!! */}
 
               {/* Buggy */}

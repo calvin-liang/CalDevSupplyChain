@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import FlatButtons from '../components/Form/button';
 class MyOrderPage extends Component {
 
     render() {
@@ -45,7 +46,7 @@ class MyOrderPage extends Component {
 
                     </table>
                 </div>
-
+                
                 <div className= "active-order">
                     <h1>Process Order</h1>
                 </div>
