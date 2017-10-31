@@ -50,10 +50,6 @@ const awardsImageStyle = {
 
 let awardsIdentifier = [awards1, awards2, awards3]
 
-
-// TODO: add star icon on top of awards
-// const StarIcon = () => <Icon color={yellow[500]}>star_rate</Icon>
-
 class HomeBanner extends React.Component {
   render() {
     const {classes, onTokenProcess, onSetupUserInfo} = this.props
