@@ -47,9 +47,9 @@ public class ShiroConfig extends AbstractShiroConfiguration {
 	}
 
 	@Bean
+	@DependsOn("lifecycleBeanPostProcessor")
 	public DefaultWebSecurityManager securityManager() {
-		Realm realm = jpaRealm();
-		DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager(realm);
+		DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager(jpaRealm());
 		SecurityUtils.setSecurityManager(securityManager);
 		return securityManager;
 	}
