@@ -40,5 +40,4 @@ CREATE TABLE IF NOT EXISTS items (
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO items (uuid, created_on, last_modified, color, fabric, quantity, price, price_note)
-  VALUES ("123", CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'red', 'denim', '{"XS": 10, "S": 1, "M": 2, "L": 3}', 99.99, 'fix price');
+

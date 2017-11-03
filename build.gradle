@@ -8,6 +8,7 @@ buildscript {
         flywayVersion = '4.2.0'
         shiroWebVersion = '1.4.0'
         mapStructVersion = '1.2.0.Final'
+        jacksonVersion = '2.9.2'
     }
     repositories {
         mavenCentral()
@@ -48,9 +49,9 @@ allprojects {
 subprojects {
     dependencies {
         compile "com.google.guava:guava:${guavaVersion}"
-        compile 'com.fasterxml.jackson.core:jackson-databind:2.9.0'
-        compile 'com.fasterxml.jackson.core:jackson-annotations:2.7.0'
-        compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.5'
+        compile "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+        compile "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
+        compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
         compile 'org.apache.commons:commons-lang3:3.6'
         compile "org.mapstruct:mapstruct-jdk8:${mapStructVersion}"
         compile "org.mapstruct:mapstruct-processor:${mapStructVersion}"
@@ -89,7 +90,7 @@ project(':account') {
 
 project(':order'){
     dependencies {
-
+        compile project(":notification")
     }
 }
 

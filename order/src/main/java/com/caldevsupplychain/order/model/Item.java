@@ -1,13 +1,11 @@
 package com.caldevsupplychain.order.model;
 
 import com.caldevsupplychain.common.entity.BaseEntity;
+import com.caldevsupplychain.common.util.JpaConverterJson;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.PrePersist;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -29,6 +27,7 @@ public class Item extends BaseEntity {
 	@Column(name = "fabric", nullable = false)
 	private String fabric;
 
+	@Convert(converter = JpaConverterJson.class)
 	@Column(name = "quantity", nullable = false)
 	private Quantity quantity;
 

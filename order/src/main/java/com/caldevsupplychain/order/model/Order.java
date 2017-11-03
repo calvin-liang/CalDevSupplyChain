@@ -19,11 +19,9 @@ public class Order extends BaseEntity {
 	@Column(name = "uuid", nullable = false, unique = true, updatable = false)
 	private String uuid;
 
-	@Id
 	@Column(nullable = false, updatable = false)
 	private Long user_id;
 
-	@Id
 	@Column(nullable = false, updatable = false)
 	private Long agent_id;
 
@@ -31,7 +29,8 @@ public class Order extends BaseEntity {
 	private String SKU;
 
 	@OneToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "order_2_item", joinColumns = @JoinColumn(name = "order_id"),
+	@JoinTable(name = "order_2_item",
+			joinColumns = @JoinColumn(name = "order_id"),
 			inverseJoinColumns = @JoinColumn(name = "item_id"))
 	private List<Item> items = new ArrayList<>();
 
