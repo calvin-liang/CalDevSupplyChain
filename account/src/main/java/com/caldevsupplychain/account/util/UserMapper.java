@@ -11,8 +11,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Mapper(config = MapperBaseConfig.class, uses = {RoleMapper.class})
 @Component
+@Mapper(config = MapperBaseConfig.class, uses = {RoleMapper.class})
 public interface UserMapper {
 
 	@Named("wsToBean")

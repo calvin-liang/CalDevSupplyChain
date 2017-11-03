@@ -1,4 +1,4 @@
-package com.caldevsupplychain.common.ws.account;
+package com.caldevsupplychain.common.ws;
 
 import java.io.Serializable;
 import java.util.List;

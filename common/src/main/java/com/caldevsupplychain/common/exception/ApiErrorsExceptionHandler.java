@@ -1,8 +1,8 @@
 package com.caldevsupplychain.common.exception;
 
 import com.caldevsupplychain.common.type.ErrorCode;
-import com.caldevsupplychain.common.ws.account.ApiErrorsWS;
-import com.caldevsupplychain.common.ws.account.ErrorWS;
+import com.caldevsupplychain.common.ws.ApiErrorsWS;
+import com.caldevsupplychain.common.ws.ErrorWS;
 import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.ShiroException;

@@ -58,6 +58,7 @@ INSERT INTO roles (name) VALUES ('ADMIN');
 INSERT INTO permissions (name) VALUES ('ACCOUNT_READ');
 INSERT INTO permissions (name) VALUES ('ACCOUNT_UPDATE');
 INSERT INTO permissions (name) VALUES ('ACCOUNT_ADMIN');
+INSERT INTO permissions (name) VALUES ('ORDER_CREATE');
 
 # USER PERMISSION
 INSERT INTO role_2_permission VALUES (1, 1);
