@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Mapper(config = MapperBaseConfig.class)
 @Component
+@Mapper(config = MapperBaseConfig.class)
 public abstract class RoleMapper {
 
 	@Autowired
