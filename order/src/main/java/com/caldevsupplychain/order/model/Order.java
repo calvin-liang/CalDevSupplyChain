@@ -19,11 +19,11 @@ public class Order extends BaseEntity {
 	@Column(name = "uuid", nullable = false, unique = true, updatable = false)
 	private String uuid;
 
-	@Column(nullable = false, updatable = false)
-	private Long user_id;
+	@Column(name = "user_id", nullable = false, updatable = false)
+	private Long userId;
 
-	@Column(nullable = false, updatable = false)
-	private Long agent_id;
+	@Column(name = "agent_id", nullable = false, updatable = false)
+	private Long agentId;
 
 	@Column(name = "SKU", nullable = false)
 	private String SKU;

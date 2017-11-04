@@ -8,6 +8,7 @@ import java.util.List;
 
 @Data
 public class UserWS implements Serializable {
+
 	private static final long serialVersionUID = 1110144298076663428L;
 
 	private String uuid;

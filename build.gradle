@@ -91,6 +91,7 @@ project(':account') {
 project(':order'){
     dependencies {
         compile project(":notification")
+        compile project(":account")
     }
 }
 
