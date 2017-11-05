@@ -35,8 +35,9 @@ public class User extends BaseEntity {
 	private Company company;
 
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "user_2_role", joinColumns = @JoinColumn(name = "user_id"),
-		inverseJoinColumns = @JoinColumn(name = "role_id"))
+	@JoinTable(name = "user_2_role",
+			joinColumns = @JoinColumn(name = "user_id"),
+			inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private List<Role> roles = new ArrayList<>();
 
 	@PrePersist
