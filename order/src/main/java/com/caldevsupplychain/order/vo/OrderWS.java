@@ -1,23 +1,26 @@
 package com.caldevsupplychain.order.vo;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 public class OrderWS implements Serializable {
 
 	private static final long serialVersionUID = -8744630767752497964L;
 
 	private String uuid;
-	private Long order_id;
-	private Long user_id;
-	private Long agent_id;
+	private Long orderId;
+	private Long ownerId;
+	private Long userId;
+	private Long agentId;
 	private String SKU;
 	private List<ItemWS> items;
-	private String currency;
+	private Currency currency;
 	private BigDecimal totalPrice;
 	private String shippingInstruction;
 	private String orderNote;

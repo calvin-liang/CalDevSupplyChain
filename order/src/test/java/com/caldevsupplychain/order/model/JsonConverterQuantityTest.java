@@ -10,7 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 
 import static org.junit.Assert.assertEquals;
 
@@ -24,7 +23,7 @@ public class JsonConverterQuantityTest {
 	@Autowired
 	ObjectMapper objectMapper;
 
-	String strQuantity = "{\"XS\":99.00,\"S\":99.99,\"M\":55.55,\"L\":70.00}";
+	String strQuantity = "{\"XS\":1,\"S\":2,\"M\":3,\"L\":4}";
 
 	@Test
 	public void testJsonToQuantityEntity() throws IOException {
@@ -35,11 +34,12 @@ public class JsonConverterQuantityTest {
 	@Test
 	public void testQuantityEntityToJson() throws IOException {
 		Quantity quantity = new Quantity();
-		quantity.setXS(new BigDecimal(99.00));
-		quantity.setS(new BigDecimal(99.99));
-		quantity.setM(new BigDecimal(55.55));
-		quantity.setL(new BigDecimal(70.00));
+		quantity.setXS(1);
+		quantity.setS(2);
+		quantity.setM(3);
+		quantity.setL(4);
 		String convertedJsonQuantity = objectMapper.writeValueAsString(quantity);
 		assertEquals(strQuantity, convertedJsonQuantity);
 	}
+
 }

@@ -1,13 +1,13 @@
 CREATE TABLE IF NOT EXISTS users (
   id            BIGINT AUTO_INCREMENT NOT NULL,
   uuid          VARCHAR(36)           NOT NULL UNIQUE,
-  created_on    TIMESTAMP             NOT NULL,
-  last_modified TIMESTAMP,
   username      VARCHAR(255),
   email_address VARCHAR(255)          NOT NULL,
   token         VARCHAR(36),
   password      VARCHAR(255),
   company_id    BIGINT,
+  created_on    TIMESTAMP             NOT NULL,
+  last_modified TIMESTAMP,
   PRIMARY KEY (id)
 )
   ENGINE = InnoDB

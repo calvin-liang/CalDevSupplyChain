@@ -46,12 +46,12 @@ public class ItemValidator implements Validator {
 
 	public boolean quantityAllZero(Quantity quantity){
 		boolean allZero = false;
-		BigDecimal XS = quantity.getXS();
-		BigDecimal S = quantity.getS();
-		BigDecimal M = quantity.getM();
-		BigDecimal L = quantity.getL();
+		Integer XS = quantity.getXS();
+		Integer S = quantity.getS();
+		Integer M = quantity.getM();
+		Integer L = quantity.getL();
 
-		if(XS.compareTo(BigDecimal.ZERO) == 0 && S.compareTo(BigDecimal.ZERO) == 0 && M.compareTo(BigDecimal.ZERO) == 0 && L.compareTo(BigDecimal.ZERO) == 0) {
+		if(XS == 0 && S == 0 && M == 0 && L == 0) {
 			allZero = true;
 		}
 		return allZero;

@@ -1,5 +1,6 @@
 package com.caldevsupplychain.account.util;
 
+import com.caldevsupplychain.common.util.MapperBaseConfig;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 

@@ -1,8 +1,10 @@
 package com.caldevsupplychain.order.model;
 
 import com.caldevsupplychain.common.entity.BaseEntity;
+import com.caldevsupplychain.order.vo.Currency;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -19,6 +21,9 @@ public class Order extends BaseEntity {
 	@Column(name = "uuid", nullable = false, unique = true, updatable = false)
 	private String uuid;
 
+	@Column(name = "owner_id", nullable = false, updatable = false)
+	private Long ownerId;
+
 	@Column(name = "user_id", nullable = false, updatable = false)
 	private Long userId;
 
@@ -28,16 +33,15 @@ public class Order extends BaseEntity {
 	@Column(name = "SKU", nullable = false)
 	private String SKU;
 
-	@OneToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "order_2_item",
-			joinColumns = @JoinColumn(name = "order_id"),
-			inverseJoinColumns = @JoinColumn(name = "item_id"))
+	@OneToMany(mappedBy = "order")
+	@BatchSize(size = 100)
 	private List<Item> items = new ArrayList<>();
 
-	@Column(name = "currency", nullable = false)
-	private String currency;
+	@Column(name = "currency")
+	@Enumerated(EnumType.STRING)
+	private Currency currency;
 
-	@Column(name = "total_price", nullable = false)
+	@Column(name = "total_price", precision = 22, scale = 10, nullable = false)
 	private BigDecimal totalPrice;
 
 	@Column(name = "shippping_instruction", nullable = false)

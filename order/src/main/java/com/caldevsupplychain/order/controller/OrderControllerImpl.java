@@ -7,8 +7,8 @@ import com.caldevsupplychain.common.type.ErrorCode;
 import com.caldevsupplychain.common.ws.ApiErrorsWS;
 import com.caldevsupplychain.common.ws.ErrorWS;
 import com.caldevsupplychain.order.service.OrderService;
+import com.caldevsupplychain.order.util.OrderMapper;
 import com.caldevsupplychain.order.validator.OrderValidator;
-import com.caldevsupplychain.order.vo.OrderBean;
 import com.caldevsupplychain.order.vo.OrderWS;
 import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
@@ -37,6 +37,8 @@ public class OrderControllerImpl implements OrderController {
 
 	private OrderValidator orderValidator;
 
+	private OrderMapper orderMapper;
+
 	private ApiErrorsExceptionHandler apiErrorsExceptionHandler;
 
 
@@ -46,15 +48,15 @@ public class OrderControllerImpl implements OrderController {
 	public ResponseEntity<?> createOrder(@Validated @RequestBody OrderWS orderWS) {
 
 		// check user_id
-		if(!accountService.findById(orderWS.getUser_id()).isPresent()){
-			log.error("Error in create order. User id={} not found", orderWS.getUser_id().toString());
-			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.USER_ID_NOT_FOUND.name(), "In create order user id={}" + orderWS.getUser_id().toString().toString() + " not found"), HttpStatus.NOT_FOUND);
+		if(!accountService.findById(orderWS.getUserId()).isPresent()){
+			log.error("Error in create order. User id={} not found", orderWS.getUserId().toString());
+			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.USER_ID_NOT_FOUND.name(), "In create order user id={}" + orderWS.getUserId().toString().toString() + " not found"), HttpStatus.NOT_FOUND);
 		}
 
 		// check agent_id
-		if(!accountService.findById(orderWS.getAgent_id()).isPresent()){
-			log.error("Error in create order. Agent id={} not found", orderWS.getAgent_id().toString());
-			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.AGENT_ID_NOT_FOUND.name(), "In create order agent id={}" + orderWS.getUser_id().toString().toString() + " not found"), HttpStatus.NOT_FOUND);
+		if(!accountService.findById(orderWS.getAgentId()).isPresent()){
+			log.error("Error in create order. Agent id={} not found", orderWS.getAgentId().toString());
+			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.AGENT_ID_NOT_FOUND.name(), "In create order agent id={}" + orderWS.getAgentId().toString().toString() + " not found"), HttpStatus.NOT_FOUND);
 		}
 
 		BindException errors = new BindException(orderWS, "OrderWS");
@@ -67,12 +69,8 @@ public class OrderControllerImpl implements OrderController {
 			return new ResponseEntity<>(new ApiErrorsWS(errorWSList), HttpStatus.UNPROCESSABLE_ENTITY);
 		}
 
-		OrderBean orderBean = orderMapper.toBean(orderWS);
-		OrderBean order = orderService.createOrder(orderBean);
-
-
-
-
+//		OrderBean orderBean = orderMapper.toBean(orderWS);
+//		OrderBean order = orderService.createOrder(orderBean);
 
 
 		return null;

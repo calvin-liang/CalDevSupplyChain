@@ -1,4 +1,4 @@
-package com.caldevsupplychain.account.util;
+package com.caldevsupplychain.common.util;
 
 import org.mapstruct.MapperConfig;
 import org.mapstruct.ReportingPolicy;
