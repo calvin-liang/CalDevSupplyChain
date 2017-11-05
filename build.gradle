@@ -1,6 +1,14 @@
 buildscript {
     ext {
         springBootVersion = '1.5.8.RELEASE'
+        lombokVersion = '1.16.18'
+        swaggerVersion = '2.7.0'
+        jwtVersion = '0.9.0'
+        guavaVersion = '23.0'
+        flywayVersion = '4.2.0'
+        shiroWebVersion = '1.4.0'
+        mapStructVersion = '1.2.0.Final'
+        jacksonVersion = '2.9.2'
     }
     repositories {
         mavenCentral()
@@ -10,25 +18,91 @@ buildscript {
     }
 }
 
-apply plugin: 'java'
-apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = 1.8
+allprojects {
+    apply plugin: 'idea'
+    apply plugin: 'java'
+    apply plugin: 'groovy'
+    apply plugin: 'io.spring.dependency-management'
 
-group 'com.caldevsupplychain'
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
 
-repositories {
-    mavenCentral()
+    group = 'com.caldevsupplychain'
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+        testCompile 'org.springframework.boot:spring-boot-starter-test'
+        testCompile group: 'org.testng', name: 'testng', version: '6.9.10'
+    }
+    dependencyManagement {
+        imports {
+            mavenBom("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
+        }
+    }
+}
+
+subprojects {
+    dependencies {
+        compile "com.google.guava:guava:${guavaVersion}"
+        compile "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+        compile "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
+        compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
+        compile 'org.apache.commons:commons-lang3:3.6'
+        compile "org.mapstruct:mapstruct-jdk8:${mapStructVersion}"
+        compile "org.mapstruct:mapstruct-processor:${mapStructVersion}"
+        compile "org.projectlombok:lombok:${lombokVersion}"
+        compile 'org.springframework.boot:spring-boot-starter-aop'
+        compile "org.apache.shiro:shiro-spring-boot-web-starter:${shiroWebVersion}"
+        compile "io.jsonwebtoken:jjwt:${jwtVersion}"
+        compile "io.springfox:springfox-swagger2:${swaggerVersion}"
+        compile "io.springfox:springfox-swagger-ui:${swaggerVersion}"
+    }
+}
+
+project(':common'){
+    dependencies {
+    }
+}
+
+configure(subprojects.findAll { println it.name; (it.name != 'common') }) {
+    dependencies {
+        compile project(':common')
+    }
+}
+
+project(':notification'){
+    dependencies {
+        compile("org.springframework.boot:spring-boot-starter-mail:${springBootVersion}")
+    }
+}
+
+project(':account') {
+    dependencies {
+        compile project(':common')
+        compile project(":notification")
+    }
+}
+
+project(':order'){
+    dependencies {
+        compile project(":notification")
+        compile project(":account")
+    }
 }
 
 dependencies {
-    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+    compile 'org.springframework.boot:spring-boot-starter-web'
     compile 'org.springframework.boot:spring-boot-starter-actuator'
     compile 'org.flywaydb:flyway-core:4.2.0'
     runtime 'mysql:mysql-connector-java'
-    testCompile('org.springframework.boot:spring-boot-starter-test')
+
     compile project(':account')
-    compile project(':common')
+    compile project(':order')
 }
+
