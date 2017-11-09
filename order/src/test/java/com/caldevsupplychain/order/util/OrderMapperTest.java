@@ -73,7 +73,7 @@ public class OrderMapperTest {
 		ItemBean itemBean = itemMapper.toBean(itemWS, context);
 		log.warn("check single ItemBean's order currency = {}", itemBean.getOrder().getCurrency());
 
-		/* TODO: DEBUG - this part got error but not sure why, it seems orderMapper + itemMapper not initialize in Mapstruct */
+		/* TODO: DEBUG - this part need to be fix. Got error but not sure exactly what cause it, it seems orderMapper + itemMapper not initialize in Mapstruct */
 		Item item = itemMapper.toItem(itemBean, context);
 		log.warn("check single Item's order currency = {}", item.getOrder().getCurrency());
 
