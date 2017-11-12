@@ -4,21 +4,18 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class OrderWS implements Serializable {
 
 	private static final long serialVersionUID = -8744630767752497964L;
 
 	private String uuid;
 	private String displayId;
-	private Long id;
-	private Long userId;
-	private Long agentId;
-	private String SKU;
+	private String userUuid;
+	private String agentUuid;
+	private String sku;
 	private OrderType orderType;
 	private OrderStatus orderStatus;
 	private List<ItemWS> items;
@@ -26,4 +23,5 @@ public class OrderWS implements Serializable {
 	private BigDecimal totalPrice;
 	private String shippingInstruction;
 	private String orderNote;
+
 }

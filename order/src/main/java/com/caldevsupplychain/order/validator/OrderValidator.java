@@ -1,7 +1,9 @@
 package com.caldevsupplychain.order.validator;
 
-import java.math.BigDecimal;
-import java.util.Optional;
+import java.util.List;
+import java.util.stream.IntStream;
+
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,8 +12,10 @@ import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 import com.caldevsupplychain.common.type.ErrorCode;
+import com.caldevsupplychain.order.vo.ItemWS;
 import com.caldevsupplychain.order.vo.OrderWS;
 
+@Slf4j
 @Component
 public class OrderValidator implements Validator {
 
@@ -27,23 +31,34 @@ public class OrderValidator implements Validator {
 	public void validate(Object o, Errors errors) {
 		OrderWS orderWS = (OrderWS) o;
 
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "user_id", ErrorCode.USER_ID_EMPTY.name(), "Order user id cannot empty");
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "agent_id", ErrorCode.AGENT_ID_EMPTY.name(), "Order agent id cannot empty");
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "SKU", ErrorCode.SKU_EMPTY.name(), "Order SKU cannot empty");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userUuid", ErrorCode.USER_UUID_EMPTY.name(), "Order user uuid cannot empty");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "agentUuid", ErrorCode.AGENT_UUID_EMPTY.name(), "Order agent uuid cannot empty");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "sku", ErrorCode.SKU_EMPTY.name(), "Order SKU cannot empty");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "currency", ErrorCode.CURRENCY_EMPTY.name(), "Order currency cannot empty");
 
-		if(!Optional.ofNullable(orderWS.getTotalPrice()).isPresent()) {
-			errors.rejectValue("totalPrice", ErrorCode.TOTAL_PRICE_EMPTY.name(), "Order total price cannot empty");
+		if(orderWS.getTotalPrice() == null) {
+			errors.rejectValue("totalPrice", ErrorCode.ORDER_TOTAL_PRICE_EMPTY.name(), "Order total price cannot be empty.");
 		}
 
-		if(orderWS.getTotalPrice().compareTo(BigDecimal.ZERO) == 0) {
-			errors.rejectValue("totalPrice", ErrorCode.TOTAL_PRICE_ZERO.name(), "Order total price cannot be zero");
-		}
-
-		/* item check */
-		if(orderWS.getItems().isEmpty()){
+		if(orderWS.getItems() == null){
 			errors.rejectValue("items", ErrorCode.ITEMS_EMPTY.name(), "Item cannot empty");
 		}
-		orderWS.getItems().stream().forEach(item -> itemValidator.validate(item, errors));
+
+		List<ItemWS> itemWSList = orderWS.getItems();
+
+		if(itemWSList != null) {
+			IntStream.range(0, itemWSList.size())
+					.forEach(idx -> {
+						ItemWS itemWS = itemWSList.get(idx);
+						try {
+							errors.pushNestedPath("items[" + idx + "]");
+							ValidationUtils.invokeValidator(itemValidator, itemWS, errors);
+						}finally {
+							errors.popNestedPath();
+
+						}
+					});
+		}
 	}
+
 }

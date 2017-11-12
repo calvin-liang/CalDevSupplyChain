@@ -1,18 +1,21 @@
 package com.caldevsupplychain.order.model;
 
-import com.caldevsupplychain.common.entity.BaseEntity;
-import com.caldevsupplychain.order.vo.Currency;
-import com.caldevsupplychain.order.vo.OrderStatus;
-import com.caldevsupplychain.order.vo.OrderType;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.BatchSize;
-
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import javax.persistence.*;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+import org.hibernate.annotations.BatchSize;
+
+import com.caldevsupplychain.common.entity.BaseEntity;
+import com.caldevsupplychain.order.vo.Currency;
+import com.caldevsupplychain.order.vo.OrderStatus;
+import com.caldevsupplychain.order.vo.OrderType;
 
 @Data
 @Entity
@@ -26,14 +29,14 @@ public class Order extends BaseEntity {
 	@Column(name = "display_id", nullable = false, unique = true, updatable = false)
 	private String displayId;
 
-	@Column(name = "user_id", nullable = false, updatable = false)
-	private Long userId;
+	@Column(name = "user_uuid", nullable = false, updatable = false)
+	private String userUuid;
 
-	@Column(name = "agent_id", nullable = false, updatable = false)
-	private Long agentId;
+	@Column(name = "agent_uuid", nullable = false, updatable = false)
+	private String agentUuid;
 
 	@Column(name = "SKU", nullable = false)
-	private String SKU;
+	private String sku;
 
 	@Column(name = "order_type")
 	@Enumerated(EnumType.STRING)
@@ -54,7 +57,7 @@ public class Order extends BaseEntity {
 	@Column(name = "total_price", precision = 22, scale = 10, nullable = false)
 	private BigDecimal totalPrice;
 
-	@Column(name = "shippping_instruction", nullable = false)
+	@Column(name = "shipping_instruction", nullable = false)
 	private String shippingInstruction;
 
 	@Column(name = "order_note")

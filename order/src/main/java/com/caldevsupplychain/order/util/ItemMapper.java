@@ -25,9 +25,8 @@ public interface ItemMapper {
 
 	ItemWS toWS(ItemBean itemBean, @Context CycleAvoidingMappingContext context);
 
-	List<Item> toItemList(List<ItemBean> itemBeans);
+	List<Item> toItemList(List<ItemBean> itemBeans, @Context CycleAvoidingMappingContext context);
 
-	List<ItemBean> toItemBeanList(List<Item> items);
-
+	List<ItemBean> toItemBeanList(List<Item> items, @Context CycleAvoidingMappingContext context);
 
 }

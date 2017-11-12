@@ -16,6 +16,7 @@ public class UserWS implements Serializable {
 	private String emailAddress;
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private String password;
+	private String companyName;
 	private List<String> roles;
 }
 

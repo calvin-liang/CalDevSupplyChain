@@ -6,7 +6,9 @@ public enum PermissionName {
 	ACCOUNT_UPDATE("account:update"),
 	ACCOUNT_ADMIN("account:admin"),
 
-	ORDER_CREATE("order:create");
+	ORDER_CREATE("order:create"),
+	ORDER_UPDATE("order:update"),
+	ORDER_READ("order:read");
 
 	private final String name;
 

@@ -51,7 +51,6 @@ public class AccountControllerImpl implements AccountController {
 	private SignupValidator signupValidator;
 	private EditUserValidator editUserValidator;
 
-	/* exception handler */
 	private ApiErrorsExceptionHandler apiErrorsExceptionHandler;
 
 	/************************************************************************************************
@@ -138,7 +137,7 @@ public class AccountControllerImpl implements AccountController {
 
 	@PostMapping("/users/{uuid}/reset-password")
 	@RequiresJwtAuthentication
-	public ResponseEntity<?> resetPassword(@PathVariable String uuid, @Validated @RequestBody UserWS userWS) {
+	public ResponseEntity<?> resetPassword(@PathVariable("uuid") String uuid, @Validated @RequestBody UserWS userWS) {
 		Optional<UserBean> user = accountService.findByUuid(uuid);
 
 		if (!user.isPresent()) {

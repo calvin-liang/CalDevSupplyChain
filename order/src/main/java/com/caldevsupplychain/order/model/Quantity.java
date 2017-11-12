@@ -1,10 +1,9 @@
 package com.caldevsupplychain.order.model;
 
+import lombok.Data;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 @Data
 @JsonPropertyOrder({ "XS", "S", "M", "L" })

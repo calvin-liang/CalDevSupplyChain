@@ -9,6 +9,7 @@ buildscript {
         shiroWebVersion = '1.4.0'
         mapStructVersion = '1.2.0.Final'
         jacksonVersion = '2.9.2'
+        gsonVersion = '2.7'
     }
     repositories {
         mavenCentral()
@@ -53,6 +54,7 @@ subprojects {
         compile "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
         compile "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
         compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
+        compile "com.google.code.gson:gson:${gsonVersion}"
         compile 'org.apache.commons:commons-lang3:3.6'
         compile "org.mapstruct:mapstruct-jdk8:${mapStructVersion}"
         compile "org.mapstruct:mapstruct-processor:${mapStructVersion}"
@@ -101,4 +103,5 @@ dependencies {
     compile 'org.flywaydb:flyway-core:4.2.0'
     runtime 'mysql:mysql-connector-java'
     compile project(':account')
+    compile project(':order')
 }

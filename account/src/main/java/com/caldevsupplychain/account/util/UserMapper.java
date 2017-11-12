@@ -7,6 +7,8 @@ import org.mapstruct.Mapper;
 import com.caldevsupplychain.account.model.User;
 import com.caldevsupplychain.account.vo.UserBean;
 import com.caldevsupplychain.account.vo.UserWS;
+
+import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +23,7 @@ public interface UserMapper {
 	UserWS toWS(UserBean userBean);
 	User toUser(UserBean userBean);
 	@Named("userToBean")
+	@Mapping(target = "companyName", source = "company.name")
 	UserBean toBean(User user);
 
 	@IterableMapping(qualifiedByName = "wsToBean")

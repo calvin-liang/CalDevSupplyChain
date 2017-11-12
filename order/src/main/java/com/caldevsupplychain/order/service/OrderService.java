@@ -1,11 +1,9 @@
 package com.caldevsupplychain.order.service;
 
-import com.caldevsupplychain.order.model.Order;
-import com.caldevsupplychain.order.vo.OrderBean;
-import org.springframework.data.domain.Pageable;
-
 import java.util.List;
 import java.util.Optional;
+
+import com.caldevsupplychain.order.vo.OrderBean;
 
 public interface OrderService {
 
@@ -13,16 +11,13 @@ public interface OrderService {
 
 	OrderBean updateOrder(OrderBean orderBean);
 
-	OrderBean deleteOrder(OrderBean orderBean);
+	void deleteOrder(OrderBean orderBean);
 
 	Optional<OrderBean> findByUuid(String uuid);
 
-	List<OrderBean> getAllOrders();
+	Optional<List<OrderBean>> findByUserUuid(String userUuid);
 
-	Optional<List<OrderBean>> findByDisplayId(String displayId);
-
-	Optional<List<OrderBean>> findByUserId(String userId);
-
-	Optional<List<OrderBean>> findByAgentId(String agentId);
+	Optional<List<OrderBean>> findByAgentUuid(String agentUuid);
 
 }
+

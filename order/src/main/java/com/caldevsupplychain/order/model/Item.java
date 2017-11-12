@@ -1,26 +1,31 @@
 package com.caldevsupplychain.order.model;
 
-import com.caldevsupplychain.common.entity.BaseEntity;
-import com.caldevsupplychain.common.util.JpaConverterJson;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.BatchSize;
-
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.UUID;
+
+import javax.persistence.*;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
+import com.caldevsupplychain.common.entity.BaseEntity;
+import com.caldevsupplychain.order.util.QuantityConverterJson;
 
 @Data
 @Entity
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "items")
+@ToString(exclude = "order")
 public class Item extends BaseEntity {
 
 	@Column(name = "uuid", nullable = false, unique = true, updatable = false)
 	private String uuid;
 
+	@Column(name = "display_id", nullable = false, unique = true, updatable = false)
+	private String displayId;
+
 	@ManyToOne(fetch = FetchType.LAZY)
-	@BatchSize(size = 100)
 	@JoinColumn(name = "order_id")
 	private Order order;
 
@@ -33,7 +38,7 @@ public class Item extends BaseEntity {
 	@Column(name = "fabric", nullable = false)
 	private String fabric;
 
-	@Convert(converter = JpaConverterJson.class)
+	@Convert(converter = QuantityConverterJson.class)
 	@Column(name = "quantity", nullable = false)
 	private Quantity quantity;
 
@@ -48,5 +53,8 @@ public class Item extends BaseEntity {
 	protected void onCreate() {
 		super.onCreate();
 		uuid = UUID.randomUUID().toString();
+		String[] arr = uuid.split("-");
+		displayId = arr[arr.length-1].toUpperCase();
 	}
+
 }

@@ -8,8 +8,11 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import java.util.List;
 
 public interface OrderRepository extends PagingAndSortingRepository<Order, Long> {
+
 	Order findByUuid(String uuid);
-	List<Order> findByDisplayId(String displayId, Pageable pageable);
-	List<Order> findByUserId(String userId, Pageable pageable);
-	List<Order> findByAgentId(String agentId, Pageable pageable);
+
+	List<Order> findByUserUuid(String userUuid, Pageable pageable);
+
+	List<Order> findByAgentUuid(String agentUuid, Pageable pageable);
+
 }
