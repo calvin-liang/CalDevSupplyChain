@@ -18,4 +18,8 @@ public class UserBean {
 	public boolean isAdmin() {
 		return roles.contains(RoleName.ADMIN);
 	}
+
+	public boolean isAgent() {
+		return roles.contains(RoleName.AGENT);
+	}
 }

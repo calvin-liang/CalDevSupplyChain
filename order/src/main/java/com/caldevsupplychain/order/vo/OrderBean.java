@@ -12,11 +12,13 @@ import java.util.List;
 public class OrderBean {
 
 	private String uuid;
-	private Long orderId;
-	private Long ownerId;
+	private String displayId;
+	private Long id;
 	private Long userId;
 	private Long agentId;
 	private String SKU;
+	private OrderType orderType;
+	private OrderStatus orderStatus;
 	private List<ItemBean> items;
 	private Currency currency;
 	private BigDecimal totalPrice;

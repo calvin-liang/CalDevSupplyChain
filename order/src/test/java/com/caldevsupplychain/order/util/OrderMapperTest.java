@@ -1,6 +1,7 @@
 package com.caldevsupplychain.order.util;
 
 import com.caldevsupplychain.order.model.Item;
+import com.caldevsupplychain.order.model.Order;
 import com.caldevsupplychain.order.model.Quantity;
 import com.caldevsupplychain.order.vo.*;
 import com.google.common.collect.Lists;
@@ -14,6 +15,7 @@ import org.testng.annotations.BeforeMethod;
 import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.testng.AssertJUnit.assertNotNull;
 
 @Slf4j
 public class OrderMapperTest {
@@ -77,9 +79,9 @@ public class OrderMapperTest {
 		Item item = itemMapper.toItem(itemBean, context);
 		log.warn("check single Item's order currency = {}", item.getOrder().getCurrency());
 
-//		Order order = orderMapper.toOrder(orderBean, context);
-//		assertNotNull(order);
-//		log.warn("Check order items={}", order.getItems().get(0).getOrder().getCurrency());
+		Order order = orderMapper.toOrder(orderBean, context);
+		assertNotNull(order);
+		log.warn("Check order items={}", order.getItems().get(0).getOrder().getCurrency());
 
 	}
 }

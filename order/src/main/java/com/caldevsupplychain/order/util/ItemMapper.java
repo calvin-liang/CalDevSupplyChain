@@ -9,6 +9,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @Mapper(config = MapperBaseConfig.class, uses = {OrderMapper.class})
 public interface ItemMapper {
@@ -22,5 +24,10 @@ public interface ItemMapper {
 	ItemBean toBean(Item item, @Context CycleAvoidingMappingContext context);
 
 	ItemWS toWS(ItemBean itemBean, @Context CycleAvoidingMappingContext context);
+
+	List<Item> toItemList(List<ItemBean> itemBeans);
+
+	List<ItemBean> toItemBeanList(List<Item> items);
+
 
 }

@@ -2,6 +2,8 @@ package com.caldevsupplychain.order.model;
 
 import com.caldevsupplychain.common.entity.BaseEntity;
 import com.caldevsupplychain.order.vo.Currency;
+import com.caldevsupplychain.order.vo.OrderStatus;
+import com.caldevsupplychain.order.vo.OrderType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.BatchSize;
@@ -21,8 +23,8 @@ public class Order extends BaseEntity {
 	@Column(name = "uuid", nullable = false, unique = true, updatable = false)
 	private String uuid;
 
-	@Column(name = "owner_id", nullable = false, updatable = false)
-	private Long ownerId;
+	@Column(name = "display_id", nullable = false, unique = true, updatable = false)
+	private String displayId;
 
 	@Column(name = "user_id", nullable = false, updatable = false)
 	private Long userId;
@@ -32,6 +34,14 @@ public class Order extends BaseEntity {
 
 	@Column(name = "SKU", nullable = false)
 	private String SKU;
+
+	@Column(name = "order_type")
+	@Enumerated(EnumType.STRING)
+	private OrderType orderType;
+
+	@Column(name = "order_status")
+	@Enumerated(EnumType.STRING)
+	private OrderStatus orderStatus;
 
 	@OneToMany(mappedBy = "order")
 	@BatchSize(size = 100)
@@ -55,5 +65,7 @@ public class Order extends BaseEntity {
 	protected void onCreate() {
 		super.onCreate();
 		uuid = UUID.randomUUID().toString();
+		String[] arr = uuid.split("-");
+		displayId = arr[arr.length-1].toUpperCase();
 	}
 }

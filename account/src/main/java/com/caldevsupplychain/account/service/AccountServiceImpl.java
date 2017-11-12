@@ -122,6 +122,7 @@ public class AccountServiceImpl implements AccountService {
 		return Optional.empty();
 	}
 
+	@Override
 	public List<UserBean> getAllUsers() {
 		Page<User> users = userRepository.findAll(new PageRequest(0, Integer.MAX_VALUE));
 		return userMapper.usersToBeans(users.getContent());

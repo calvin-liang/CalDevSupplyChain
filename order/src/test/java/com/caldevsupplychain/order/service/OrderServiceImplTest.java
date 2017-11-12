@@ -1,5 +1,6 @@
 package com.caldevsupplychain.order.service;
 
+import com.caldevsupplychain.order.model.Order;
 import com.caldevsupplychain.order.model.Quantity;
 import com.caldevsupplychain.order.repository.OrderRepository;
 import com.caldevsupplychain.order.util.CycleAvoidingMappingContext;
@@ -16,8 +17,12 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.testng.AssertJUnit.assertNotNull;
 
 @Slf4j
 public class OrderServiceImplTest {
@@ -32,7 +37,7 @@ public class OrderServiceImplTest {
 	private OrderRepository orderRepository;
 
 	@InjectMocks
-	private OrderService orderService = new OrderServiceImpl(orderRepository, orderMapper);
+	private OrderService orderService = new OrderServiceImpl(orderRepository, orderMapper, itemMapper);
 
 	@BeforeMethod(alwaysRun = true)
 	public void setUp() {
@@ -42,45 +47,55 @@ public class OrderServiceImplTest {
 	@Test
 	public void test(){
 
-		OrderWS orderWS = new OrderWS();
-		orderWS.setOrderId(123L);
-		orderWS.setUserId(1L);
-		orderWS.setAgentId(2L);
-		orderWS.setSKU("SKU123");
 
-		ItemWS itemWS = new ItemWS();
-		itemWS.setColor("red");
-		itemWS.setDescription("item description");
-		itemWS.setFabric("denim");
+		//		TODO: delete later after testing
+//		List<String> greeting = Lists.newArrayList("hello", "bye");
+//		Optional.ofNullable(greeting).ifPresent(temps -> {
+//			temps.stream().forEach(g -> {
+//				System.out.println(g);
+//			});
+//		});
+//		System.out.println(tmp);
 
-		Quantity quantity = new Quantity();
-		quantity.setXS(9);
-		quantity.setS(1);
-		quantity.setM(5);
-		quantity.setL(7);
+//		OrderWS orderWS = new OrderWS();
+//		orderWS.setOrderId(123L);
+//		orderWS.setUserId(1L);
+//		orderWS.setAgentId(2L);
+//		orderWS.setSKU("SKU123");
+//
+//		ItemWS itemWS = new ItemWS();
+//		itemWS.setColor("red");
+//		itemWS.setDescription("item description");
+//		itemWS.setFabric("denim");
+//
+//		Quantity quantity = new Quantity();
+//		quantity.setXS(9);
+//		quantity.setS(1);
+//		quantity.setM(5);
+//		quantity.setL(7);
+//
+//		itemWS.setQuantity(quantity);
+//		itemWS.setPrice(new BigDecimal(324.54));
+//		itemWS.setNote("It is so expensive!");
+//
+//		orderWS.setCurrency(Currency.USD);
+//		orderWS.setTotalPrice(itemWS.getPrice());
+//		orderWS.setShippingInstruction("Ship to Atlantis");
+//		orderWS.setOrderNote("Sample order note");
+//
+//		orderWS.setItems(Lists.newArrayList(itemWS));
+//		itemWS.setOrder(orderWS);
+//
+//		CycleAvoidingMappingContext context = new CycleAvoidingMappingContext();
+//
+//		OrderBean orderBean = orderMapper.toBean(orderWS, context);
+//		assertThat(orderBean.getItems().get(0).equals(itemWS));
+//		assertThat(orderBean.getCurrency().equals("USD"));
 
-		itemWS.setQuantity(quantity);
-		itemWS.setPrice(new BigDecimal(324.54));
-		itemWS.setNote("It is so expensive!");
+//		log.warn("check orderBean item not null={}", orderBean.getItems() != null);
 
-		orderWS.setCurrency(Currency.USD);
-		orderWS.setTotalPrice(itemWS.getPrice());
-		orderWS.setShippingInstruction("Ship to Atlantis");
-		orderWS.setOrderNote("Sample order note");
-
-		orderWS.setItems(Lists.newArrayList(itemWS));
-		itemWS.setOrder(orderWS);
-
-		CycleAvoidingMappingContext context = new CycleAvoidingMappingContext();
-
-		OrderBean orderBean = orderMapper.toBean(orderWS, context);
-		assertThat(orderBean.getItems().get(0).equals(itemWS));
-		assertThat(orderBean.getCurrency().equals("USD"));
-
-		log.warn("check orderBean item not null={}", orderBean.getItems() != null);
-
-		ItemBean itemBean = itemMapper.toBean(itemWS, context);
-		log.warn("check single ItemBean's order currency = {}", itemBean.getOrder().getCurrency());
+//		ItemBean itemBean = itemMapper.toBean(itemWS, context);
+//		log.warn("check single ItemBean's order currency = {}", itemBean.getOrder().getCurrency());
 
 		/* TODO: DEBUG - this part got error but not sure why, it seems orderMapper + itemMapper not initialize in Mapstruct
 		*  Tried but really can't figure out. :(
@@ -88,9 +103,10 @@ public class OrderServiceImplTest {
 //		Item item = itemMapper.toItem(itemBean, context);
 //		log.warn("check single Item's order currency = {}", item.getOrder().getCurrency());
 
-//		Order order = orderMapper.toOrder(orderBean, new CycleAvoidingMappingContext());
+//		Order order = orderMapper.toOrder(orderBean, context);
 //		assertNotNull(order);
-//		log.info("check order = {}", order.toString());
+//		log.info("check order currency = {}", order.getCurrency());
+//		log.info("check order currency = {}", order.getItems().get(0).getOrder().getCurrency());
 
 	}
 

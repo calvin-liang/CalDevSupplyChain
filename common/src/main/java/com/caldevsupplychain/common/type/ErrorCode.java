@@ -31,6 +31,7 @@ public enum ErrorCode {
 	PERMISSION_DENIED_ON_USER_UPDATE,
 
 	/* order errors */
+	ORDER_ID_NOT_FOUND,
 	USER_ID_NOT_FOUND,
 	AGENT_ID_NOT_FOUND,
 	USER_ID_EMPTY,

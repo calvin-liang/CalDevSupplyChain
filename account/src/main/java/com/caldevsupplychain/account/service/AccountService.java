@@ -25,5 +25,4 @@ public interface AccountService {
 
 	Optional<UserBean> findById(Long id);
 
-
 }

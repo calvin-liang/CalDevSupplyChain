@@ -171,8 +171,6 @@ public class AccountControllerImpl implements AccountController {
 	public ResponseEntity<?> updateUser(@PathVariable("uuid") String uuid, @Validated @RequestBody UserWS userWS) {
 		BindException errors = new BindException(userWS, "UserWS");
 
-		log.warn("update user account");
-
 		editUserValidator.validate(userWS, errors);
 
 		if (errors.hasErrors()) {
