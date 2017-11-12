@@ -6,6 +6,7 @@ import java.util.Optional;
 import com.caldevsupplychain.account.vo.UserBean;
 
 public interface AccountService {
+
 	boolean userExist(String emailAddress);
 
 	UserBean createUser(UserBean userBean);
@@ -22,5 +23,5 @@ public interface AccountService {
 
 	Optional<UserBean> findByToken(String token);
 
-
+	Optional<UserBean> findById(Long id);
 }

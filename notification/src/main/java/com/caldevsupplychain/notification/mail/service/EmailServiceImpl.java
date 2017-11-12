@@ -34,11 +34,8 @@ public class EmailServiceImpl implements EmailService {
 	@Autowired
 	private JavaMailSender javaMailSender;
 
-	@Value("${api.fe-port}")
+	@Value("${api.client-port}")
 	String clientPort;
-
-	@Value("${api.protocol}")
-	String protocol;
 
 	@Async
 	@Override

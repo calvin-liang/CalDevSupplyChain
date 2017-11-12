@@ -84,15 +84,7 @@ project(':notification'){
 
 project(':account') {
     dependencies {
-        compile project(':common')
         compile project(":notification")
-    }
-}
-
-project(':order'){
-    dependencies {
-        compile project(":notification")
-        compile project(":account")
     }
 }
 
@@ -101,8 +93,5 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-actuator'
     compile 'org.flywaydb:flyway-core:4.2.0'
     runtime 'mysql:mysql-connector-java'
-
     compile project(':account')
-    compile project(':order')
 }
-
