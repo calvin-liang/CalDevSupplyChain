@@ -3,14 +3,15 @@ package com.caldevsupplychain.account.util;
 import com.caldevsupplychain.account.model.Role;
 import com.caldevsupplychain.account.repository.RoleRepository;
 import com.caldevsupplychain.account.vo.RoleName;
+import com.caldevsupplychain.common.util.MapperBaseConfig;
 import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Mapper(config = MapperBaseConfig.class)
 @Component
+@Mapper(config = MapperBaseConfig.class)
 public abstract class RoleMapper {
 
 	@Autowired

@@ -11,8 +11,8 @@ import com.caldevsupplychain.account.vo.UserBean;
 import com.caldevsupplychain.account.vo.UserWS;
 import com.caldevsupplychain.common.exception.ApiErrorsExceptionHandler;
 import com.caldevsupplychain.common.type.ErrorCode;
-import com.caldevsupplychain.common.ws.account.ApiErrorsWS;
-import com.caldevsupplychain.common.ws.account.ErrorWS;
+import com.caldevsupplychain.common.ws.ApiErrorsWS;
+import com.caldevsupplychain.common.ws.ErrorWS;
 import com.caldevsupplychain.notification.mail.service.EmailService;
 import com.caldevsupplychain.notification.mail.type.EmailType;
 import com.google.common.collect.Lists;
@@ -170,8 +170,6 @@ public class AccountControllerImpl implements AccountController {
 	@RequiresPermissions("account:update")
 	public ResponseEntity<?> updateUser(@PathVariable("uuid") String uuid, @Validated @RequestBody UserWS userWS) {
 		BindException errors = new BindException(userWS, "UserWS");
-
-		log.warn("update user account");
 
 		editUserValidator.validate(userWS, errors);
 

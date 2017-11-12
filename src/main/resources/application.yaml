@@ -8,7 +8,7 @@ spring:
   aop:
     auto: true
   datasource:
-    url: jdbc:mysql://localhost:3306/supply_chain
+    url: jdbc:mysql://localhost:3306/supply_chain?useSSL=false
     username: root
     password: password
     driver-class-name: com.mysql.jdbc.Driver
@@ -37,5 +37,5 @@ jwt:
 
 api:
   version: v1
-  fe-port: 3000
+  client-port: 3000
   protocol: http
