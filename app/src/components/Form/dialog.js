@@ -1,7 +1,11 @@
 import React from 'react';
 import Button from 'material-ui/Button';
 import TextField from 'material-ui/TextField';
+//import RaisedButton from 'material-ui/RaisedButton';
 import FlatButtons from './button';
+import axios from 'axios';
+//import { API_ROOT } from '../config/ApiConfig';
+
 import Dialog, {
     DialogActions,
     DialogContent,
@@ -26,6 +30,10 @@ export default class FormDialog extends React.Component {
 
     state = {
         open: false,
+        userInput: {
+            email: '',
+            password: ''
+        }
     };
 
     handleClickOpen = () => {
@@ -35,6 +43,50 @@ export default class FormDialog extends React.Component {
     handleRequestClose = () => {
         this.setState({ open: false });
     };
+
+    handleEmailChange = (e) => {
+        let userInput = Object.assign({}, this.state.userInput);
+
+        userInput.email = e.target.value;
+        this.setState({
+            userInput: userInput
+        });
+    };
+
+    handlePasswordChange = (e) => {
+        let userInput = Object.assign({}, this.state.userInput);
+
+        userInput.password = e.target.value;
+        this.setState({
+            userInput: userInput
+        });
+    };
+
+    // handleClick(event) {
+    //     // const { classes } = props;
+    //     //
+    //     // const doLogin = () => {
+    //     //     const email = props.userInput.email;
+    //     //     const password = props.userInput.password;
+    // var payload ={
+    //     "email":this.userInput.email,
+    //     "password":this.userInput.password,
+    //
+    //     }
+    //     axios.post(`${API_ROOT}/account/login`,payload)
+    //         .then(function(response){
+    //             if(response.data.code ==200) {
+    //                      window.location.href = '/loginPage';
+    //                     }
+    //                     else{
+    //                 console.log("Error");
+    //             }
+    //         })
+    //         .catch(function(error) {
+    //             console.log("Error");
+    //         });
+    //     }
+
 
     render() {
         return (
@@ -54,6 +106,7 @@ export default class FormDialog extends React.Component {
                             id="name"
                             label="Email Address"
                             type="email"
+                            onChange={this.handleEmailChange}
                             fullWidth
                         />
                         <TextField
@@ -62,6 +115,7 @@ export default class FormDialog extends React.Component {
                             id="name"
                             label="Password"
                             type="password"
+                            onChange={this.handlePasswordChange}
                             fullWidth
                         />
 
@@ -72,7 +126,10 @@ export default class FormDialog extends React.Component {
                                 Cancel
                             </Button>
                         </div>
-                        <FlatButtons></FlatButtons>
+                        {/*<RaisedButton label="Login" primary={true} onclick={(event) =>this.handleClick(event)}/>*/}
+                        <FlatButtons
+                            userInput={this.state.userInput}
+                        ></FlatButtons>
                     </DialogActions>
                 </Dialog>
             </div>

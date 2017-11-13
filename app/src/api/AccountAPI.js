@@ -12,3 +12,8 @@ export const signup = (signUpFormInput) => {
 export const activateAccount = (token) => {
   return axios.get(`${API_ROOT}/account/activate/${token}`)
 }
+
+// TODO 更改登陆接口
+export const checkLogin = (userInfo) => {
+    return axios.post(`${API_ROOT}/account/issue-token`, userInfo)
+}

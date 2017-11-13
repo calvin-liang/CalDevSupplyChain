@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Button from 'material-ui/Button';
+import { checkLogin } from '../../api/AccountAPI';
 
 const styles = theme => ({
     button: {
@@ -16,10 +17,41 @@ function doSomething(event) {
 
 function FlatButtons(props) {
     const { classes } = props;
+
+    const doLogin = () => {
+        const email = props.userInput.email;
+        const password = props.userInput.password;
+        console.log("this is ", email);
+
+        if(!email) {
+            alert(`Please enter email～`);
+            return;
+        }
+        if(!password) {
+            alert(`Please enter password`);
+            return;
+        }
+
+        if(email && password) {
+            console.log('here!!!!');
+            checkLogin().then(res => {
+                // TODO 假设返回的code＝0未登录成功
+                if(res.code == 200) {
+                    window.location.href = '/loginPage';
+                } else {
+                    alert("error");
+                    // TODO 处理服务器提示 输入用户名 或 密码 错误
+                }
+            }).catch(err => {
+                console.log('服务异常');
+            })
+        }
+    }
+
     return (
         <div>
             {/*<Button className={classes.button}>Default</Button>*/}
-            <Button href="/loginPage" color="primary" className={classes.button}>
+            <Button color="primary" className={classes.button} onClick={doLogin} >
                 login
             </Button>
             {/*<Button color="accent" className={classes.button}>*/}
