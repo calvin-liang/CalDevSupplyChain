@@ -88,6 +88,13 @@ project(':account') {
     }
 }
 
+project(':order'){
+    dependencies {
+        compile project(":notification")
+        compile project(":account")
+    }
+}
+
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter-web'
     compile 'org.springframework.boot:spring-boot-starter-actuator'
