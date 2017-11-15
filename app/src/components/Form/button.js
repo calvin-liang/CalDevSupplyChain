@@ -41,7 +41,8 @@ function FlatButtons(props) {
             checkLogin(userInput).then(res => {
                 // TODO 假设返回的code＝0未登录成功
                 console.log("checkLogin", res);
-                if(res.code == 200) {
+                console.log("here", res.headers.toString());
+                if(res.status == 200) {
                     window.location.href = '/loginPage';
                 } else {
                     alert("error");

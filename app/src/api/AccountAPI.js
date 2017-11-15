@@ -15,5 +15,25 @@ export const activateAccount = (token) => {
 
 // TODO 更改登陆接口
 export const checkLogin = (userInfo) => {
-    return axios.post(`${API_ROOT}/account/issue-token`, userInfo)
+    //return axios.post(`${API_ROOT}/account/issue-token`, userInfo)
+    console.log("email", userInfo["emailAddress"]);
+    console.log("password", userInfo["password"]);
+    // return axios.post(`${API_ROOT}/account/issue-token`, {
+    //     auth: {
+    //         user: userInfo["emailAddress"],
+    //         password: userInfo["password"]
+    //
+    //     }
+    // })
+    const client = axios.create({
+        auth: {
+            username: userInfo["emailAddress"],  //This could be your email
+            password: userInfo["password"]
+        },
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+    return client.post(`${API_ROOT}/account/issue-token`);
+
 }
