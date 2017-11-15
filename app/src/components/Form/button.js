@@ -32,10 +32,15 @@ function FlatButtons(props) {
             return;
         }
 
+        let userInput = {}
+        userInput["emailAddress"] = email;
+        userInput["password"] = password;
+
         if(email && password) {
             console.log('here!!!!');
-            checkLogin().then(res => {
+            checkLogin(userInput).then(res => {
                 // TODO 假设返回的code＝0未登录成功
+                console.log("checkLogin", res);
                 if(res.code == 200) {
                     window.location.href = '/loginPage';
                 } else {
