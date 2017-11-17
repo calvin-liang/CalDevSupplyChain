@@ -6,8 +6,8 @@ CREATE TABLE IF NOT EXISTS users (
   token         VARCHAR(36),
   password      VARCHAR(255),
   company_id    BIGINT,
-  created_on    TIMESTAMP             NOT NULL,
-  last_modified TIMESTAMP,
+  created_on    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  last_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (id)
 )
   ENGINE = InnoDB
