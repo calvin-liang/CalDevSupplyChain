@@ -3,6 +3,7 @@ package com.caldevsupplychain.order.controller;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -183,14 +184,11 @@ public class OrderControllerImpl implements OrderController {
 
 		List<OrderBean> orderBeans = tmpOrderBeans.get();
 
-		for(OrderBean orderBean : orderBeans) {
-			if(orderBean.getOrderStatus().equals(OrderStatus.DELETED)){
-				log.error("User cannot read deleted orders");
-				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-			}
-		}
+		List<OrderBean> newOrderBeans = orderBeans.stream().filter(orderBean ->
+			!orderBean.getOrderStatus().equals(OrderStatus.DELETED)
+		).collect(Collectors.toList());
 
-		return new ResponseEntity<>(orderMapper.toWSs(orderBeans, new CycleAvoidingMappingContext()), HttpStatus.OK);
+		return new ResponseEntity<>(orderMapper.toWSs(newOrderBeans, new CycleAvoidingMappingContext()), HttpStatus.OK);
 	}
 
 	@GetMapping(params = "agentUuid")
@@ -207,14 +205,11 @@ public class OrderControllerImpl implements OrderController {
 
 		List<OrderBean> orderBeans = tmpOrderBeans.get();
 
-		for(OrderBean orderBean : orderBeans) {
-			if(orderBean.getOrderStatus().equals(OrderStatus.DELETED)){
-				log.error("Agent cannot read deleted orders");
-				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-			}
-		}
+		List<OrderBean> newOrderBeans = orderBeans.stream().filter(orderBean ->
+				!orderBean.getOrderStatus().equals(OrderStatus.DELETED)
+		).collect(Collectors.toList());
 
-		return new ResponseEntity<>(orderMapper.toWSs(orderBeans, new CycleAvoidingMappingContext()), HttpStatus.OK);
+		return new ResponseEntity<>(orderMapper.toWSs(newOrderBeans, new CycleAvoidingMappingContext()), HttpStatus.OK);
 	}
 
 	/******************     NON API     *******************/
