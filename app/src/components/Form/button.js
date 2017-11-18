@@ -41,15 +41,20 @@ function FlatButtons(props) {
             checkLogin(userInput).then(res => {
                 // TODO 假设返回的code＝0未登录成功
                 console.log("checkLogin", res);
-                console.log("here", res.headers.toString());
+                //console.log("here", res.headers.toString());
+                console.log("before");
+                //console.log("header is:", res.getResponseHeader('X-Request-Id'));
+                console.log("after");
+                //console.log("after header");
                 if(res.status == 200) {
-                    window.location.href = '/loginPage';
+                    window.location.href = '/myorderPage';
                 } else {
                     alert("error");
                     // TODO 处理服务器提示 输入用户名 或 密码 错误
                 }
             }).catch(err => {
-                console.log('服务异常');
+                console.log("err", err);
+                //console.log('1服务异常');
             })
         }
     }

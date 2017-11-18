@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import FlatButtons from '../components/Form/button';
 class MyOrderPage extends Component {
 
     render() {
@@ -10,7 +9,7 @@ class MyOrderPage extends Component {
                 <button class="button button4">Designer</button>
 
                 <div className= "create_order">
-                    <a href="#" class="button_link button4"> Create Order</a>
+                    <a href="/createOrder" class="button_link button4"> Create Order</a>
                 </div>
                 <div className= "active-order">
                     <h1>Active Order</h1>
@@ -28,21 +27,21 @@ class MyOrderPage extends Component {
                             <th>Total</th>
                         </tr>
                         <br/>
-                        <tr>
-                            <td>#001</td>
-                            <td>09/05/2017</td>
-                            <td>12/05/2017</td>
-                        </tr>
-                        <tr>
-                            <td>#002</td>
-                            <td>08/05/2017</td>
-                            <td>01/05/2018</td>
-                        </tr>
-                        <tr>
-                            <td>#003</td>
-                            <td>10/05/2017</td>
-                            <td>02/05/2018</td>
-                        </tr>
+                        {/*<tr>*/}
+                            {/*<td>#001</td>*/}
+                            {/*<td>09/05/2017</td>*/}
+                            {/*<td>12/05/2017</td>*/}
+                        {/*</tr>*/}
+                        {/*<tr>*/}
+                            {/*<td>#002</td>*/}
+                            {/*<td>08/05/2017</td>*/}
+                            {/*<td>01/05/2018</td>*/}
+                        {/*</tr>*/}
+                        {/*<tr>*/}
+                            {/*<td>#003</td>*/}
+                            {/*<td>10/05/2017</td>*/}
+                            {/*<td>02/05/2018</td>*/}
+                        {/*</tr>*/}
 
                     </table>
                 </div>
@@ -61,30 +60,27 @@ class MyOrderPage extends Component {
                             <th>Agent</th>
                             <th>Total</th>
                         </tr>
-                        <br/>
-                        <tr>
-                            <td>#004</td>
-                            <td>09/05/2017</td>
-                            <td>12/05/2017</td>
-                        </tr>
-                        <tr>
-                            <td>#005</td>
-                            <td>08/05/2017</td>
-                            <td>01/05/2018</td>
-                        </tr>
-                        <tr>
-                            <td>#006</td>
-                            <td>10/05/2017</td>
-                            <td>02/05/2018</td>
-                        </tr>
+                        {/*<br/>*/}
+                        {/*<tr>*/}
+                            {/*<td>#004</td>*/}
+                            {/*<td>09/05/2017</td>*/}
+                            {/*<td>12/05/2017</td>*/}
+                        {/*</tr>*/}
+                        {/*<tr>*/}
+                            {/*<td>#005</td>*/}
+                            {/*<td>08/05/2017</td>*/}
+                            {/*<td>01/05/2018</td>*/}
+                        {/*</tr>*/}
+                        {/*<tr>*/}
+                            {/*<td>#006</td>*/}
+                            {/*<td>10/05/2017</td>*/}
+                            {/*<td>02/05/2018</td>*/}
+                        {/*</tr>*/}
 
                     </table>
                 </div>
 
             </div>
-
-
-
         )
     }
 }

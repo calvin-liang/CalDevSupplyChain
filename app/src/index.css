@@ -23,6 +23,19 @@ html, body {
   cursor: pointer;
 }
 
+.button_link1 {
+  background-color: #f1f1f1;
+  border: none;
+  color: blue;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 15px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
 .button {
   background-color: #f1f1f1;
   border: none;
@@ -88,4 +101,11 @@ th {
 }
 .dia {
   background-color: lightblue;
+}
+
+.detail {
+  border-style: solid;
+  border-color: cornflowerblue;
+  margin-top: 30px;
+  margin-left: 5px;
 }

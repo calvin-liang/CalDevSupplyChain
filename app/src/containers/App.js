@@ -5,6 +5,8 @@ import ActivateAccountProcess from '../process/ActivateAccountProcess'
 import { Switch, Route } from 'react-router-dom'
 import LoginPage from './LoginPage'
 import MyOrderPage from './MyOrderPage'
+import CreateOrder from './CreateOrder'
+import OrderDetail from './OrderDetail'
 import * as AccountAPI from '../api/AccountAPI'
 
 class App extends Component {
@@ -36,21 +38,30 @@ class App extends Component {
               />
           }/>
           <Route path="/welcomePage" render={() =>
-            <WelcomePage
-              user={user}
-            />
+              <WelcomePage
+                user={user}
+              />
           }/>
           <Route path="/loginPage" render={() =>
-            <LoginPage
+              <LoginPage
                 // user={user}
-            />
+              />
           }/>
           <Route path="/myorderPage" render={() =>
-            <MyOrderPage
+              <MyOrderPage
                 // user={user}
                 // onSetupUserInfo={this.handleSetupUserInfo}
-            />
+              />
           }/>
+          <Route path="/createOrder" render={() =>
+              <CreateOrder
+              />
+          }/>
+            <Route path="/orderDetail" render={() =>
+                <OrderDetail
+                />
+            }/>
+
           <ActivateAccountProcess
             path="/activating/:token"
             successRedirectTo="/welcomePage"
