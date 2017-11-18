@@ -14,8 +14,6 @@ public interface OrderController {
 
 	ResponseEntity<?> readOrder(String orderUuid);
 
-	ResponseEntity<?> readOrdersByUserUuid(String userUuid);
-
-	ResponseEntity<?> readOrdersByAgentUuid(String agentUuid);
+	ResponseEntity<?> readOrders(String userUuid, String agentUuid);
 
 }

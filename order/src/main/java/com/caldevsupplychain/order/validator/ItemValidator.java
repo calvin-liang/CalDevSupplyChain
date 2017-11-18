@@ -1,10 +1,9 @@
 package com.caldevsupplychain.order.validator;
 
-import com.caldevsupplychain.account.service.AccountService;
-import com.caldevsupplychain.account.vo.UserBean;
-import com.caldevsupplychain.common.type.ErrorCode;
-import com.caldevsupplychain.order.model.Quantity;
-import com.caldevsupplychain.order.vo.ItemWS;
+import java.math.BigDecimal;
+import java.util.Optional;
+
+import lombok.extern.slf4j.Slf4j;
 
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,17 +12,18 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
-import java.math.BigDecimal;
-import java.util.Optional;
-
-import lombok.extern.slf4j.Slf4j;
+import com.caldevsupplychain.account.util.ContextUtil;
+import com.caldevsupplychain.account.vo.UserBean;
+import com.caldevsupplychain.common.type.ErrorCode;
+import com.caldevsupplychain.order.model.Quantity;
+import com.caldevsupplychain.order.vo.ItemWS;
 
 @Slf4j
 @Component
 public class ItemValidator implements Validator {
 
 	@Autowired
-	private AccountService accountService;
+	private ContextUtil contextUtil;
 
 	@Override
 	public boolean supports(Class clazz) {
@@ -35,7 +35,7 @@ public class ItemValidator implements Validator {
 
 		String currentUserUuid = (String) SecurityUtils.getSubject().getPrincipal();
 
-		Optional<UserBean> userBean =  accountService.findByUuid(currentUserUuid);
+		Optional<UserBean> userBean =  contextUtil.currentUser();
 
 		ItemWS itemWS = (ItemWS) o;
 

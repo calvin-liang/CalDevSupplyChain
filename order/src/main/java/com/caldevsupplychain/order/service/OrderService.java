@@ -7,17 +7,21 @@ import com.caldevsupplychain.order.vo.OrderBean;
 
 public interface OrderService {
 
+	boolean orderExists(String uuid);
+
 	OrderBean createOrder(OrderBean orderBean);
 
-	OrderBean updateOrder(OrderBean orderBean);
+	OrderBean updateOrder(String orderUuid, OrderBean orderBean);
 
-	void deleteOrder(OrderBean orderBean);
+	void deleteOrder(Long id);
+
+	Optional<OrderBean> getOrder(String uuid);
 
 	Optional<OrderBean> findByUuid(String uuid);
 
-	Optional<List<OrderBean>> findByUserUuid(String userUuid);
+	List<OrderBean> findByUserUuid(String userUuid);
 
-	Optional<List<OrderBean>> findByAgentUuid(String agentUuid);
+	List<OrderBean> findByAgentUuid(String agentUuid);
 
 }
 

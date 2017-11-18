@@ -1,9 +1,35 @@
 package com.caldevsupplychain.account.controller;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import javax.mail.MessagingException;
+
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.caldevsupplychain.account.annotation.RequiresJwtAuthentication;
 import com.caldevsupplychain.account.jwt.service.JwtService;
 import com.caldevsupplychain.account.jwt.token.JWTAuthenticationToken;
 import com.caldevsupplychain.account.service.AccountService;
+import com.caldevsupplychain.account.util.ContextUtil;
 import com.caldevsupplychain.account.util.UserMapper;
 import com.caldevsupplychain.account.validator.EditUserValidator;
 import com.caldevsupplychain.account.validator.SignupValidator;
@@ -17,23 +43,6 @@ import com.caldevsupplychain.notification.mail.service.EmailService;
 import com.caldevsupplychain.notification.mail.type.EmailType;
 import com.google.common.collect.Lists;
 import io.swagger.annotations.Api;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authz.annotation.RequiresAuthentication;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.subject.Subject;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindException;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import javax.mail.MessagingException;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -41,6 +50,8 @@ import java.util.UUID;
 @Api(value="/api/v1/account", description = "Account API")
 @RequestMapping("/api/v1/account")
 public class AccountControllerImpl implements AccountController {
+
+	private ContextUtil contextUtil;
 
 	private AccountService accountService;
 	private EmailService emailService;
@@ -101,8 +112,16 @@ public class AccountControllerImpl implements AccountController {
 	@PostMapping("/issue-token")
 	@RequiresAuthentication
 	public ResponseEntity<?> issueToken() {
-		String uuid = (String) SecurityUtils.getSubject().getPrincipal();
-		UserBean user = accountService.findByUuid(uuid).orElse(null);
+
+		Optional<UserBean> userBean =  contextUtil.currentUser();
+
+		if(!userBean.isPresent()) {
+			log.error("Current user not found");
+			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.USER_NOT_FOUND.name(), "Cannot find current user"), HttpStatus.NOT_FOUND);
+		}
+
+		UserBean user = userBean.get();
+
 		JWTAuthenticationToken jwtToken = jwtService.createJwtToken(user);
 
 		log.debug("Success create jwt token. jwtToken={}", jwtToken.getToken());
@@ -178,14 +197,19 @@ public class AccountControllerImpl implements AccountController {
 			return new ResponseEntity<>(new ApiErrorsWS(errorWSList), HttpStatus.UNPROCESSABLE_ENTITY);
 		}
 
-		Optional<UserBean> user = accountService.findByUuid(uuid);
-		if (!user.isPresent()) {
+		if (!accountService.findByUuid(uuid).isPresent()) {
 			log.error("Error in update user. Fail in finding user's uuid={}", uuid);
 			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.ACCOUNT_NOT_EXIST.name(), "Cannot find user account."), HttpStatus.NOT_FOUND);
 		}
 
-		Subject subject = SecurityUtils.getSubject();
-		if(!user.get().isAdmin() || !subject.getPrincipal().toString().equals(uuid)) {
+		Optional<UserBean> currentUser =  contextUtil.currentUser();
+
+		if(!currentUser.isPresent()) {
+			log.error("Current user not found");
+			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.USER_NOT_FOUND.name(), "Cannot find current user"), HttpStatus.NOT_FOUND);
+		}
+
+		if(!currentUser.get().isAdmin()) {
 			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.PERMISSION_DENIED_ON_USER_UPDATE.name(), "Cannot update user information"), HttpStatus.BAD_REQUEST);
 		}
 

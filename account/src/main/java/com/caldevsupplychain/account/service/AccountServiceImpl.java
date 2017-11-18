@@ -73,6 +73,7 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	@Transactional
 	public UserBean updateUser(UserBean userBean) {
+
 		User user = userRepository.findByEmailAddress(userBean.getEmailAddress());
 
 		Preconditions.checkState(user != null, ErrorCode.USER_NOT_FOUND.name());

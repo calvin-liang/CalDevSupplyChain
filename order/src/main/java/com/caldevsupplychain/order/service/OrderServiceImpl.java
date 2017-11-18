@@ -32,6 +32,12 @@ public class OrderServiceImpl implements OrderService {
 	private ItemRepository itemRepository;
 	private OrderMapper orderMapper;
 
+
+	@Override
+	public boolean orderExists(String uuid) {
+		return orderRepository.findByUuid(uuid) != null;
+	}
+
 	@Override
 	@Transactional
 	public OrderBean createOrder(OrderBean orderBean) {
@@ -55,16 +61,16 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	@Transactional
-	public OrderBean updateOrder(OrderBean orderBean) {
+	public OrderBean updateOrder(String orderUuid, OrderBean orderBean) {
 
-		System.out.println(org.hibernate.Version.getVersionString());
+		Order order = orderRepository.findByUuid(orderUuid);
 
-		Order order = orderRepository.findOne(orderBean.getId());
-
-		Preconditions.checkState(orderBean != null, ErrorCode.ORDER_UUID_NOT_FOUND);
+		Preconditions.checkState(order != null, ErrorCode.ORDER_NOT_FOUND);
 
 		// update order part
 		Optional.ofNullable(orderBean.getSku()).ifPresent(sku -> order.setSku(sku));
+
+		log.warn("stuck at sku?");
 
 		Optional.ofNullable(orderBean.getOrderType()).ifPresent(orderType -> order.setOrderType(orderType));
 
@@ -79,32 +85,28 @@ public class OrderServiceImpl implements OrderService {
 		Optional.ofNullable(orderBean.getOrderNote()).ifPresent(orderNote -> order.setOrderNote(orderNote));
 
 		// update item list part
-		Optional.ofNullable(orderBean.getItems()).ifPresent(itemBeanList -> {
+		orderBean.getItems().stream().forEach(itemBean -> {
 
-			itemBeanList.stream().forEach(itemBean -> {
+			// must have item uuid
+			Preconditions.checkState(itemBean.getUuid() != null, "Can't find itemBean with uuid = {" + itemBean.getUuid() + "}");
 
-				// must have item uuid
-				Preconditions.checkState(itemBean.getUuid() != null, "Can't find itemBean with uuid = {" + itemBean.getUuid() + "}");
+			Item item = itemRepository.findByUuid(itemBean.getUuid());
 
-				Item item = itemRepository.findByUuid(itemBean.getUuid());
+			Preconditions.checkState(item != null, ErrorCode.ITEM_NOT_FOUND.name());
 
-				Preconditions.checkState(item != null, ErrorCode.ITEM_NOT_FOUND.name());
+			Optional.ofNullable(itemBean.getColor()).ifPresent(color -> item.setColor(color));
 
-				Optional.ofNullable(itemBean.getColor()).ifPresent(color -> item.setColor(color));
+			Optional.ofNullable(itemBean.getDescription()).ifPresent(itemDescription -> item.setDescription(itemDescription));
 
-				Optional.ofNullable(itemBean.getDescription()).ifPresent(itemDescription -> item.setDescription(itemDescription));
+			Optional.ofNullable(itemBean.getFabric()).ifPresent(fabric -> item.setFabric(fabric));
 
-				Optional.ofNullable(itemBean.getFabric()).ifPresent(fabric -> item.setFabric(fabric));
+			Optional.ofNullable(itemBean.getQuantity()).ifPresent(quantity -> item.setQuantity(quantity));
 
-				Optional.ofNullable(itemBean.getQuantity()).ifPresent(quantity -> item.setQuantity(quantity));
+			Optional.ofNullable(itemBean.getPrice()).ifPresent(itemPrice -> item.setPrice(itemPrice));
 
-				Optional.ofNullable(itemBean.getPrice()).ifPresent(itemPrice -> item.setPrice(itemPrice));
+			Optional.ofNullable(itemBean.getNote()).ifPresent(itemNote -> item.setNote(itemNote));
 
-				Optional.ofNullable(itemBean.getNote()).ifPresent(itemNote -> item.setNote(itemNote));
-
-				item.setOrder(order);
-
-			});
+			item.setOrder(order);
 
 		});
 
@@ -113,14 +115,24 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	@Transactional
-	public void deleteOrder(OrderBean orderBean) {
+	public void deleteOrder(Long id) {
 
-		Order order = orderRepository.findOne(orderBean.getId());
+		Order order = orderRepository.findOne(id);
 
-		Preconditions.checkState(orderBean != null, ErrorCode.ORDER_UUID_NOT_FOUND);
+		Preconditions.checkState(order != null, ErrorCode.ORDER_NOT_FOUND);
 
 		order.setOrderStatus(OrderStatus.DELETED);
 
+	}
+
+	public Optional<OrderBean> getOrder(String uuid) {
+
+		Order order = orderRepository.findByUuidAndOrderStatusNotDeleted(uuid);
+
+		if(order != null) {
+			return Optional.of(orderMapper.toBean(order, new CycleAvoidingMappingContext()));
+		}
+		return Optional.empty();
 	}
 
 	@Override
@@ -135,25 +147,21 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public Optional<List<OrderBean>> findByUserUuid(String userUuid) {
+	public List<OrderBean> findByUserUuid(String userUuid) {
 
 		List<Order> orders = orderRepository.findByUserUuid(userUuid, new PageRequest(0, Integer.MAX_VALUE));
 
-		if(orders != null){
-			return Optional.of(orderMapper.ordersToBeans(orders, new CycleAvoidingMappingContext()));
-		}
-		return Optional.empty();
+		return orderMapper.ordersToBeans(orders, new CycleAvoidingMappingContext());
+
 	}
 
 	@Override
-	public Optional<List<OrderBean>> findByAgentUuid(String agentUuid) {
+	public List<OrderBean> findByAgentUuid(String agentUuid) {
 
 		List<Order> orders = orderRepository.findByAgentUuid(agentUuid, new PageRequest(0, Integer.MAX_VALUE));
 
-		if(orders != null){
-			return Optional.of(orderMapper.ordersToBeans(orders, new CycleAvoidingMappingContext()));
-		}
-		return Optional.empty();
+		return orderMapper.ordersToBeans(orders, new CycleAvoidingMappingContext());
+
 	}
 
 }
