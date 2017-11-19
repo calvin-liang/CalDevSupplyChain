@@ -2,14 +2,12 @@ package com.caldevsupplychain.account.jwt.service;
 
 import java.security.Key;
 import java.util.Date;
-import java.util.List;
 
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
 import com.caldevsupplychain.account.jwt.token.JWTAuthenticationToken;
