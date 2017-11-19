@@ -1,0 +1,40 @@
+[
+  {
+    "userUuid": "bcc78cc2-793d-4dbd-bf8d-c625543f1ff1",
+    "agentUuid": "821870b5-426d-4dcb-8431-42370a69536f",
+    "sku": "ABC002",
+    "orderType": "SAMPLE",
+    "orderStatus": "PENDING",
+    "items": [{
+      "color": "Black",
+      "description": "Black Jacket",
+      "fabric": "Jacket",
+      "quantity": {
+        "XS": 1,
+        "S": 1,
+        "M": 1,
+        "L": 1
+      },
+      "price": 0,
+      "note": "Make sure silver jacket is in good quality!"
+    },
+      {
+        "color": "Green",
+        "description": "Green Jacket",
+        "fabric": "Jacket",
+        "quantity": {
+          "XS": 2,
+          "S": 2,
+          "M": 2,
+          "L": 2
+        },
+        "price": 0,
+        "note": "Make sure black jacket is in good quality!"
+      }
+    ],
+    "currency": "GBP",
+    "totalPrice": 0,
+    "shippingInstruction": "Ship to England",
+    "orderNote": "Please make sure the quality is good!"
+  }
+]

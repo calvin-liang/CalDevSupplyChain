@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
+//import example.json from 'example.json';
 class MyOrderPage extends Component {
 
+    //var data = require('../file.json');
     render() {
         return (
             <div>
@@ -79,6 +81,8 @@ class MyOrderPage extends Component {
 
                     </table>
                 </div>
+
+
 
             </div>
         )
