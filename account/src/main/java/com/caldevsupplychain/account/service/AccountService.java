@@ -1,9 +1,9 @@
 package com.caldevsupplychain.account.service;
 
-import com.caldevsupplychain.account.vo.UserBean;
-
 import java.util.List;
 import java.util.Optional;
+
+import com.caldevsupplychain.account.vo.UserBean;
 
 public interface AccountService {
 

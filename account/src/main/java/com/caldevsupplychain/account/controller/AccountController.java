@@ -1,7 +1,8 @@
 package com.caldevsupplychain.account.controller;
 
-import com.caldevsupplychain.account.vo.UserWS;
 import org.springframework.http.ResponseEntity;
+
+import com.caldevsupplychain.account.vo.UserWS;
 
 public interface AccountController {
 
@@ -12,8 +13,6 @@ public interface AccountController {
 	ResponseEntity<?> issueToken();
 
 	ResponseEntity<?> forgotPassword(UserWS userWS);
-
-	ResponseEntity<?> resetPassword(String uuid, UserWS userWS);
 
 	ResponseEntity<?> updateUser(String uuid, UserWS userWS);
 

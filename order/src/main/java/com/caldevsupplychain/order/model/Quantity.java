@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @Data
-@JsonPropertyOrder({ "XS", "S", "M", "L" })
+@JsonPropertyOrder({"XS", "S", "M", "L"})
 public class Quantity {
 
 	private Integer XS;

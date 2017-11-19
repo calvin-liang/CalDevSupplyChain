@@ -36,24 +36,24 @@ public class OrderValidator implements Validator {
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "sku", ErrorCode.SKU_EMPTY.name(), "Order SKU cannot empty");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "currency", ErrorCode.CURRENCY_EMPTY.name(), "Order currency cannot empty");
 
-		if(orderWS.getTotalPrice() == null) {
+		if (orderWS.getTotalPrice() == null) {
 			errors.rejectValue("totalPrice", ErrorCode.ORDER_TOTAL_PRICE_EMPTY.name(), "Order total price cannot be empty.");
 		}
 
-		if(orderWS.getItems() == null){
+		if (orderWS.getItems() == null) {
 			errors.rejectValue("items", ErrorCode.ITEMS_EMPTY.name(), "Item cannot empty");
 		}
 
 		List<ItemWS> itemWSList = orderWS.getItems();
 
-		if(itemWSList != null) {
+		if (itemWSList != null) {
 			IntStream.range(0, itemWSList.size())
 					.forEach(idx -> {
 						ItemWS itemWS = itemWSList.get(idx);
 						try {
 							errors.pushNestedPath("items[" + idx + "]");
 							ValidationUtils.invokeValidator(itemValidator, itemWS, errors);
-						}finally {
+						} finally {
 							errors.popNestedPath();
 
 						}

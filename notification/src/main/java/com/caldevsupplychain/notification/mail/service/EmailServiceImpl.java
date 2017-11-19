@@ -1,9 +1,11 @@
 package com.caldevsupplychain.notification.mail.service;
 
-import com.caldevsupplychain.notification.mail.model.EmailTemplate;
-import com.caldevsupplychain.notification.mail.repository.EmailTemplateRepository;
-import com.caldevsupplychain.notification.mail.type.EmailType;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -15,9 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import javax.servlet.http.HttpServletRequest;
+import com.caldevsupplychain.notification.mail.model.EmailTemplate;
+import com.caldevsupplychain.notification.mail.repository.EmailTemplateRepository;
+import com.caldevsupplychain.notification.mail.type.EmailType;
 
 @Slf4j
 @Service
@@ -26,16 +28,14 @@ public class EmailServiceImpl implements EmailService {
 
 	private final String ROOT_URL = "{rootURL}";
 	private final String TOKEN_PLACEHOLDER = "{token}";
-
+	@Value("${api.client-port}")
+	String clientPort;
 	@Autowired
 	private Environment env;
 	@Autowired
 	private EmailTemplateRepository emailTemplateRepository;
 	@Autowired
 	private JavaMailSender javaMailSender;
-
-	@Value("${api.client-port}")
-	String clientPort;
 
 	@Async
 	@Override
@@ -69,11 +69,11 @@ public class EmailServiceImpl implements EmailService {
 		javaMailSender.send(message);
 	}
 
-	public String getRootURL(){
+	public String getRootURL() {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 		String url = request.getRequestURL().toString().replace(request.getRequestURI(), "");
 
-		if(url.contains("localhost")){
+		if (url.contains("localhost")) {
 			url = url.replace(Integer.toString(request.getServerPort()), clientPort);
 		}
 		return url;

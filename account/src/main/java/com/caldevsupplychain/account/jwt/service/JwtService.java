@@ -1,8 +1,9 @@
 package com.caldevsupplychain.account.jwt.service;
 
+import org.springframework.http.HttpHeaders;
+
 import com.caldevsupplychain.account.jwt.token.JWTAuthenticationToken;
 import com.caldevsupplychain.account.vo.UserBean;
-import org.springframework.http.HttpHeaders;
 
 public interface JwtService {
 

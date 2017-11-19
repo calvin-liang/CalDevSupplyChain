@@ -17,8 +17,8 @@ public class ContextUtil {
 	AccountService accountService;
 
 	public Optional<UserBean> currentUser() {
-		Subject subject  = SecurityUtils.getSubject();
-		return accountService.findByUuid((String)subject.getPrincipal());
+		Subject subject = SecurityUtils.getSubject();
+		return accountService.findByUuid((String) subject.getPrincipal());
 	}
 
 }

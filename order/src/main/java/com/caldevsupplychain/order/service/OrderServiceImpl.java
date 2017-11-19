@@ -129,7 +129,7 @@ public class OrderServiceImpl implements OrderService {
 
 		Order order = orderRepository.findByUuidAndOrderStatusNotDeleted(uuid);
 
-		if(order != null) {
+		if (order != null) {
 			return Optional.of(orderMapper.toBean(order, new CycleAvoidingMappingContext()));
 		}
 		return Optional.empty();
@@ -140,7 +140,7 @@ public class OrderServiceImpl implements OrderService {
 
 		Order order = orderRepository.findByUuid(uuid);
 
-		if(order != null) {
+		if (order != null) {
 			return Optional.of(orderMapper.toBean(order, new CycleAvoidingMappingContext()));
 		}
 		return Optional.empty();
