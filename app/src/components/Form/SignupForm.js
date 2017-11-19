@@ -193,7 +193,7 @@ class SignupForm extends React.Component {
     /* condition check */
     // icon color
     let iconColor = !error ? classes.iconBaseColor : classes.iconErrorColor;
-    
+
     return (
         <div className={classes.root}>
           <Paper elevation={24} style={{borderRadius: 10}}>
