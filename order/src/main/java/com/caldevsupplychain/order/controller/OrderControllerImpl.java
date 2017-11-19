@@ -191,11 +191,6 @@ public class OrderControllerImpl implements OrderController {
 			orderBeans = orderService.findByAgentUuid(agentUuid);
 		}
 
-		if (orderBeans.isEmpty()) {
-			log.error("Error in read orders. Read orders need to have either user or agent uuid");
-			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.READ_ORDERS_ERROR.name(), "Error in read orders. Either user or agent uuid is missing"), HttpStatus.BAD_REQUEST);
-		}
-
 		return new ResponseEntity<>(orderMapper.toWSs(orderBeans, new CycleAvoidingMappingContext()), HttpStatus.OK);
 	}
 
