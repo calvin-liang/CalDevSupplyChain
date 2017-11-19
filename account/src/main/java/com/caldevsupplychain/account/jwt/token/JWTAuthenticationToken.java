@@ -2,6 +2,7 @@ package com.caldevsupplychain.account.jwt.token;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+
 import org.apache.shiro.authc.AuthenticationToken;
 
 @Data

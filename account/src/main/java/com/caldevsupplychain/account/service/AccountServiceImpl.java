@@ -1,5 +1,19 @@
 package com.caldevsupplychain.account.service;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import javax.transaction.Transactional;
+
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+import org.apache.shiro.authc.credential.PasswordService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+
 import com.caldevsupplychain.account.model.Company;
 import com.caldevsupplychain.account.model.Role;
 import com.caldevsupplychain.account.model.User;
@@ -11,17 +25,7 @@ import com.caldevsupplychain.account.util.UserMapper;
 import com.caldevsupplychain.account.vo.UserBean;
 import com.caldevsupplychain.common.type.ErrorCode;
 import com.google.common.base.Preconditions;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.authc.credential.PasswordService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -126,9 +130,9 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
-	public Optional<UserBean> findById(Long id){
+	public Optional<UserBean> findById(Long id) {
 		User user = userRepository.findOne(id);
-		if(user != null){
+		if (user != null) {
 			return Optional.of(userMapper.toBean(user));
 		}
 		return Optional.empty();

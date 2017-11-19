@@ -5,7 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.Table;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -69,6 +75,6 @@ public class Order extends BaseEntity {
 		super.onCreate();
 		uuid = UUID.randomUUID().toString();
 		String[] arr = uuid.split("-");
-		displayId = arr[arr.length-1].toUpperCase();
+		displayId = arr[arr.length - 1].toUpperCase();
 	}
 }

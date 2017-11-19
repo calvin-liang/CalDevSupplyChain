@@ -47,7 +47,7 @@ import io.swagger.annotations.Api;
 @Slf4j
 @RestController
 @AllArgsConstructor
-@Api(value="/api/v1/account", description = "Account API")
+@Api(value = "/api/v1/account", description = "Account API")
 @RequestMapping("/api/v1/account")
 public class AccountControllerImpl implements AccountController {
 
@@ -113,9 +113,9 @@ public class AccountControllerImpl implements AccountController {
 	@RequiresAuthentication
 	public ResponseEntity<?> issueToken() {
 
-		Optional<UserBean> userBean =  contextUtil.currentUser();
+		Optional<UserBean> userBean = contextUtil.currentUser();
 
-		if(!userBean.isPresent()) {
+		if (!userBean.isPresent()) {
 			log.error("Current user not found");
 			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.USER_NOT_FOUND.name(), "Cannot find current user"), HttpStatus.NOT_FOUND);
 		}
@@ -154,35 +154,6 @@ public class AccountControllerImpl implements AccountController {
 		return new ResponseEntity<>(userMapper.toWS(userBean), HttpStatus.OK);
 	}
 
-	@PostMapping("/users/{uuid}/reset-password")
-	@RequiresJwtAuthentication
-	public ResponseEntity<?> resetPassword(@PathVariable("uuid") String uuid, @Validated @RequestBody UserWS userWS) {
-		Optional<UserBean> user = accountService.findByUuid(uuid);
-
-		if (!user.isPresent()) {
-			log.error("Error in user reset password. Fail in finding user's uuid={}", uuid);
-			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.ACCOUNT_NOT_EXIST.name(), "Cannot find user account."), HttpStatus.NOT_FOUND);
-		}
-
-		if(!userWS.getEmailAddress().equals(user.get().getEmailAddress())){
-			log.error("Error in user reset password. Fail in finding user's email={}", userWS.getEmailAddress());
-			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.ACCOUNT_NOT_EXIST.name(), "Cannot find user email address."), HttpStatus.NOT_FOUND);
-		}
-
-		if(StringUtils.isEmpty(userWS.getPassword())){
-			log.error("Error in user reset password. The user password field cannot be empty.");
-			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.PASSWORD_EMPTY.name(), "Password field cannot empty."), HttpStatus.BAD_REQUEST);
-		}
-
-		UserBean userBean = user.get();
-
-		userBean.setPassword(userWS.getPassword());
-
-		UserBean updatedUser = accountService.updateUser(userBean);
-
-		return new ResponseEntity<>(userMapper.toWS(updatedUser), HttpStatus.OK);
-	}
-
 	@PutMapping("/users/{uuid}")
 	@RequiresJwtAuthentication
 	@RequiresPermissions("account:update")
@@ -202,18 +173,18 @@ public class AccountControllerImpl implements AccountController {
 			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.ACCOUNT_NOT_EXIST.name(), "Cannot find user account."), HttpStatus.NOT_FOUND);
 		}
 
-		Optional<UserBean> currentUser =  contextUtil.currentUser();
+		Optional<UserBean> currentUser = contextUtil.currentUser();
 
-		if(!currentUser.isPresent()) {
+		if (!currentUser.isPresent()) {
 			log.error("Current user not found");
 			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.USER_NOT_FOUND.name(), "Cannot find current user"), HttpStatus.NOT_FOUND);
 		}
 
-		if(!currentUser.get().isAdmin()) {
+		if (!currentUser.get().isAdmin()) {
 			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.PERMISSION_DENIED_ON_USER_UPDATE.name(), "Cannot update user information"), HttpStatus.BAD_REQUEST);
 		}
 
-		if(!StringUtils.isNotBlank(userWS.getEmailAddress())) {
+		if (!StringUtils.isNotBlank(userWS.getEmailAddress())) {
 			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.PERMISSION_DENIED_ON_EMPTY_EMAIL_UPDATE.name(), "User cannot update email address"), HttpStatus.BAD_REQUEST);
 		}
 

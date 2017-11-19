@@ -67,7 +67,7 @@ subprojects {
     }
 }
 
-project(':common'){
+project(':common') {
     dependencies {
     }
 }
@@ -78,7 +78,7 @@ configure(subprojects.findAll { println it.name; (it.name != 'common') }) {
     }
 }
 
-project(':notification'){
+project(':notification') {
     dependencies {
         compile("org.springframework.boot:spring-boot-starter-mail:${springBootVersion}")
     }
@@ -90,7 +90,7 @@ project(':account') {
     }
 }
 
-project(':order'){
+project(':order') {
     dependencies {
         compile project(":notification")
         compile project(":account")

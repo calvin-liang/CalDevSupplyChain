@@ -1,24 +1,25 @@
 package com.caldevsupplychain.order.util;
 
-import com.caldevsupplychain.common.util.MapperBaseConfig;
-import com.caldevsupplychain.order.model.Item;
-import com.caldevsupplychain.order.vo.ItemBean;
-import com.caldevsupplychain.order.vo.ItemWS;
+import java.util.List;
+
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import com.caldevsupplychain.common.util.MapperBaseConfig;
+import com.caldevsupplychain.order.model.Item;
+import com.caldevsupplychain.order.vo.ItemBean;
+import com.caldevsupplychain.order.vo.ItemWS;
 
 @Component
 @Mapper(config = MapperBaseConfig.class, uses = {OrderMapper.class})
 public interface ItemMapper {
 
 	@Named("wsToBean")
-	ItemBean toBean(ItemWS itemWS,  @Context CycleAvoidingMappingContext context);
+	ItemBean toBean(ItemWS itemWS, @Context CycleAvoidingMappingContext context);
 
-	Item toItem(ItemBean itemBean,  @Context CycleAvoidingMappingContext context);
+	Item toItem(ItemBean itemBean, @Context CycleAvoidingMappingContext context);
 
 	@Named("itemToBean")
 	ItemBean toBean(Item item, @Context CycleAvoidingMappingContext context);
