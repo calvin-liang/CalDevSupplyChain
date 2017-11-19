@@ -2,16 +2,19 @@ package com.caldevsupplychain.account.jwt.service;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.List;
 
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
 import com.caldevsupplychain.account.jwt.token.JWTAuthenticationToken;
 import com.caldevsupplychain.account.vo.UserBean;
+import com.google.common.collect.Lists;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.CompressionCodecs;
 import io.jsonwebtoken.JwtException;
@@ -59,6 +62,7 @@ public class JwtServiceImpl implements JwtService {
 	public HttpHeaders createJwtHeader(String jwtToken) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.set(AUTH_HEADER, BEARER + " " + jwtToken);
+		headers.setAccessControlExposeHeaders(Lists.newArrayList(AUTH_HEADER));
 		return headers;
 	}
 
