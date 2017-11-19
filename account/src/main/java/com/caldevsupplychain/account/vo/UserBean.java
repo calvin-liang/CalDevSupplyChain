@@ -3,7 +3,6 @@ package com.caldevsupplychain.account.vo;
 import java.util.List;
 
 import lombok.Data;
-import org.springframework.stereotype.Component;
 
 @Data
 public class UserBean {

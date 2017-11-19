@@ -42,7 +42,7 @@ import io.swagger.annotations.Api;
 @Slf4j
 @RestController
 @AllArgsConstructor
-@Api(value="/api/v1/orders", description = "Order API")
+@Api(value = "/api/v1/orders", description = "Order API")
 @RequestMapping("/api/v1/orders")
 public class OrderControllerImpl implements OrderController {
 
@@ -62,16 +62,16 @@ public class OrderControllerImpl implements OrderController {
 	@RequiresPermissions("order:create")
 	public ResponseEntity<?> createOrder(@Validated @RequestBody OrderWS orderWS) {
 
-		Optional<UserBean> currentUserBean =  contextUtil.currentUser();
+		Optional<UserBean> currentUserBean = contextUtil.currentUser();
 
-		if(!currentUserBean.isPresent()) {
+		if (!currentUserBean.isPresent()) {
 			log.error("Current user not found");
 			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.USER_NOT_FOUND.name(), "Cannot find current user"), HttpStatus.NOT_FOUND);
 		}
 
 		ResponseEntity<?> validateUserAgentUuidResult = validateUserAndAgent(orderWS);
 
-		if(validateUserAgentUuidResult != null) {
+		if (validateUserAgentUuidResult != null) {
 			return validateUserAgentUuidResult;
 		}
 
@@ -79,13 +79,13 @@ public class OrderControllerImpl implements OrderController {
 
 		UserBean user = currentUserBean.get();
 
-		if(!user.isAgent()){
+		if (!user.isAgent()) {
 
 			BigDecimal orderTotalPrice = orderWS.getTotalPrice();
 
-			if(orderTotalPrice != null && orderTotalPrice.compareTo(BigDecimal.ZERO) != 0){
+			if (orderTotalPrice != null && orderTotalPrice.compareTo(BigDecimal.ZERO) != 0) {
 				log.error("Error in user create order. End user cannot set order total price. user uuid={}", user.getUuid());
-				errors.rejectValue("totalPrice", ErrorCode.ORDER_TOTAL_PRICE_NOT_ZERO.name(),"User cannot set order total price.");
+				errors.rejectValue("totalPrice", ErrorCode.ORDER_TOTAL_PRICE_NOT_ZERO.name(), "User cannot set order total price.");
 			}
 		}
 
@@ -109,14 +109,14 @@ public class OrderControllerImpl implements OrderController {
 	@RequiresPermissions("order:update")
 	public ResponseEntity<?> updateOrder(@PathVariable("uuid") String orderUuid, @Validated @RequestBody OrderWS orderWS) {
 
-		if(!orderService.orderExists(orderUuid)) {
+		if (!orderService.orderExists(orderUuid)) {
 			log.error("Error in update order. Fail in finding order uuid={}", orderUuid);
 			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.ORDER_NOT_FOUND.name(), "Cannot find order by uuid"), HttpStatus.NOT_FOUND);
 		}
 
 		ResponseEntity<?> validateUserAgentUuidResult = validateUserAndAgent(orderWS);
 
-		if(validateUserAgentUuidResult != null) {
+		if (validateUserAgentUuidResult != null) {
 			return validateUserAgentUuidResult;
 		}
 
@@ -144,7 +144,7 @@ public class OrderControllerImpl implements OrderController {
 
 		Optional<OrderBean> order = orderService.findByUuid(orderUuid);
 
-		if(!order.isPresent()){
+		if (!order.isPresent()) {
 			log.error("Error in delete order. Fail in finding order uuid={}", orderUuid);
 			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.ORDER_NOT_FOUND.name(), "Cannot find order by uuid that is not found"), HttpStatus.NOT_FOUND);
 		}
@@ -161,7 +161,7 @@ public class OrderControllerImpl implements OrderController {
 
 		Optional<OrderBean> order = orderService.getOrder(orderUuid);
 
-		if(!order.isPresent()){
+		if (!order.isPresent()) {
 			log.error("Error in read order. Order not found");
 			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.ORDER_NOT_FOUND.name(), "Order not found"), HttpStatus.NOT_FOUND);
 		}
@@ -176,24 +176,22 @@ public class OrderControllerImpl implements OrderController {
 
 		List<OrderBean> orderBeans = null;
 
-		if(userUuid != null && agentUuid != null){
+		if (userUuid != null && agentUuid != null) {
 			log.error("Error in read orders. Can only read orders by either user or agent uuid and not both");
 			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.READ_ORDERS_ERROR.name(), "Error in read orders. Can only read orders by either user or agent and not both"), HttpStatus.BAD_REQUEST);
 
 		}
-		if(userUuid == null && agentUuid == null){
+		if (userUuid == null && agentUuid == null) {
 			log.error("Error in read orders. Read orders must have either user or agent uuid");
 			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.READ_ORDERS_ERROR.name(), "Error in read orders. Read orders must have either user or agent uuid"), HttpStatus.BAD_REQUEST);
 
-		}
-		else if(Optional.ofNullable(userUuid).isPresent()){
+		} else if (Optional.ofNullable(userUuid).isPresent()) {
 			orderBeans = orderService.findByUserUuid(userUuid);
-		}
-		else if(Optional.ofNullable(agentUuid).isPresent()){
+		} else if (Optional.ofNullable(agentUuid).isPresent()) {
 			orderBeans = orderService.findByAgentUuid(agentUuid);
 		}
 
-		if(orderBeans.isEmpty()) {
+		if (orderBeans.isEmpty()) {
 			log.error("Error in read orders. Read orders need to have either user or agent uuid");
 			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.READ_ORDERS_ERROR.name(), "Error in read orders. Either user or agent uuid is missing"), HttpStatus.BAD_REQUEST);
 		}
@@ -208,19 +206,19 @@ public class OrderControllerImpl implements OrderController {
 		Optional<UserBean> agentBean = accountService.findByUuid(orderWS.getAgentUuid());
 
 		// check user uuid
-		if(!userBean.isPresent()){
+		if (!userBean.isPresent()) {
 			log.error("Error in create order. User uuid={} not found", orderWS.getUserUuid());
 			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.USER_NOT_FOUND.name(), "In create order user uuid={" + orderWS.getUserUuid() + "} not found"), HttpStatus.NOT_FOUND);
 		}
 
 		// check agent uuid
-		if(!agentBean.isPresent()){
+		if (!agentBean.isPresent()) {
 			log.error("Error in create order. Agent uuid={} not found", orderWS.getAgentUuid());
 			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.AGENT_NOT_FOUND.name(), "In create order agent uuid={" + orderWS.getAgentUuid() + "} not found"), HttpStatus.NOT_FOUND);
 		}
 
 		// check agent role
-		if(!agentBean.get().isAgent()) {
+		if (!agentBean.get().isAgent()) {
 			log.error("Error in create order. Subject uuid={} found but role is not Agent", agentBean.get().getUuid());
 			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.ROLE_NOT_MATCH.name(), "In create order agent uuid found but role not match."), HttpStatus.NOT_FOUND);
 		}

@@ -24,6 +24,3 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
-*.js
-*.js
-*.js

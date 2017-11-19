@@ -35,7 +35,7 @@ public class ItemValidator implements Validator {
 
 		String currentUserUuid = (String) SecurityUtils.getSubject().getPrincipal();
 
-		Optional<UserBean> userBean =  contextUtil.currentUser();
+		Optional<UserBean> userBean = contextUtil.currentUser();
 
 		ItemWS itemWS = (ItemWS) o;
 
@@ -43,35 +43,35 @@ public class ItemValidator implements Validator {
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "description", ErrorCode.ITEM_DESCRIPTION.name(), "Item description cannot empty");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "fabric", ErrorCode.FABRIC_EMPTY.name(), "Item fabric cannot empty");
 
-		if(!Optional.ofNullable(itemWS.getQuantity()).isPresent()){
+		if (!Optional.ofNullable(itemWS.getQuantity()).isPresent()) {
 			errors.rejectValue("quantity", ErrorCode.QUANTITY_EMPTY.name(), "Item quantity cannot empty");
 		}
 
-		if(itemWS.getPrice() == null){
+		if (itemWS.getPrice() == null) {
 			errors.rejectValue("price", ErrorCode.ITEM_PRICE_EMPTY.name(), "Item price cannot be empty");
 		}
 
-		if(userBean.isPresent()){
+		if (userBean.isPresent()) {
 			UserBean user = userBean.get();
 
-			if(!user.isAgent() && itemWS.getPrice().compareTo(BigDecimal.ZERO) != 0) {
+			if (!user.isAgent() && itemWS.getPrice().compareTo(BigDecimal.ZERO) != 0) {
 				errors.rejectValue("price", ErrorCode.ITEMS_PRICE_NOT_ZERO.name(), "User cannot set item price.");
 			}
 		}
 
-		if(quantityAllZero(itemWS.getQuantity())){
+		if (quantityAllZero(itemWS.getQuantity())) {
 			errors.rejectValue("quantity", ErrorCode.QUANTITY_SIZE_EMPTY.name(), "Need to have at least one item quantity size");
 		}
 	}
 
-	private boolean quantityAllZero(Quantity quantity){
+	private boolean quantityAllZero(Quantity quantity) {
 		boolean allZero = false;
 		Integer XS = quantity.getXS();
 		Integer S = quantity.getS();
 		Integer M = quantity.getM();
 		Integer L = quantity.getL();
 
-		if(XS == 0 && S == 0 && M == 0 && L == 0) {
+		if (XS == 0 && S == 0 && M == 0 && L == 0) {
 			allZero = true;
 		}
 		return allZero;

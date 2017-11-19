@@ -1,10 +1,11 @@
 package com.caldevsupplychain.common.exception;
 
-import com.caldevsupplychain.common.type.ErrorCode;
-import com.caldevsupplychain.common.ws.ApiErrorsWS;
-import com.caldevsupplychain.common.ws.ErrorWS;
-import io.jsonwebtoken.JwtException;
+import static java.util.stream.Collectors.toList;
+
+import java.util.List;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.apache.shiro.ShiroException;
 import org.apache.shiro.authz.UnauthenticatedException;
 import org.apache.shiro.authz.UnauthorizedException;
@@ -15,16 +16,17 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.util.List;
-
-import static java.util.stream.Collectors.toList;
+import com.caldevsupplychain.common.type.ErrorCode;
+import com.caldevsupplychain.common.ws.ApiErrorsWS;
+import com.caldevsupplychain.common.ws.ErrorWS;
+import io.jsonwebtoken.JwtException;
 
 @Slf4j
 @ControllerAdvice
 public class ApiErrorsExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler({JwtException.class})
-	public ResponseEntity<?> handleJwtAuthenticationException(JwtException e){
+	public ResponseEntity<?> handleJwtAuthenticationException(JwtException e) {
 
 		log.error("Error message={} stack_trace={}", e.getMessage(), e.getStackTrace());
 
@@ -32,14 +34,13 @@ public class ApiErrorsExceptionHandler extends ResponseEntityExceptionHandler {
 	}
 
 	@ExceptionHandler({ShiroException.class})
-	public ResponseEntity<?> handleAuthenticationException(ShiroException e){
+	public ResponseEntity<?> handleAuthenticationException(ShiroException e) {
 
 		log.error("Error message={} stack_trace={}", e.getMessage(), e.getStackTrace());
 
-		if(e instanceof UnauthenticatedException){
+		if (e instanceof UnauthenticatedException) {
 			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.UNAUTHENTICATION.name(), e.getMessage()), HttpStatus.UNAUTHORIZED);
-		}
-		else if(e instanceof UnauthorizedException){
+		} else if (e instanceof UnauthorizedException) {
 			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.UNAUTHORIZATION.name(), e.getMessage()), HttpStatus.UNAUTHORIZED);
 		}
 		return new ResponseEntity<>(new ApiErrorsWS(e.getClass().getSimpleName(), e.getMessage()), HttpStatus.UNAUTHORIZED);

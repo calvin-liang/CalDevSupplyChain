@@ -1,8 +1,11 @@
 package com.caldevsupplychain.account.annotation;
 
-import com.caldevsupplychain.account.jwt.service.JwtService;
-import io.jsonwebtoken.JwtException;
+import java.util.Optional;
+
+import javax.servlet.http.HttpServletRequest;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -13,8 +16,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
+import com.caldevsupplychain.account.jwt.service.JwtService;
+import io.jsonwebtoken.JwtException;
 
 @Slf4j
 @Aspect
@@ -32,12 +35,12 @@ public class JwtAuthenticationAspect {
 
 		try {
 			proceed = proceedingJoinPoint.proceed();
-		} catch (Throwable e){
+		} catch (Throwable e) {
 			log.error("Error message={} stack_trace={}", e.getMessage(), e.getStackTrace());
 		} finally {
 			Subject subject = SecurityUtils.getSubject();
 			Optional<String> jwtTokenObj = Optional.ofNullable(request.getHeader(jwtService.getAuthHeader()));
-			if(!jwtTokenObj.isPresent()){
+			if (!jwtTokenObj.isPresent()) {
 				throw new JwtException("JSON Web Token empty");
 			}
 			jwtService.verifyJwtToken(subject.getPrincipal().toString(), jwtTokenObj.get());
