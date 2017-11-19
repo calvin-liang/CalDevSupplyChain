@@ -1,22 +1,19 @@
 package com.caldevsupplychain.order.vo;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.math.BigDecimal;
 import java.util.List;
 
-@Getter
-@Setter
+import lombok.Data;
+
+@Data
 public class OrderBean {
 
 	private String uuid;
 	private String displayId;
 	private Long id;
-	private Long userId;
-	private Long agentId;
-	private String SKU;
+	private String userUuid;
+	private String agentUuid;
+	private String sku;
 	private OrderType orderType;
 	private OrderStatus orderStatus;
 	private List<ItemBean> items;

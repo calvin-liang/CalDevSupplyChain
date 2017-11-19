@@ -1,12 +1,9 @@
 package com.caldevsupplychain.account.config;
 
-import com.caldevsupplychain.account.security.JpaRealm;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.Authenticator;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
 import org.apache.shiro.authc.credential.PasswordMatcher;
 import org.apache.shiro.authc.credential.PasswordService;
-import org.apache.shiro.authz.Authorizer;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.cache.MemoryConstrainedCacheManager;
 import org.apache.shiro.realm.Realm;
@@ -20,6 +17,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+
+import com.caldevsupplychain.account.security.JpaRealm;
 
 @Configuration
 public class ShiroConfig extends AbstractShiroConfiguration {

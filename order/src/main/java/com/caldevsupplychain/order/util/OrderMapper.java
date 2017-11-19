@@ -24,6 +24,9 @@ public interface OrderMapper {
 	OrderWS toWS(OrderBean orderBean,  @Context CycleAvoidingMappingContext context);
 
 	@IterableMapping(qualifiedByName = "orderToBean")
-	List<OrderBean> ordersToBeans(List<Order> order);
+	List<OrderBean> ordersToBeans(List<Order> order, @Context CycleAvoidingMappingContext context);
+
+	@IterableMapping(qualifiedByName = "toWS")
+	List<OrderWS> toWSs(List<OrderBean> orderBean, @Context CycleAvoidingMappingContext context);
 
 }

@@ -13,7 +13,12 @@ public class UserBean {
 	private String emailAddress;
 	private String password;
 	private String token;
+	private String companyName;
 	private List<RoleName> roles;
+
+	public boolean isUser() {
+		return roles.contains(RoleName.USER);
+	}
 
 	public boolean isAdmin() {
 		return roles.contains(RoleName.ADMIN);

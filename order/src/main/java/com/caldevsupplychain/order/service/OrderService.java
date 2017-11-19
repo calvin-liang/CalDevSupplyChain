@@ -1,28 +1,27 @@
 package com.caldevsupplychain.order.service;
 
-import com.caldevsupplychain.order.model.Order;
-import com.caldevsupplychain.order.vo.OrderBean;
-import org.springframework.data.domain.Pageable;
-
 import java.util.List;
 import java.util.Optional;
 
+import com.caldevsupplychain.order.vo.OrderBean;
+
 public interface OrderService {
+
+	boolean orderExists(String uuid);
 
 	OrderBean createOrder(OrderBean orderBean);
 
-	OrderBean updateOrder(OrderBean orderBean);
+	OrderBean updateOrder(String orderUuid, OrderBean orderBean);
 
-	OrderBean deleteOrder(OrderBean orderBean);
+	void deleteOrder(Long id);
+
+	Optional<OrderBean> getOrder(String uuid);
 
 	Optional<OrderBean> findByUuid(String uuid);
 
-	List<OrderBean> getAllOrders();
+	List<OrderBean> findByUserUuid(String userUuid);
 
-	Optional<List<OrderBean>> findByDisplayId(String displayId);
-
-	Optional<List<OrderBean>> findByUserId(String userId);
-
-	Optional<List<OrderBean>> findByAgentId(String agentId);
+	List<OrderBean> findByAgentUuid(String agentUuid);
 
 }
+

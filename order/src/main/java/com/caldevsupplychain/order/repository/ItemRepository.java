@@ -1,8 +1,9 @@
 package com.caldevsupplychain.order.repository;
 
-import com.caldevsupplychain.order.model.Order;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
-public interface ItemRepository extends PagingAndSortingRepository<Order, Long> {
-	
+import com.caldevsupplychain.order.model.Item;
+
+public interface ItemRepository extends PagingAndSortingRepository<Item, Long> {
+	Item findByUuid(String uuid);
 }
