@@ -40,7 +40,7 @@ class TextBox extends React.Component {
       <form className={classes.container} noValidate autoComplete="off">
         <TextField
           id="multiline-static"
-          label="Notes, shipping instructions, etc..."
+          label="Notes:"
           multiline
           rows="4"
           defaultValue=""

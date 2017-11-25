@@ -12,7 +12,7 @@ const styles = theme => ({
     flexWrap: 'wrap',
   },
   textField: {
-    marginLeft: theme.spacing.unit,
+    marginLeft: theme.spacing.unit * 10,
     marginRight: theme.spacing.unit,
     width: 200,
   },
@@ -31,6 +31,7 @@ class Price extends React.Component {
     this.setState({
       [name]: event.target.value,
     });
+    this.props.getPrice(event.target.value);
   };
 
   render() {

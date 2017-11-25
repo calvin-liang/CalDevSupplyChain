@@ -14,7 +14,8 @@ const styles = theme => ({
     flexWrap: 'wrap',
   },
   formControl: {
-    margin: theme.spacing.unit,
+    marginTop: theme.spacing.unit * 2.4,
+    marginLeft: theme.spacing.unit * 3.5,
     minWidth: 120,
   },
   selectEmpty: {
@@ -30,6 +31,8 @@ class OrderType extends React.Component {
 
   handleChange = name => event => {
     this.setState({ [name]: event.target.value });
+    this.props.getOrderType(event.target.value);
+
   };
 
   render() {

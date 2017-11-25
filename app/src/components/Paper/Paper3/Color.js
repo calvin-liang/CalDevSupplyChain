@@ -31,6 +31,7 @@ class Color extends React.Component {
     this.setState({
       [name]: event.target.value,
     });
+      this.props.getColor(event.target.value);
   };
 
   render() {

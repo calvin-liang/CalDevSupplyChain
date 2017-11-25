@@ -6,38 +6,58 @@ import { withStyles } from 'material-ui/styles';
 import TextField from 'material-ui/TextField';
 
 const styles = theme => ({
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    width: 200,
-  },
+    container: {
+        display: 'flex',
+        flexWrap: 'wrap',
+    },
+    textField: {
+        marginLeft: theme.spacing.unit,
+        marginRight: theme.spacing.unit,
+        marginBottom: theme.spacing.unit * 100,
+        marginTop: theme.spacing.unit,
+        width: 200,
+    },
 });
 
-function ShipmentDate(props) {
-  const { classes } = props;
+class ShipmentDate extends React.Component {
 
-  return (
-    <form className={classes.container} noValidate>
-      <TextField
-        id="date"
-        label="Shipment Date"
-        type="date"
-        defaultValue="2017-05-24"
-        className={classes.textField}
-        InputLabelProps={{
-          shrink: true,
-        }}
-      />
-    </form>
-  );
+    constructor(props) {
+        super(props);
+        const { classes } = props;
+
+        this.state = {
+            value: 'Property Value',
+        };
+    }
+
+    handleChange = (event) => {
+        this.setState({
+            value: event.target.value,
+        });
+        this.props.getShipment(event.target.value);
+    };
+
+    render() {
+        return (
+            <form className={this.props.classes && this.props.classes.container} noValidate>
+              <TextField
+                  id="date"
+                  label="Shipment Date"
+                  type="date"
+                  defaultValue="2017-11-20"
+                  className={this.props.classes && this.props.textField}
+                  InputLabelProps={{
+                      shrink: true,
+                  }}
+                  onChange={this.handleChange}
+              />
+            </form>
+        );
+    }
 }
 
 ShipmentDate.propTypes = {
-  classes: PropTypes.object.isRequired,
+    classes: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(ShipmentDate);

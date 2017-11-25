@@ -12,8 +12,8 @@ const styles = theme => ({
     flexWrap: 'wrap',
   },
   textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
+    marginLeft: theme.spacing.unit * 0.1,
+    marginTop: theme.spacing.unit * 0.05,
     width: 200,
   },
   menu: {
@@ -49,6 +49,7 @@ class Currency extends React.Component {
     this.setState({
       [name]: event.target.value,
     });
+    this.props.getCurrency(event.target.value);
   };
 
   render() {

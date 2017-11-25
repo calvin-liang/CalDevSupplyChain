@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "axios": "^0.16.2",
+    "browser-cookies": "^1.1.0",
     "jss": "^9.0.0",
     "material-design-icons": "^3.0.1",
     "material-ui": "^1.0.0-beta.16",

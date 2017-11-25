@@ -31,6 +31,7 @@ class Note extends React.Component {
     this.setState({
       [name]: event.target.value,
     });
+      this.props.getNote(event.target.value);
   };
 
   render() {
