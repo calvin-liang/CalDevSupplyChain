@@ -2,7 +2,9 @@ import React, { Component } from 'react'
 import data from '../example.json';
 import axios from 'axios'
 import { API_ROOT } from '../config/ApiConfig'
-import cookies from 'browser-cookies';
+//import cookies from 'browser-cookies';
+var cookies = require('browser-cookies');
+
 class MyOrderPage extends Component {
 
     constructor() {
@@ -24,7 +26,7 @@ class MyOrderPage extends Component {
         // ).catch((error)=>{
         //         console.log(error);
         // })
-
+        debugger;
         const axiosIntance = axios.create({
             baseURL: `${API_ROOT}`,
             headers: {Authorization: decodeURIComponent(cookies.get('authorizationToken'))}
