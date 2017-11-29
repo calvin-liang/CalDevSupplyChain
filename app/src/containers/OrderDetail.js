@@ -4,9 +4,10 @@ class OrderDetail extends Component {
 
     render() {
         debugger;
-        const items = data[0].items;
-
-        const tableDatas = items.map((item, index) => {
+        console.log("this is window data", window.oneOrder);
+        const oneOrder = window.oneOrder;
+        debugger;
+        const tableDatas = oneOrder.items.map((item, index) => {
             console.log("[",item, "after", index);
             //console.log("length",item.items.length);
             //for (var i = 0; i < item.items.length; i++) {
@@ -16,7 +17,7 @@ class OrderDetail extends Component {
                     <td>{item.color}</td>
                     <td>{item.description}</td>
                     <td>{item.fabric}</td>
-                    <td>{item.quantity.L}</td>
+                    <td>{item.quantity.XS}</td>
                     <td>{item.price}</td>
                 </tr>)
             //}

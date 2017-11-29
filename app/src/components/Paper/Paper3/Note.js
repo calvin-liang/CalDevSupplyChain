@@ -41,7 +41,7 @@ class Note extends React.Component {
       <form className={classes.container} noValidate autoComplete="off">
         <TextField
           id="name"
-          label="Note"
+          label="description"
           className={classes.textField}
           value={this.state.name}
           onChange={this.handleChange('name')}

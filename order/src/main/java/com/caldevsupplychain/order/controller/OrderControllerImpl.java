@@ -58,11 +58,14 @@ public class OrderControllerImpl implements OrderController {
 	private ApiErrorsExceptionHandler apiErrorsExceptionHandler;
 
 	@PostMapping
-	@RequiresJwtAuthentication
-	@RequiresPermissions("order:create")
+//	@RequiresJwtAuthentication
+//	@RequiresPermissions("order:update")
 	public ResponseEntity<?> createOrder(@Validated @RequestBody OrderWS orderWS) {
 
-		Optional<UserBean> currentUserBean = contextUtil.currentUser();
+		log.info("user uuid: {}", orderWS.getUserUuid());
+		log.info("order: {}", orderWS);
+
+		Optional<UserBean> currentUserBean = accountService.findByUuid(orderWS.getUserUuid());
 
 		if (!currentUserBean.isPresent()) {
 			log.error("Current user not found");
@@ -105,8 +108,8 @@ public class OrderControllerImpl implements OrderController {
 	}
 
 	@PutMapping("/order/{uuid}")
-	@RequiresJwtAuthentication
-	@RequiresPermissions("order:update")
+	//@RequiresJwtAuthentication
+	//@RequiresPermissions("order:update")
 	public ResponseEntity<?> updateOrder(@PathVariable("uuid") String orderUuid, @Validated @RequestBody OrderWS orderWS) {
 
 		if (!orderService.orderExists(orderUuid)) {
@@ -138,8 +141,8 @@ public class OrderControllerImpl implements OrderController {
 	}
 
 	@DeleteMapping("/order/{uuid}")
-	@RequiresJwtAuthentication
-	@RequiresPermissions("order:update")
+//	@RequiresJwtAuthentication
+//	@RequiresPermissions("order:update")
 	public ResponseEntity<?> deleteOrder(@PathVariable("uuid") String orderUuid) {
 
 		Optional<OrderBean> order = orderService.findByUuid(orderUuid);
@@ -155,8 +158,8 @@ public class OrderControllerImpl implements OrderController {
 	}
 
 	@GetMapping("/order/{uuid}")
-	@RequiresJwtAuthentication
-	@RequiresPermissions("order:read")
+//	@RequiresJwtAuthentication
+//	@RequiresPermissions("order:read")
 	public ResponseEntity<?> readOrder(@PathVariable("uuid") String orderUuid) {
 
 		Optional<OrderBean> order = orderService.getOrder(orderUuid);
@@ -170,8 +173,8 @@ public class OrderControllerImpl implements OrderController {
 	}
 
 	@GetMapping
-	@RequiresJwtAuthentication
-	@RequiresPermissions("order:read")
+//	@RequiresJwtAuthentication
+//	@RequiresPermissions("order:read")
 	public ResponseEntity<?> readOrders(@Nullable String userUuid, @Nullable String agentUuid) {
 
 		List<OrderBean> orderBeans = null;

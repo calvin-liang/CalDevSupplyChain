@@ -1,19 +1,49 @@
 import React, { Component } from 'react'
-import data from '../example.json';
+//import data from '../example.json';
 import axios from 'axios'
 import { API_ROOT } from '../config/ApiConfig'
+import Button from 'material-ui/Button';
+import {
+    Redirect
+} from 'react-router-dom'
+
 //import cookies from 'browser-cookies';
 var cookies = require('browser-cookies');
+
+
+const styles = theme => ({
+    button: {
+        margin: theme.spacing.unit,
+    },
+});
 
 class MyOrderPage extends Component {
 
     constructor() {
         super();
         this.state = {
-            gettingData: false,
+            redirectToOrderDetail: false,
+            gettingData: true,
             data: {}
         }
     }
+
+    handleClick = (val) => {
+        console.log("this", val);
+        for (var i = 0; i < this.state.data.length; i++) {
+            if (this.state.data[i].uuid == val) {
+                var oneOrder = this.state.data[i];
+                window.oneOrder = oneOrder;
+                break;
+            }
+        }
+        console.log("this is", oneOrder);
+        this.setState({
+            redirectToOrderDetail: true
+        })
+
+    }
+
     componentDidMount() {
         console.log("i am here!");
         //const client = axios.create();
@@ -27,72 +57,36 @@ class MyOrderPage extends Component {
         //         console.log(error);
         // })
         debugger;
+        console.log("cookie: ", cookies.get('authorizationToken'));
         const axiosIntance = axios.create({
             baseURL: `${API_ROOT}`,
             headers: {Authorization: decodeURIComponent(cookies.get('authorizationToken'))}
         });
-        axiosIntance.get('/orders?userUuid=28968fa1-df8e-42e5-92cd-3a14123a831f').then((data)=>
+        axiosIntance.get('/orders?userUuid=28968fa1-df8e-42e5-92cd-3a14123a831f').then((res)=>
         {
-            console.log("data:", data);
+            debugger;
+            console.log("data:", res);
+            this.setState({
+                data: res.data,
+                gettingData: false
+            })
         }
         ).catch((error)=>{
                 console.log(error);
         })
-
-
-        //var result =  client.get(`${API_ROOT}/orders?userUuid=28968fa1-df8e-42e5-92cd-3a14123a831f`);
-
-        // export default function() {
-        //     axios.interceptors.request.use(function (config) {
-        //         config.headers.Authorization = 'Bearer ' + 'eyJhbGciOiJIUzI1NiIsInppcCI6IkRFRiJ9.eNpUjUEOgyAQAP-yZ2lYBBVPfgUB6zZoSVBj0_TvXQ89NJnTzGHeQKVAD96lEI-y55xefna0QgVlH7mgqpnhvjhKN_9cOJDboEeDqLlYXcE6Tv8invknjL3EY6PrMnlUoW6FxSCF7mQQto0oGmVQy45PKOHzBQAA__8.GO3TNjT3SeolsXpvYlHU-7ZHSo079L4_7JV3C5yXErY';
-        //         return config;
-        //     });
-        // }
-
-        // console.log("after result");
-        // result.then(res => {
-        //
-        //     //debugger;
-        //     console.log(res);
-        //
-        //     this.setState({
-        //         gettingData: true,
-        //         data: res
-        //     });
-        //
-        // });
-
-        // var data = null;
-        //
-        // var xhr = new XMLHttpRequest();
-        // xhr.withCredentials = true;
-        //
-        // xhr.addEventListener("readystatechange", function () {
-        //     if (this.readyState === 4) {
-        //         console.log(this.responseText);
-        //     }
-        // });
-        //
-        // xhr.open("GET", "http://localhost:8080/api/v1/orders?userUuid=28968fa1-df8e-42e5-92cd-3a14123a831f");
-        // xhr.setRequestHeader("authorization", "Bearer eyJhbGciOiJIUzI1NiIsInppcCI6IkRFRiJ9.eNpUzE0OwiAQQOG7zLqYDBQKXXmVKT86hlYSSqMx3l1cuHD7veS9gGuFGTzlEI_aSslPfyXeYIDall5q5jbJ82Ulzid_X3tg2mFGjSid0sYMsC3pH-Kj_GDCL9x27i9pnbGJUIRkoxhl1MJJH4QiHFEqsgoTvD8AAAD__w.HxFVs4HDgC4Qvs6e2Q7RYN2TfbfBKPFN5wY1DZ5Humc");
-        // xhr.setRequestHeader("cache-control", "no-cache");
-        // xhr.setRequestHeader("postman-token", "9195b1e9-394e-237b-1f13-50689e3cfede");
-        //
-        // xhr.send(data);
-
-
     }
 
-    //var data = require('../file.json');
     render() {
+        const { classes } = this.props;
+
         if (this.state.gettingData)
             return (
                 <div>Loading</div>
             )
         else {
-            console.log(data);
-            const tableDatas = data.map((item, index) => {
-                // const tableDatas = this.state.data.map((item, index) => {
+            //console.log(data);
+            //const tableDatas = data.map((item, index) => {
+                const tableDatas = this.state.data.map((item, index) => {
                 return (<tr key="{index}">
                     <td>{item.sku}</td>
                     <td>{null}</td>
@@ -100,11 +94,27 @@ class MyOrderPage extends Component {
                     <td>{item.orderStatus}</td>
                     <td>{item.agentUuid}</td>
                     <td>{item.totalPrice}</td>
+                    <td>
+                        {/*<a href="/orderDetail" className="button_link2 button4"> Detail</a>*/}
+                        {/*<Button color="primary" className={this.props.classes.button} onClick={this.handleClick(item.uuid)} >*/}
+                            {/*Detail*/}
+                        {/*</Button>*/}
+                        <button onClick={ () => this.handleClick(item.uuid)} >Detail</button>
+                    </td>
                 </tr>)
             });
-            console.log(tableDatas);
+            //console.log(tableDatas);
+            console.log("before");
             return (
                 <div>
+
+                    {this.state.redirectToOrderDetail == true ?
+                        <Redirect to={{
+                            pathname: '/orderDetail'
+                        }}/> :
+                        null
+                    }
+
                     <button className="button button4">MyOrder</button>
                     <button className="button button4">Manufacturer</button>
                     <button className="button button4">Designer</button>
@@ -129,6 +139,7 @@ class MyOrderPage extends Component {
                                 <th>Total</th>
                             </tr>
                             {tableDatas}
+
                             </tbody>
                         </table>
                     </div>

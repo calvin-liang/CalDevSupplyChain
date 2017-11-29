@@ -36,6 +36,19 @@ html, body {
   cursor: pointer;
 }
 
+.button_link2 {
+  background-color: #f9f9f9;
+  border: none;
+  color: black;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 15px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
 .button {
   background-color: #f1f1f1;
   border: none;

@@ -69,7 +69,14 @@ class CreateOrder extends Component {
 
     getOrderType =(value) => {
         let userInput = Object.assign({},this.state.userInput);
-        userInput.orderType = value;
+        //console.log("value", value);
+        if (value == "10") {
+            userInput.orderType = "SAMPLE";
+        }
+        else {
+            userInput.orderType = "PRODUCTION";
+        }
+        //userInput.orderType = value;
         this.setState({
             userInput: userInput
         })
@@ -78,7 +85,7 @@ class CreateOrder extends Component {
 
     getQuantity1 =(value) => {
         let userInput = Object.assign({},this.state.userInput);
-        userInput.xs = value;
+        userInput.xs = Number(value);
         this.setState({
             userInput: userInput
         })
@@ -87,7 +94,7 @@ class CreateOrder extends Component {
 
     getQuantity2 =(value) => {
         let userInput = Object.assign({},this.state.userInput);
-        userInput.s = value;
+        userInput.s = Number(value);
         this.setState({
             userInput: userInput
         })
@@ -96,7 +103,7 @@ class CreateOrder extends Component {
 
     getQuantity3 =(value) => {
         let userInput = Object.assign({},this.state.userInput);
-        userInput.m = value;
+        userInput.m = Number(value);
         this.setState({
             userInput: userInput
         })
@@ -105,7 +112,7 @@ class CreateOrder extends Component {
 
     getQuantity4 =(value) => {
         let userInput = Object.assign({},this.state.userInput);
-        userInput.l = value;
+        userInput.l = Number(value);
         this.setState({
             userInput: userInput
         })
@@ -114,7 +121,7 @@ class CreateOrder extends Component {
 
     getQuantity5 =(value) => {
         let userInput = Object.assign({},this.state.userInput);
-        userInput.xl = value;
+        userInput.xl = Number(value);
         this.setState({
             userInput: userInput
         })
@@ -159,7 +166,7 @@ class CreateOrder extends Component {
 
     getPrice =(value) => {
         let userInput = Object.assign({},this.state.userInput);
-        userInput.price = value;
+        userInput.price = Number(value);
         this.setState({
             userInput: userInput
         })

@@ -86,9 +86,9 @@ class Paper3 extends React.Component  {
             <Paper className={this.props.classes.root} elevation={1}>
               <Typography type="body1" component="p">
                 <Grid container spacing={15}>
-                  <Grid item xs={2}>
-                    <Item getItem={this.getItem}/>
-                  </Grid>
+                  {/*<Grid item xs={2}>*/}
+                    {/*<Item getItem={this.getItem}/>*/}
+                  {/*</Grid>*/}
                   <Grid item xs={2}>
                     <Color getColor={this.getColor}/>
                   </Grid>

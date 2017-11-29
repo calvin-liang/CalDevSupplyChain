@@ -26,11 +26,14 @@ const styles = theme => ({
 class OrderType extends React.Component {
   state = {
     age: '',
-    name: 'hai',
+    name: '',
   };
 
   handleChange = name => event => {
-    this.setState({ [name]: event.target.value });
+    //this.setState({ [name]: event.target.value });
+    this.setState({
+        name: event.target.value,
+    });
     this.props.getOrderType(event.target.value);
 
   };
@@ -47,7 +50,7 @@ class OrderType extends React.Component {
             onChange={this.handleChange('age')}
             input={<Input id="age-simple" />}
           >
-          <MenuItem value={10}>Quote</MenuItem>
+          <MenuItem value={10}>Sample</MenuItem>
           <MenuItem value={20}>Production</MenuItem>
           </Select>
         </FormControl>

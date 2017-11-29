@@ -20,7 +20,7 @@
           "M": 1,
           "L": 1
         },
-        "price": 0,
+        "price": 1,
         "note": "Make sure silver jacket is in good quality!"
       },
       {
@@ -35,7 +35,7 @@
           "M": 2,
           "L": 2
         },
-        "price": 0,
+        "price": 2,
         "note": "Make sure black jacket is in good quality!"
       }
     ],
@@ -60,12 +60,12 @@
         "description": "Black Jacket",
         "fabric": "Jacket",
         "quantity": {
-          "XS": 1,
+          "XS": 3,
           "S": 1,
           "M": 1,
           "L": 1
         },
-        "price": 0,
+        "price": 3,
         "note": "Make sure silver jacket is in good quality!"
       },
       {
@@ -75,12 +75,12 @@
         "description": "Green Jacket",
         "fabric": "Jacket",
         "quantity": {
-          "XS": 2,
+          "XS": 4,
           "S": 2,
           "M": 2,
           "L": 2
         },
-        "price": 0,
+        "price": 4,
         "note": "Make sure black jacket is in good quality!"
       }
     ],
@@ -105,12 +105,12 @@
         "description": "red Jacket",
         "fabric": "Jacket",
         "quantity": {
-          "XS": 1,
+          "XS": 5,
           "S": 1,
           "M": 1,
           "L": 1
         },
-        "price": 0,
+        "price": 5,
         "note": "Make sure silver jacket is in good quality!"
       },
       {
@@ -120,12 +120,12 @@
         "description": "Green Jacket",
         "fabric": "Jacket",
         "quantity": {
-          "XS": 2,
+          "XS": 6,
           "S": 2,
           "M": 2,
           "L": 2
         },
-        "price": 0,
+        "price": 6,
         "note": "Make sure black jacket is in good quality!"
       }
     ],

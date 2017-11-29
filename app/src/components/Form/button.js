@@ -55,39 +55,25 @@ class FlatButtons extends Component {
         if(email && password) {
             console.log('here!!!!');
             checkLogin(userInput).then(res => {
-                // TODO 假设返回的code＝0未登录成功
-                console.log("checkLogin", res);
-                //console.log("here", res.headers.toString());
-                console.log("before");
-                console.log("[ ",res.headers["authorization"],"]");
-                //console.log("header is:", res.getResponseHeader('X-Request-Id'));
-                //var response = res.headers["authorization"].replace("Bearer ", "");
-                //console.log(response);
-                console.log("after");
+                // console.log("checkLogin", res);
+                // console.log("before");
+                // console.log("[ ",res.headers["authorization"],"]");
+                // console.log("after");
 
-                //debugger;
-                //window.authorizationToken = res.headers["authorization"];
-                //if (!cookies.get('authorizationToken')) {
-                    debugger;
-                    cookies.set('authorizationToken', res.headers["authorization"]);
-                //}
+                debugger;
+                cookies.set('authorizationToken', res.headers["authorization"]);
 
                 console.log("cookies:",cookies);
-                console.log("after header");
+                // console.log("after header");
                 if(res.status == 200) {
-
                     this.setState({
                         redirectToMyOrderPage: true
                     })
-
-                    // window.location.href = '/myorderPage';
                 } else {
                     alert("error");
-                    // TODO 处理服务器提示 输入用户名 或 密码 错误
                 }
             }).catch(err => {
                 console.log("err", err);
-                //console.log('1服务异常');
             })
         }
     };
@@ -109,27 +95,6 @@ class FlatButtons extends Component {
                     <Button color="primary" className={classes.button} onClick={this.doLogin} >
                         login
                     </Button>
-                    {/*<Button color="accent" className={classes.button}>*/}
-                    {/*Accent*/}
-                    {/*</Button>*/}
-                    {/*<Button color="contrast" className={classes.button}>*/}
-                    {/*Contrast*/}
-                    {/*</Button>*/}
-                    {/*<Button disabled className={classes.button}>*/}
-                    {/*Disabled*/}
-                    {/*</Button>*/}
-                    {/*<Button href="#flat-buttons" className={classes.button}>*/}
-                    {/*Link*/}
-                    {/*</Button>*/}
-                    {/*<Button disabled component={Link} href="/" className={classes.button}>*/}
-                    {/*Link disabled*/}
-                    {/*</Button>*/}
-                    {/*<Button dense className={classes.button}>*/}
-                    {/*Dense*/}
-                    {/*</Button>*/}
-                    {/*<Button className={classes.button} onClick={doSomething} data-something="here I am">*/}
-                    {/*Does something*/}
-                    {/*</Button>*/}
                 </div>
             )
         )
