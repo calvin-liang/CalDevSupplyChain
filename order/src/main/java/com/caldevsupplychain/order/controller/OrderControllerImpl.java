@@ -9,6 +9,7 @@ import javax.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.caldevsupplychain.account.annotation.RequiresJwtAuthentication;
 import com.caldevsupplychain.account.service.AccountService;
 import com.caldevsupplychain.account.util.ContextUtil;
 import com.caldevsupplychain.account.vo.UserBean;
@@ -58,10 +58,9 @@ public class OrderControllerImpl implements OrderController {
 	private ApiErrorsExceptionHandler apiErrorsExceptionHandler;
 
 	@PostMapping
-	@RequiresJwtAuthentication
+	@RequiresAuthentication
 	@RequiresPermissions("order:create")
 	public ResponseEntity<?> createOrder(@Validated @RequestBody OrderWS orderWS) {
-
 		Optional<UserBean> currentUserBean = contextUtil.currentUser();
 
 		if (!currentUserBean.isPresent()) {
@@ -105,7 +104,7 @@ public class OrderControllerImpl implements OrderController {
 	}
 
 	@PutMapping("/order/{uuid}")
-	@RequiresJwtAuthentication
+	@RequiresAuthentication
 	@RequiresPermissions("order:update")
 	public ResponseEntity<?> updateOrder(@PathVariable("uuid") String orderUuid, @Validated @RequestBody OrderWS orderWS) {
 
@@ -138,7 +137,7 @@ public class OrderControllerImpl implements OrderController {
 	}
 
 	@DeleteMapping("/order/{uuid}")
-	@RequiresJwtAuthentication
+	@RequiresAuthentication
 	@RequiresPermissions("order:update")
 	public ResponseEntity<?> deleteOrder(@PathVariable("uuid") String orderUuid) {
 
@@ -155,7 +154,7 @@ public class OrderControllerImpl implements OrderController {
 	}
 
 	@GetMapping("/order/{uuid}")
-	@RequiresJwtAuthentication
+	@RequiresAuthentication
 	@RequiresPermissions("order:read")
 	public ResponseEntity<?> readOrder(@PathVariable("uuid") String orderUuid) {
 
@@ -170,10 +169,9 @@ public class OrderControllerImpl implements OrderController {
 	}
 
 	@GetMapping
-	@RequiresJwtAuthentication
+	@RequiresAuthentication
 	@RequiresPermissions("order:read")
 	public ResponseEntity<?> readOrders(@Nullable String userUuid, @Nullable String agentUuid) {
-
 		List<OrderBean> orderBeans = null;
 
 		if (userUuid != null && agentUuid != null) {

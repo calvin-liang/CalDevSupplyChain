@@ -9,10 +9,9 @@ public interface JwtService {
 
 	JWTAuthenticationToken createJwtToken(UserBean userBean);
 
-	void verifyJwtToken(String uuid, String jwtToken);
+	boolean verifyJwtToken(String jwtToken);
+
+	String getSubject(String jwtToken);
 
 	HttpHeaders createJwtHeader(String jwtToken);
-
-	String getAuthHeader();
-
 }

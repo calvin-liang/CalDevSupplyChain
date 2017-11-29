@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import javax.transaction.Transactional;
-
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -13,11 +11,13 @@ import org.apache.shiro.authc.credential.PasswordService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.caldevsupplychain.account.model.Company;
 import com.caldevsupplychain.account.model.Role;
 import com.caldevsupplychain.account.model.User;
 import com.caldevsupplychain.account.repository.CompanyRepository;
+import com.caldevsupplychain.account.repository.PermissionRepository;
 import com.caldevsupplychain.account.repository.RoleRepository;
 import com.caldevsupplychain.account.repository.UserRepository;
 import com.caldevsupplychain.account.util.RoleMapper;
@@ -34,6 +34,7 @@ public class AccountServiceImpl implements AccountService {
 
 	private UserRepository userRepository;
 	private RoleRepository roleRepository;
+	private PermissionRepository permissionRepository;
 	private CompanyRepository companyRepository;
 	private PasswordService passwordService;
 	private UserMapper userMapper;
@@ -103,6 +104,7 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Optional<UserBean> findByUuid(String uuid) {
 		User user = userRepository.findByUuid(uuid);
 		if (user != null) {
@@ -112,6 +114,7 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Optional<UserBean> findByEmailAddress(String emailAddress) {
 		User user = userRepository.findByEmailAddress(emailAddress);
 		if (user != null) {
@@ -121,6 +124,7 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Optional<UserBean> findByToken(String token) {
 		User user = userRepository.findByToken(token);
 		if (user != null) {
@@ -130,15 +134,7 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
-	public Optional<UserBean> findById(Long id) {
-		User user = userRepository.findOne(id);
-		if (user != null) {
-			return Optional.of(userMapper.toBean(user));
-		}
-		return Optional.empty();
-	}
-
-	@Override
+	@Transactional(readOnly = true)
 	public List<UserBean> getAllUsers() {
 		Page<User> users = userRepository.findAll(new PageRequest(0, Integer.MAX_VALUE));
 		return userMapper.usersToBeans(users.getContent());

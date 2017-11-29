@@ -2,6 +2,7 @@ package com.caldevsupplychain.account.jwt.service;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.UUID;
 
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,41 +15,36 @@ import com.caldevsupplychain.account.jwt.token.JWTAuthenticationToken;
 import com.caldevsupplychain.account.vo.UserBean;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.CompressionCodecs;
-import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.crypto.MacProvider;
 
 @Slf4j
-@Service
+@Service("jwtService")
 @NoArgsConstructor
 public class JwtServiceImpl implements JwtService {
+	private static final String AUTHORIZATION_HEADER = "Authorization";
+	private static String AUTH_SCHEMA = "Bearer";
 
 	// generated pre-shared key
-	Key key = MacProvider.generateKey();
+	private Key key = MacProvider.generateKey();
+
 	@Value("${jwt.header.issuer}")
 	private String ISSUER;
-	@Value("${jwt.header.token-prefix}")
-	private String BEARER;
-	@Value("${jwt.header.auth}")
-	private String AUTH_HEADER;
 	@Value("${jwt.header.expire-time-range}")
 	private long EXPIRE_TIME_RANGE;
 
-	public String getAuthHeader() {
-		return AUTH_HEADER;
-	}
-
+	@Override
 	public JWTAuthenticationToken createJwtToken(UserBean userBean) {
 
 		// @Reference: ref google auth api: https://developers.google.com/identity/protocols/OAuth2ServiceAccount
 		String jwtToken = Jwts.builder()
 				.setIssuer(ISSUER)
-				.setSubject(userBean.getEmailAddress())
+				.setSubject(userBean.getUuid())
 				.setIssuedAt(new Date())
 				.setNotBefore(new Date())
 				.setExpiration(new Date(new Date().getTime() + EXPIRE_TIME_RANGE))
-				.setId(userBean.getUuid())
+				.setId(UUID.randomUUID().toString())
 				.compressWith(CompressionCodecs.DEFLATE)
 				.signWith(SignatureAlgorithm.HS256, key)
 				.compact();
@@ -56,28 +52,48 @@ public class JwtServiceImpl implements JwtService {
 		return new JWTAuthenticationToken(userBean.getUuid(), jwtToken);
 	}
 
+	@Override
 	public HttpHeaders createJwtHeader(String jwtToken) {
 		HttpHeaders headers = new HttpHeaders();
-		headers.set(AUTH_HEADER, BEARER + " " + jwtToken);
+		headers.set(AUTHORIZATION_HEADER, AUTH_SCHEMA + " " + jwtToken);
 		return headers;
 	}
 
-	public void verifyJwtToken(String uuid, String jwtTokenObj) throws JwtException {
+	@Override
+	public boolean verifyJwtToken(String jwtTokenObj) {
+		String jwtToken = jwtTokenObj.replace(AUTH_SCHEMA, "");
 
-		String jwtToken = jwtTokenObj.replace(BEARER, "");
-
-		Claims claims = Jwts.parser()
-				.requireId(uuid)
+		Claims claims = null;
+		try {
+			claims = Jwts.parser()
 				.setSigningKey(key)
 				.parseClaimsJws(jwtToken)
 				.getBody();
+		} catch (Exception e) {
+			return false;
+		}
 
 		long currentTime = System.currentTimeMillis();
-		boolean checkIntegrity = claims.getId().equals(uuid);
-		boolean checkTimeRange = claims.getNotBefore().getTime() <= currentTime && currentTime < claims.getExpiration().getTime();
+		return claims.getNotBefore().getTime() <= currentTime && currentTime < claims.getExpiration().getTime();
+	}
 
-		if (!(checkIntegrity && checkTimeRange)) {
-			throw new JwtException("JSON Web Token Authentication Fail.");
+	/**
+	 * Return user uuid as subject if this is a valida JWT token.
+	 * @param token
+	 * @return null if the jwt token is not valid
+	 */
+	@Override
+	public String getSubject(String token) {
+		token = token.replace(AUTH_SCHEMA, "");
+		try {
+			return Jwts.parser()
+				.setSigningKey(key)
+				.parseClaimsJws(token)
+				.getBody()
+				.getSubject();
+		} catch (RuntimeException e) {
+			log.error("Unable to parse JWT token.", e);
+			return null;
 		}
 	}
 }

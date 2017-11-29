@@ -1,68 +1,64 @@
 package com.caldevsupplychain.account.security;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.SimpleAuthenticationInfo;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.authc.credential.PasswordService;
+import org.apache.shiro.authc.SimpleAccount;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
+import com.caldevsupplychain.account.jwt.service.JwtService;
+import com.caldevsupplychain.account.jwt.token.JWTAuthenticationToken;
 import com.caldevsupplychain.account.service.AccountService;
 import com.caldevsupplychain.account.service.PermissionService;
-import com.caldevsupplychain.account.util.UserMapper;
 import com.caldevsupplychain.account.vo.UserBean;
 
 @Slf4j
-@Component
-public class JpaRealm extends AuthorizingRealm {
-
+public class JwtRealm extends AuthorizingRealm {
 	@Autowired
 	private AccountService accountService;
 	@Autowired
 	private PermissionService permissionService;
 	@Autowired
-	private PasswordService passwordService;
-	@Autowired
-	private UserMapper userMapper;
+	private JwtService jwtService;
 
 	@Override
 	public boolean supports(AuthenticationToken token) {
-		return token != null && token.getClass().isAssignableFrom(UsernamePasswordToken.class);
+		return token != null && token instanceof JWTAuthenticationToken;
 	}
 
-	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken) {
-		UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
+	@Override
+	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken) throws AuthenticationException {
+		JWTAuthenticationToken token = (JWTAuthenticationToken) authcToken;
+		Optional<UserBean> user = accountService.findByUuid(token.getUuid());
 
-		UserBean user = accountService.findByEmailAddress(token.getUsername()).orElse(null);
-
-		if (user != null && passwordService.passwordsMatch(token.getPassword(), user.getPassword())) {
-			return new SimpleAuthenticationInfo(user, user.getPassword(), getName());
+		if (user.isPresent() && jwtService.verifyJwtToken(token.getToken())) {
+			SimpleAccount account = new SimpleAccount(user.get(), token.getToken(), getName());
+			account.addRole(user.get().getRoles().stream().map(r -> r.name()).collect(Collectors.toList()));
+			return account;
 		}
-
 		return null;
 	}
 
+	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
 		if (principals.fromRealm(getName()).isEmpty()) {
 			return null;
 		}
-		String uuid = (String) principals.getPrimaryPrincipal();
-		UserBean user = accountService.findByUuid(uuid).orElse(null);
-
+		UserBean user = ((UserBean) principals.getPrimaryPrincipal());
 		if (user != null) {
 			Set<String> roles = user.getRoles().stream().map(r -> r.toString()).collect(Collectors.toSet());
 			SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(roles);
-			info.addStringPermissions(permissionService.getPermissions(roles));
+			info.setStringPermissions(permissionService.getPermissions(roles));
 			return info;
 		}
 		return null;
