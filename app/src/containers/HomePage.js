@@ -220,7 +220,7 @@ class HomePage extends Component {
                   <Grid item xs={12} sm={3}>
                     <Grid container direction={'column'} justify={'space-around'} className={classes.flex}>
                       <Grid item>
-                        <Paper>
+                        <Paper elevation={0}>
                           <div className="home-features-icon">
                             <AccountSvgIcon fillColor={style.featureIconColor}></AccountSvgIcon>
                           </div>
@@ -239,7 +239,7 @@ class HomePage extends Component {
                   <Grid item xs={12} sm={3}>
                     <Grid container direction={'column'} justify={'space-around'} className={classes.flex}>
                       <Grid item xs>
-                        <Paper>
+                        <Paper elevation={0}>
                           <div className="home-features-icon">
                             <OrderSvgIcon fillColor={style.featureIconColor}></OrderSvgIcon>
                           </div>
@@ -258,7 +258,7 @@ class HomePage extends Component {
                   <Grid item xs={12} sm={3}>
                     <Grid container direction={'column'} justify={'space-around'} className={classes.flex}>
                       <Grid item xs>
-                        <Paper>
+                        <Paper elevation={0}>
                           <div className="home-features-icon">
                             <InventoryIcon fillColor={style.featureIconColor}></InventoryIcon>
                           </div>
@@ -277,7 +277,7 @@ class HomePage extends Component {
                   <Grid item xs={12} sm={3}>
                     <Grid container direction={'column'} justify={'space-around'} className={classes.flex}>
                       <Grid item xs>
-                        <Paper>
+                        <Paper elevation={0}>
                           <div className="home-features-icon">
                             <ReportIcon fillColor={style.featureIconColor}></ReportIcon>
                           </div>

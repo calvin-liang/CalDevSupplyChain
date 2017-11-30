@@ -87,6 +87,7 @@ a.home-navbar-menu-text:hover {
 .home-background-video-container {
   position: relative;
   overflow: hidden;
+  height: 100vh;
 }
 
 .home-background-video-inner-container {
