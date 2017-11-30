@@ -1,53 +1,33 @@
-import React, { Component } from 'react'
-import HomePage from './HomePage'
-import WelcomePage from './WelcomePage'
-import ActivateAccountProcess from '../process/ActivateAccountProcess'
-import { Switch, Route } from 'react-router-dom'
+import React, {Component} from 'react'
+import {Route, Router} from 'react-router-dom'
 import * as AccountAPI from '../api/AccountAPI'
+import ReactLoading from 'react-loading';
+import HomePage from './HomePage';
+import {withStyles} from 'material-ui/styles';
+import {history} from '../util';
+import {compose} from 'recompose';
+import {connect} from 'react-redux';
+
+const styles = theme => ({});
 
 class App extends Component {
 
-  state = {
-    user: null,
-    apiToken: null,
-  }
-
-  handleSetupUserInfo = (user) => {
-    console.log("App.js method- in handle setup user info: ", user);
-    this.setState({user})
-  }
-
-  handleSetupApiToken = (token) => {
-    this.setState({apiToken: token})
-  }
-
   render() {
 
-    const {user} = this.state
+    const {classes, alert, loader} = this.props
 
-    return (
-        <Switch>
-          <Route exact path="/" render={() =>
-              <HomePage
-                user={user}
-                onSetupUserInfo={this.handleSetupUserInfo}
-              />
-          }/>
-          <Route path="/welcomePage" render={() =>
-            <WelcomePage
-              user={user}
-            />
-          }/>
-          <ActivateAccountProcess
-            path="/activating/:token"
-            successRedirectTo="/welcomePage"
-            failRedirectTo="/"
-            onSetupUserInfo={this.handleSetupUserInfo}
-            onSetupApiToken={this.handleSetupApiToken}
-          />
-        </Switch>
-    )
+    return (<div className="container">
+      {loader.isLoading && <ReactLoading className="loader-container" type="bars" color="#66dbf9"/>}
+      <Router history={history}>
+        <Route exact="exact" path="/" component={HomePage}/>
+      </Router>
+    </div>)
   }
 }
 
-export default App
+function mapStateToProps(state) {
+  const {alert, loader} = state;
+  return {alert, loader};
+}
+
+export default compose(withStyles(styles), connect(mapStateToProps))(App);

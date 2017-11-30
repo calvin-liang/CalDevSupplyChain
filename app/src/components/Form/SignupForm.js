@@ -1,263 +1,444 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { withStyles } from 'material-ui/styles'
-import TextField from 'material-ui/TextField'
-import Typography from 'material-ui/Typography'
-import { blue, red, grey, blueGrey } from 'material-ui/colors'
-import Paper from 'material-ui/Paper'
-import Button from 'material-ui/Button'
-import * as AccountAPI from '../../api/AccountAPI'
-import TokenForm from './TokenForm'
-import emailMask from 'text-mask-addons/dist/emailMask'
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import classNames from 'classnames';
+import { connect } from 'react-redux';
+import { withStyles } from 'material-ui/styles';
 import Icon from 'material-ui/Icon'
+import Button from 'material-ui/Button';
+import TextField from 'material-ui/TextField';
+import Snackbar from 'material-ui/Snackbar';
+import Fade from 'material-ui/transitions/Fade';
+import ActivationEmailDialog from '../dialog/ActivationEmailDialog'
+import Card, { CardHeader, CardActions, CardContent, CardMedia } from 'material-ui/Card';
+import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
+import { FormControl } from 'material-ui/Form';
+import { InputAdornment } from 'material-ui/Input';
+import { LinearProgress, CircularProgress } from 'material-ui/Progress';
+import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
+import { Visibility, VisibilityOff, Warning } from 'material-ui-icons';
+import { validateEmail, history } from '../../util';
+import { compose } from 'recompose';
+import { userActions, alertActions, notificationActions } from '../../actions';
+import '../../index.css'
+
+const theme = createMuiTheme({
+  overrides: {
+    MuiInput: {
+      underline: {
+        '&:hover:not(.foo):before': {
+          background: '#8e9192',
+          height: 2,
+        },
+      },
+      inkbar: {
+        '&:before:': {
+            backgroundColor: '#8e9192',
+            borderRadius: 4
+        },
+        '&:after': {
+            backgroundColor: '#8e9192',
+            borderRadius: 4
+        },
+        '&:focus': {
+            backgroundColor: '#8e9192',
+            borderRadius: 4
+        }
+      }
+    },
+ }
+});
 
 const styles = theme => ({
-  root: {
-    display: 'flex',
-    paddingTop: 50,
-    paddingLeft: 100,
-    paddingBottom: 50,
+  overridePrimaryColorBar: {
+    backgroundColor: '#58D3F7'
   },
-  formContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    flexWrap: 'wrap',
-    textAlign: 'center',
-    paddingLeft: 20,
-    paddingRight: 20,
-    paddingTop: 20,
-    width: 400,
-    height: 350
-  },
-  textField: {
-    backgroundColor: grey[200],
-    borderRadius: 4,
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    width: '90%',
-  },
-  // text field label styling
-  label: {
-    paddingLeft: 3,
+  textFieldContainer: {
+    width: 200,
   },
   input: {
-    paddingLeft: 3,
-    //   borderBottom: "1px solid",
-    //   borderBottomColor: blue[500],
+      marginTop: 5,
+      padding: '10px 10px',
+      background: '#f4f9fb',
+      borderRadius: 4,
+      fontSize: 16,
   },
-  signupButton: {
-    color: 'white',
-    background: blue[500],
-    borderColor: 'black',
-    fontWeight: 400,
-    '&:hover': {
-      background: blue[500]
-    },
-    width: "95%",
-    height: 50,
-    padding: "10",
-    margin: "auto",
+  errorInput: {
+      marginTop: 5,
+      padding: '10px 10px',
+      background: '#fbf4f9',
+      borderRadius: 4,
+      fontSize: 16,
+  },
+  inputLabel: {
+    color: '#22252a',
+    fontWeight: 500,
+    fontSize: 18,
+  },
+  errorInputLabel: {
+    color: '#fc3f63',
+    fontWeight: 500,
+    fontSize: 18,
+  },
+  inputLabelFocused: {
+    color: '#22252a',
+    fontWeight: 500,
+    fontSize: 18
+  },
+  iconRoot: {
+    fontSize: 30,
+    color: '#22252a',
+    position: 'relative',
+    left: -5,
+    top: 10,
+  },
+  passwordEyeIconRoot: {
+    color: '#22252a',
+    position: 'absolute',
+    fontSize: 20,
+    top: 28,
+    right: 3,
+    backgroundColor: 'transparent'
+  },
+  cardButtonRoot: {
+    position: 'relative',
     display: 'flex',
-    justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 30,
+    background: '#22252a',
   },
-  iconBaseColor: {
-    color: grey
-    // can adjust icon -> fontSize: xxx
+  submitButton: {
+    width: 200,
+    paddingLeft: 10,
+    color: "black",
+    backgroundColor: "#58D3F7 !important",
+    '&:hover': {
+      backgroundColor: "#58D3F7 !important",
+    },
+    fontWeight: "500",
   },
-  iconErrorColor: {
-    color: red[500]
+  disableButton: {
+    width: 200,
+    paddingLeft: 10,
+    color: "grey",
+    backgroundColor: "#d6d6d6 !important",
+    fontWeight: "500"
+  },
+  circularButtonProgress: {
+    color: "#16c1f1",
+    position: 'absolute',
+    alignItems: 'center',
+    marginLeft: -12,
+  },
+  passwordListRootContainer: {
+    fontWeight: 400,
+  },
+  passwordListItemContainer: {
+    padding: 0,
+  },
+  warningIconRoot: {
+    width: 18,
+    height: 18,
+  },
+  warningItemTextRoot: {
+    marginLeft: -5,
+    padding: 0,
+    fontSize: 10,
+  },
+  blackColor: {
+    color: '#22252a',
+    fontWeight: 500,
+  },
+  tomatoColor: {
+    color: '#fc3f63'
+  },
+  greenColor: {
+    color: '#28c29a',
+    fontWeight: 750,
+  },
+  alertBar: {
+    margin: theme.spacing.unit,
+    textAlign: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#fbf4f9',
+    color: 'red'
   }
 })
 
-const textFieldBoxStyle = {
-  borderRadius: 'inherit',
-  borderBottomLeftRadius: 0,
-  borderBottomRightRadius: 0,
-  backgroundColor: blue[500],
-  height: 100,
-  width: '100%',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-}
+class SignupForm extends Component {
+  constructor(props) {
+      super(props);
 
-const signupFormHeadlineStyle = {
-  color: 'white',
-}
+      this.state = {
 
-const signupFieldStyle = {
-  position: 'relative',
-  display: 'inline-block',
-  width: '100%'
-}
+        username: '',
+        emailAddress: '',
+        password: '',
 
-const iconOptions = {
-  username: "account_box",
-  email: "email",
-  password: "lock"
-}
+        showPassword: false,
+        formError: true,
+        usernameError: false,
+        emailError: false,
+        passwordError: false,
 
-const errors = {
-  error: false,
-  errorText: null,
-  errorField: null,
-}
+        open: true,
 
-const errorGroup = {
-  "username": errors,
-  "email": errors,
-  "password": errors,
-}
-
-class SignupForm extends React.Component {
-  state = {
-    username: '',
-    email: '',
-    password: '',
-    errorGroup: errorGroup,
+      }
   }
 
-  /* error handling need to check */
-  resetError = (field) => {
-    this.setState({
-      ...this.state.errorGroup,
-      [field]: {
-        ...this.state.errorGroup[field],
-          error: false,
-          errorText: null,
-          errorField: null
-        }
-      })
+  componentWillReceiveProps(nextProps){
+    if(this.props !== nextProps){
+      this.setState({open: !nextProps.signupSubmitted })
+    }
   }
 
-  setError = (error, text, field) => {
-    this.setState({
-      ...this.state.errorGroup,
-      [field]: {
-        ...this.state.errorGroup[field],
-          error: error,
-          errorText: text,
-          errorField: field
-        }
-      })
-  }
-
-
-  validateEmailPattern = email => {
-    let emailPattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return email.match(emailPattern);
-  }
-
-  handleUserSignUpInput = name => event => {
-    // may need to add validation here during user input on form field
-    this.setState({
-      [name]: event.target.value.toLowerCase().replace(/\s+/g, '')
-    })
-  }
-
-  handleFormSubmit = event => {
-    const {username, email, password} = this.state
-    // validate form input field
-    if(!this.validateEmailPattern(email)){
-      console.log("NOT VALID email");
-      console.log(email);
+  getButtonName = () => {
+    if (this.props.success) {return `Success`}
+    else if (this.props.signing) {
+      return `Submitting...`;
     }
     else {
-      console.log("valid email");
+      return `Submit`;
+    }
+  }
+
+  handleMouseDownPassword = e => e.preventDefault()
+
+  handleClickShowPasssword = () => this.setState({ showPassword: !this.state.showPassword })
+
+  handleUsernameInput = e => {
+    let username = e.target.value
+    return this.setState({ username : username.trim().toLowerCase() }, this.validateUsernameInput(username))
+  }
+
+  validateUsernameInput = username => this.setState({usernameError: !username }, this.validateFormInput())
+
+  handleEmailInput = e => {
+    let email = e.target.value
+    return this.setState({ emailAddress: email }, this.validateEmailInput(email))
+  }
+
+  validateEmailInput = email => this.setState({emailError: validateEmail(email)}, this.validateFormInput())
+
+  handlePasswordInput = e => {
+    let password = e.target.value
+    return this.setState({ password, passwordError: password.length < 8}, () => this.validateFormInput())
+  }
+
+  validateFormInput = () => {
+    let {username, emailAddress, password, usernameError, emailError, passwordError } =  this.state
+    return this.setState({formError: !username || usernameError || !emailAddress || emailError || !password || passwordError})
+  }
+
+  handleSignupFormSubmit = e => {
+
+    const {username, emailAddress, password, formError } =  this.state
+
+    if(!formError && !this.props.signing) {
+      this.props.dispatch(userActions.signup({username, emailAddress, password}))
     }
 
-    // deep copy
-    let data = {}
-    data["username"] = this.state.username
-    data["emailAddress"] = this.state.email
-    data["password"] = this.state.password
+  };
 
-    // should actually add validation check before calling this method
-    this.props.onTokenProcess()
-
-    AccountAPI.signup(data).then(res => {
-      console.log("SignupForm.js - handleFormSubmit method check res: ", res);
-      this.props.onSetupUserInfo(res.data);
-    })
-    .catch(error => {
-      console.log(error);
-    })
+  handleCloseSignupForm = () =>  {
+    this.setState({open: false})
+    this.props.dispatch(alertActions.clear())
   }
 
   render() {
 
-    const { classes } = this.props
-    const { error } = this.state
+    const { classes, user, signing, error } = this.props
 
-    /* condition check */
-    // icon color
-    let iconColor = !error ? classes.iconBaseColor : classes.iconErrorColor;
-    
+    const submitButtonClassName = classNames({
+      [classes.submitButton]: !this.props.signing || this.props.success,
+      [classes.disableButton]: this.state.formError || this.props.signing ,
+    })
+
     return (
-        <div className={classes.root}>
-          <Paper elevation={24} style={{borderRadius: 10}}>
-            <div style={textFieldBoxStyle}>
-              <Typography
-                type="title"
-                gutterBottom
-                style={signupFormHeadlineStyle}
-              >
-                Create Account
-              </Typography>
-            </div>
-            <div>
-              <form className={classes.formContainer} noValidate autoComplete="off">
-                {Object.keys(this.state).filter(s => s !== "errorGroup").map(s => {
-                  return (
-                  <div key={s} style={signupFieldStyle}>
-                    <TextField
-                      required
-                      key={s}
-                      id={s}
-                      type={s}
-                      margin="normal"
-                      value={this.state[s]}
-                      label={s.charAt(0).toUpperCase() + s.slice(1)}
-                      onChange={this.handleUserSignUpInput(s)}
-                      className={classes.textField}
-                      labelClassName={classes.label}
-                      InputClassName={classes.input}
-                      /* depth customization - damn... took me 20mins to figure out this. Goodluck guys for future customization part :)
-                        InputProps={{
-                          disableUnderline: true
-                          className: classes.input
+      <MuiThemeProvider theme={theme}>
+        {error &&
+          error.map((e, i) => (
+              <Snackbar
+                key={e.code+i}
+                open={error ? true: false}
+                onRequestClose={this.handleCloseSignupForm}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                transition={Fade}
+                SnackbarContentProps={{
+                  className: classes.alertBar,
+                  'aria-describedby': 'alert-id',
+                }}
+                message={e.message}
+              />
+          ))
+        }
+        {!this.state.open ? null
+          : <div className="signup-form">
+            {this.props.signing && <LinearProgress style={{backgroundColor: "#b2edfc"}}
+              classes={{
+                primaryColorBar: classes.overridePrimaryColorBar
+              }}
+            >
+            </LinearProgress>}
+            <form onSubmit={this.handleSignupFormSubmit}>
+              <Card className="signup-form-root">
+                <div className="signup-form-field-container">
+                  <CardHeader
+                    className="signup-form-header"
+                    title={
+                      <div className="signup-form-header-title">
+                        <h3>Signup</h3>
+                      </div>
+                    }
+                  />
+                  <CardContent className="signup-form-body-container">
+                    <div className="form-text-field-container">
+                      <Icon classes={{
+                        root: classes.iconRoot
+                      }}>
+                        account_box
+                      </Icon>
+                      <TextField
+                        id="username"
+                        label="Username"
+                        margin="normal"
+                        required
+                        autoFocus
+                        value={this.state.username}
+                        helperText={this.state.usernameError && `⚠️ Please enter a username.`}
+                        onChange={this.handleUsernameInput}
+                        onBlur={this.handleUsernameInput}
+                        onKeyUp={this.handleUsernameInput}
+                        onPaste={this.handleUsernameInput}
+                        className={classes.textFieldContainer}
+                        labelClassName={!this.state.usernameError ? classes.inputLabel: classes.errorInputLabel }
+                        InputLabelProps={{
+                          shrink: true
                         }}
-                      */
-
-                      // TODO; need to add errorText when dynamically checking user input
-                      // errorText = helperText (why MATERIAL UI don't add a more concise migration note!!)
-                      // ref = see the experimented code -> DemoValidationFormFlow.js
-                    />
-                    <Icon classes={{
-                      root: iconColor
-                    }}>
-                      {iconOptions[s]}
-                    </Icon>
-                  </div>)
-                })}
-
-                <Button raised className={classes.signupButton} onClick={this.handleFormSubmit}>
-                  Signup
-                </Button>
-              </form>
-            </div>
-          </Paper>
-        </div>
+                        error={this.state.usernameError}
+                        InputProps={{
+                          classes: {
+                            input: !this.state.usernameError ? classes.input: classes.errorInput,
+                          }
+                        }}
+                      />
+                    </div>
+                    <div className="form-text-field-container">
+                      <Icon classes={{
+                        root: classes.iconRoot
+                      }}>
+                        email
+                      </Icon>
+                      <TextField
+                        id="emailAddress"
+                        label="Email"
+                        margin="normal"
+                        required
+                        value={this.state.emailAddress}
+                        helperText={this.state.emailError && `⚠️ Please enter a valid email.`}
+                        onChange={this.handleEmailInput}
+                        onBlur={this.handleEmailInput}
+                        onKeyUp={this.handleEmailInput}
+                        onPaste={this.handleEmailInput}
+                        className={classes.textFieldContainer}
+                        labelClassName={!this.state.emailError ? classes.inputLabel: classes.errorInputLabel }
+                        InputLabelProps={{
+                          shrink: true
+                        }}
+                        error={this.state.emailError}
+                        InputProps={{
+                          classes: {
+                            input: !this.state.emailError ? classes.input: classes.errorInput,
+                          }
+                        }}
+                      />
+                    </div>
+                    <div className="form-text-field-container">
+                      <Icon classes={{
+                        root: classes.iconRoot
+                      }}>
+                        lock
+                      </Icon>
+                      <TextField
+                        id="password"
+                        label="Password"
+                        margin="normal"
+                        required
+                        value={this.state.password}
+                        type={this.state.showPassword ? 'text' : 'password'}
+                        onChange={this.handlePasswordInput}
+                        onBlur={this.handlePasswordInput}
+                        onKeyUp={this.handlePasswordInput}
+                        onPaste={this.handlePasswordInput}
+                        helperText={this.state.passwordError && `⚠️ Password must be at least 8 characters`}
+                        className={classes.textFieldContainer}
+                        labelClassName={!this.state.passwordError ? classes.inputLabel: classes.errorInputLabel }
+                        InputLabelProps={{
+                          shrink: true
+                        }}
+                        error={this.state.passwordError}
+                        InputProps={{
+                          classes: {
+                            input: !this.state.passwordError ? classes.input: classes.errorInput,
+                          },
+                          endAdornment:
+                          <InputAdornment position="end"
+                            classes={{
+                              root: classes.passwordEyeIconRoot
+                            }}
+                          >
+                            <Icon
+                              onClick={this.handleClickShowPasssword}
+                              onMouseDown={this.handleMouseDownPassword}
+                            >
+                            {this.state.showPassword ? <VisibilityOff /> : <Visibility />}
+                            </Icon>
+                          </InputAdornment>
+                        }}
+                      />
+                    </div>
+                  </CardContent>
+                  <div className="signup-form-button-container">
+                    <CardActions
+                      classes={{
+                        root: classes.cardButtonRoot
+                      }}
+                      >
+                      <Button
+                        raised
+                        disabled={this.state.formError || this.props.signing || this.props.success}
+                        className={submitButtonClassName}
+                        onClick={this.handleSignupFormSubmit}
+                      >
+                        {this.getButtonName()}
+                      </Button>
+                      {this.props.signing && <CircularProgress size={40} className={classes.circularButtonProgress}/>}
+                    </CardActions>
+                  </div>
+                </div>
+            </Card>
+            </form>
+          </div>
+        }
+      </MuiThemeProvider>
     )
   }
 }
 
-SignupForm.propTypes = {
-  classes: PropTypes.object.isRequired,
-  onTokenProcess: PropTypes.func,
-  onSetupUserInfo: PropTypes.func,
+function mapStateToProps(state) {
+    const { error } = state.alert
+    const { signupSubmitted } = state.signup
+
+    return {
+      error,
+      signupSubmitted,
+      ...state.signup
+    }
 }
 
-
-export default withStyles(styles)(SignupForm)
+export default compose(
+  withStyles(styles),
+  connect(mapStateToProps)
+)(SignupForm);

@@ -82,7 +82,7 @@ public class AccountControllerImpl implements AccountController {
 		userWS.setRoles(Lists.newArrayList(role));
 
 		if (accountService.userExist(userWS.getEmailAddress())) {
-			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.ACCOUNT_EXIST.name(), "Account already registered."), HttpStatus.CONFLICT);
+			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.ACCOUNT_EXIST.name(), "Account email address already registered."), HttpStatus.CONFLICT);
 		}
 
 		UserBean userBean = userMapper.toBean(userWS);
