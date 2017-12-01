@@ -1,0 +1,24 @@
+{
+  "userUuid": "28968fa1-df8e-42e5-92cd-3a14123a831f",
+  "agentUuid": "cfc12d37-91d0-480d-97e1-625140823110",
+  "sku": "xvc",
+  "orderType": "SAMPLE",
+  "orderStatus": "PENDING",
+  "items": [{
+      "color": "Green",
+      "description": "Green Jacket",
+      "fabric": "Jacket",
+      "quantity": {
+        "XS": 2,
+        "S": 2,
+        "M": 2,
+        "L": 2
+      },
+      "price": 0,
+      "note": "Make sure black jacket is in good quality!"
+    }],
+  "currency": "USD",
+  "totalPrice": 0,
+  "shippingInstruction": "Ship to England",
+  "orderNote": "Please make sure the quality is good!"
+}

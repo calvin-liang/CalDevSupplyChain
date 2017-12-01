@@ -5,3 +5,130 @@ html, body {
   max-width: 100%;
   overflow-x: hidden;
 }
+
+.flatButtons {
+  margin-left: 300px;
+}
+
+.button_link {
+  background-color: #f1f1f1;
+  border: none;
+  color: blue;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 15px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+.button_link1 {
+  background-color: #f1f1f1;
+  border: none;
+  color: blue;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 15px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+.button_link2 {
+  background-color: #f9f9f9;
+  border: none;
+  color: black;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 15px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+.button {
+  background-color: #f1f1f1;
+  border: none;
+  color: blue;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 15px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+.button4 {border-radius: 12px;}
+
+.t {
+  background-color: rgb(220,220,220);
+  color: rgb(0,191,255);
+  padding: 1px;
+}
+
+.active-order {
+  margin-top: 80px;
+  margin-left: 150px;
+  color: blue;
+}
+
+.process-order {
+  margin-left: 150px;
+  color: blue;
+}
+
+.create_order {
+  margin-left: 1200px;
+}
+/*.table {*/
+/*margin-left: 500px;*/
+/*margin-top: 100px;*/
+/*!*border: 1px solid #ddd;*!*/
+/*text-align: left;*/
+/*border-collapse: collapse;*/
+/*width: 200%;*/
+/*padding: 25px;*/
+/*}*/
+table {
+  margin-left: 300px;
+  margin-top: 30px;
+  border-collapse: collapse;
+  width: 50%;
+}
+
+/*table, td, th {*/
+  /*border: 1px solid black;*/
+/*}*/
+
+th, td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th, td {
+  text-align: left;
+  padding: 18px;
+}
+th {
+  /*background-color: #b8ccd8;*/
+  color: black;
+}
+
+.cancelButtons {
+  margin-left: 300px;
+}
+.dia {
+  background-color: lightblue;
+}
+
+.detail {
+  border-style: solid;
+  border-color: cornflowerblue;
+  margin-top: 10px;
+  margin-left: 5px;
+}
