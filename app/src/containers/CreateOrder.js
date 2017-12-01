@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import Paper2 from '../components/Paper/Paper2/Paper2';
-import Paper3 from '../components/Paper/Paper3/Paper3';
-import Paper4 from '../components/Paper/Paper4/Paper4';
+import Up from '../components/CreateOrders/item1/MainPage1';
+import Middle from '../components/CreateOrders/item2/MainPage2';
+import Down from '../components/CreateOrders/item3/MainPage3';
 import Button from 'material-ui/Button';
 import Grid from 'material-ui/Grid';
 import TextField from 'material-ui/TextField';
 import PropTypes from 'prop-types';
 import Paper from 'material-ui/Paper';
 import { withStyles } from 'material-ui/styles';
-import CreateButton from '../components/Paper/Paper4/CreateButton';
+import CreateButton from '../components/CreateOrders/item3/CreateButton';
 
 const styles = theme => ({
     container: {
@@ -200,13 +200,13 @@ class CreateOrder extends Component {
                 <div className="detail">
                     <h2>Create Order</h2>
                 </div>
-                <Paper2
+                <Up
                     getShipment={this.getShipment}
                     getCurrency={this.getCurrency}
                     getOrderType={this.getOrderType}
                     getSKU={this.getSKU}
                 />
-                <Paper3
+                <Middle
                     getQuantity1={this.getQuantity1}
                     getQuantity2={this.getQuantity2}
                     getQuantity3={this.getQuantity3}
@@ -219,7 +219,7 @@ class CreateOrder extends Component {
                     getPrice={this.getPrice}
                     getNote={this.getNote}
                 />
-                <Paper4 />
+                <Down />
                 <CreateButton
                     userInput={this.state.userInput}
                 ></CreateButton>

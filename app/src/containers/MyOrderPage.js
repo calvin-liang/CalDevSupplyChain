@@ -46,16 +46,6 @@ class MyOrderPage extends Component {
 
     componentDidMount() {
         console.log("i am here!");
-        //const client = axios.create();
-        //console.log("auth: ", window.authorizationToken);
-        // axios.defaults.headers.common['Authorization'] =  cookies.get('authorizationToken');
-        // axios.get(`${API_ROOT}/orders/order?userUuid=28968fa1-df8e-42e5-92cd-3a14123a831f`).then((data)=>
-        //     {
-        //     console.log("data:", data);
-        // }
-        // ).catch((error)=>{
-        //         console.log(error);
-        // })
         debugger;
         console.log("cookie: ", cookies.get('authorizationToken'));
         const axiosIntance = axios.create({
@@ -89,17 +79,13 @@ class MyOrderPage extends Component {
                 const tableDatas = this.state.data.map((item, index) => {
                 return (<tr key="{index}">
                     <td>{item.sku}</td>
-                    <td>{null}</td>
-                    <td>{null}</td>
+                    <td>{"12/01/2017"}</td>
+                    <td>{}</td>
                     <td>{item.orderStatus}</td>
                     <td>{item.agentUuid}</td>
                     <td>{item.totalPrice}</td>
                     <td>
-                        {/*<a href="/orderDetail" className="button_link2 button4"> Detail</a>*/}
-                        {/*<Button color="primary" className={this.props.classes.button} onClick={this.handleClick(item.uuid)} >*/}
-                            {/*Detail*/}
-                        {/*</Button>*/}
-                        <button onClick={ () => this.handleClick(item.uuid)} >Detail</button>
+                        <button onClick={() => this.handleClick(item.uuid)} >Detail</button>
                     </td>
                 </tr>)
             });
@@ -115,7 +101,7 @@ class MyOrderPage extends Component {
                         null
                     }
 
-                    <button className="button button4">MyOrder</button>
+                    <a href="/myorderPage" class="button_link1 button4"> MyOrder </a>
                     <button className="button button4">Manufacturer</button>
                     <button className="button button4">Designer</button>
 
@@ -137,6 +123,7 @@ class MyOrderPage extends Component {
                                 <th>Progress</th>
                                 <th>Agent</th>
                                 <th>Total</th>
+                                <th></th>
                             </tr>
                             {tableDatas}
 

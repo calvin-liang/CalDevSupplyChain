@@ -33,16 +33,6 @@ function CreateButton(props) {
 
       let item = {}
 
-      // userInput["color"] = props.userInput.color;
-      // userInput["description"] = props.userInput.note;
-      // userInput["fabric"] = props.userInput.fabric;
-      // userInput["xs"] = props.userInput.xs;
-      // userInput["s"] = props.userInput.s;
-      // userInput["m"] = props.userInput.m;
-      // userInput["l"] = props.userInput.l;
-      // userInput["xl"] = props.userInput.xl;
-      // userInput["xxl"] = props.userInput.xxl;
-
       item["color"] = props.userInput.color;
       item["description"] = props.userInput.note;
       item["fabric"] = props.userInput.fabric;
@@ -51,11 +41,7 @@ function CreateButton(props) {
       quan["S"] = props.userInput.s;
       quan["M"] = props.userInput.m;
       quan["L"] = props.userInput.l;
-      // quan["XL"] = props.userInput.xl;
-      // quan["XLL"] = props.userInput.xxl;
       item["quantity"] = quan;
-
-
 
       item["price"] = props.userInput.price;
       item["note"] = "Be careful";
@@ -71,24 +57,6 @@ function CreateButton(props) {
           props.userInput.fabric && props.userInput.xs && props.userInput.s && props.userInput.m &&
           props.userInput.l && props.userInput.price && props.userInput.currency)
       {
-          // axios.post(`${API_ROOT}/api/v1/orders/order`, userInput)
-          //     .then(function (response) {
-          //         console.log("res is :", response);
-          //         if(response.status == 200) {
-          //             window.location.href = '/myorderPage';
-          //         } else {
-          //             alert("error");
-          //         }
-          //     }).catch(err => {
-          //     console.log("[err]:", err);
-          // })
-          // const client = axios.create({
-          //     Authorization : 'Bearer ' + ''
-          //
-          // });
-
-          console.log("cookie is ",cookies.get('authorizationToken'));
-          console.log("!!!", data1);
           var config = {
 
               headers: {
@@ -97,8 +65,6 @@ function CreateButton(props) {
                   'Content-Type': 'application/json'
               }
           }
-          //var bodyParameters = userInput;
-          //console.log(bodyParameters);
 
           axios.post(
 

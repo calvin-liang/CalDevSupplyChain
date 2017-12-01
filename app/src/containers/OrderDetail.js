@@ -9,8 +9,6 @@ class OrderDetail extends Component {
         debugger;
         const tableDatas = oneOrder.items.map((item, index) => {
             console.log("[",item, "after", index);
-            //console.log("length",item.items.length);
-            //for (var i = 0; i < item.items.length; i++) {
                 return (<tr key="{index}">
 
                     <td>{item.uuid}</td>
@@ -18,10 +16,11 @@ class OrderDetail extends Component {
                     <td>{item.description}</td>
                     <td>{item.fabric}</td>
                     <td>{item.quantity.XS}</td>
+                    <td>{item.quantity.S}</td>
+                    <td>{item.quantity.M}</td>
+                    <td>{item.quantity.L}</td>
                     <td>{item.price}</td>
                 </tr>)
-            //}
-
         });
 
         return (
@@ -42,7 +41,10 @@ class OrderDetail extends Component {
                             <th>Color</th>
                             <th>Description</th>
                             <th>Farbic</th>
-                            <th>Size Quantity</th>
+                            <th>Size(XS) Quantity</th>
+                            <th>Size(S) Quantity</th>
+                            <th>Size(M) Quantity</th>
+                            <th>Size(L) Quantity</th>
                             <th>Price</th>
                         </tr>
                         {tableDatas}

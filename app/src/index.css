@@ -13,7 +13,7 @@ html, body {
 .button_link {
   background-color: #f1f1f1;
   border: none;
-  color: black;
+  color: blue;
   padding: 10px;
   text-align: center;
   text-decoration: none;
@@ -98,6 +98,16 @@ table {
   margin-top: 30px;
   border-collapse: collapse;
   width: 50%;
+}
+
+/*table, td, th {*/
+  /*border: 1px solid black;*/
+/*}*/
+
+th, td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
 }
 
 th, td {

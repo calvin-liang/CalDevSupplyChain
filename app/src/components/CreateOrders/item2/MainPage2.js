@@ -19,10 +19,12 @@ const styles = theme => ({
     paddingTop: 16,
     paddingBottom: 16,
     marginTop: theme.spacing.unit * 0.2,
+    marginBottom: theme.spacing.unit * 1
+
   }),
 });
 
-class Paper3 extends React.Component  {
+class MainPage2 extends React.Component  {
   //const { classes } = props;
     getQuantity1 = (value) => {
         console.log(value);
@@ -105,10 +107,10 @@ class Paper3 extends React.Component  {
                         getQuantity6={this.getQuantity6}
                     />
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={2.5}>
                     <Price getPrice={this.getPrice}/>
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={2.5}>
                     <Note getNote={this.getNote}/>
                   </Grid>
                 </Grid>
@@ -120,8 +122,8 @@ class Paper3 extends React.Component  {
 
 }
 
-Paper3.propTypes = {
+MainPage2.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Paper3);
+export default withStyles(styles)(MainPage2);

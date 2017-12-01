@@ -25,13 +25,14 @@ const styles = theme => ({
   }),
     textField: {
         marginLeft: theme.spacing.unit * 2.5,
+        marginTop: theme.spacing.unit * 9,
         marginRight: theme.spacing.unit,
         width: 200,
     },
 });
 
 
-function Paper4(props) {
+function MainPage3(props) {
   const { classes } = props;
   return (
     <div>
@@ -50,14 +51,14 @@ function Paper4(props) {
 
           <Grid item xs={1}>
               <form className={classes.container} noValidate autoComplete="off">
-                  <TextField
-                      id="TotalUnit"
-                      label="TotalUnit"
-                      className={classes.textField}
-                      // value={this.state.name}
-                      // onChange={this.handleChange('name')}
-                      margin="normal"
-                  />
+                  {/*<TextField*/}
+                      {/*id="TotalUnit"*/}
+                      {/*label="TotalUnit"*/}
+                      {/*className={classes.textField}*/}
+                      {/*// value={this.state.name}*/}
+                      {/*// onChange={this.handleChange('name')}*/}
+                      {/*margin="normal"*/}
+                  {/*/>*/}
                   <TextField
                       id="Total"
                       label="Total"
@@ -79,8 +80,8 @@ function Paper4(props) {
   );
 }
 
-Paper4.propTypes = {
+MainPage3.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Paper4);
+export default withStyles(styles)(MainPage3);

@@ -54,27 +54,43 @@ class FlatButtons extends Component {
 
         if(email && password) {
             console.log('here!!!!');
-            checkLogin(userInput).then(res => {
-                // console.log("checkLogin", res);
-                // console.log("before");
-                // console.log("[ ",res.headers["authorization"],"]");
-                // console.log("after");
-
+            console.log("email varify: ", email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i));
+            if (email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)) {
+                console.log('in');
                 debugger;
-                cookies.set('authorizationToken', res.headers["authorization"]);
-
-                console.log("cookies:",cookies);
-                // console.log("after header");
-                if(res.status == 200) {
-                    this.setState({
-                        redirectToMyOrderPage: true
-                    })
-                } else {
-                    alert("error");
+                console.log("this is: ", checkLogin(userInput));
+                if (checkLogin(userInput)) {
+                    console.log("111");
                 }
-            }).catch(err => {
-                console.log("err", err);
-            })
+                checkLogin(userInput).then(res => {
+                    console.log("checkLogin", res);
+                    // console.log("before");
+                    // console.log("[ ",res.headers["authorization"],"]");
+                    // console.log("after");
+
+
+                    cookies.set('authorizationToken', res.headers["authorization"]);
+
+                    console.log("cookies:",cookies);
+                    // console.log("after header");
+                    if(res.status == 200) {
+                        this.setState({
+                            redirectToMyOrderPage: true
+                        })
+                    } else {
+                        alert("error");
+                    }
+                }).catch( function (error)  {
+                    // const response = error.response
+                    // console.log("res ",response);
+                    alert(`Email and password do not match!`);
+                })
+            }
+            else {
+                alert(`Please enter correct email!`);
+            }
+
+
         }
     };
 

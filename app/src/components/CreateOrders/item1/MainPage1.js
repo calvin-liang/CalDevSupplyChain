@@ -24,7 +24,7 @@ const styles = theme => ({
     },
 });
 
-class Paper2 extends React.Component {
+class MainPage1 extends React.Component {
   //const { classes } = props;
     constructor(props) {
         super(props);
@@ -98,8 +98,8 @@ class Paper2 extends React.Component {
 
 }
 
-Paper2.propTypes = {
+MainPage1.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Paper2);
+export default withStyles(styles)(MainPage1);
