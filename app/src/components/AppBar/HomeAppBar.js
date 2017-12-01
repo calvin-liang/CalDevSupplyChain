@@ -4,6 +4,7 @@ import { withStyles } from 'material-ui/styles'
 import AppBar from 'material-ui/AppBar'
 import Toolbar from 'material-ui/Toolbar'
 import Typography from 'material-ui/Typography'
+import FormDialog from '../Form/dialog';
 import Button from 'material-ui/Button'
 import { grey, blue } from 'material-ui/colors'
 
@@ -56,9 +57,7 @@ function HomeAppBar(props) {
           <Typography type="title" className={classes.logoTitle}>
             CalDevSupplyChain
           </Typography>
-          <Button raised className={classes.loginButton}>
-            Login
-          </Button>
+          <FormDialog></FormDialog>
         </Toolbar>
       </AppBar>
     </div>

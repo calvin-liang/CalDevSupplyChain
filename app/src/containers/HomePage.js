@@ -35,9 +35,6 @@ class HomePage extends Component {
           >
           </TokenForm>
         }
-        <p>ADD SOMETHING HERE AND MAKE IT LOOK NICE!!</p>
-        <p>Reference: https://www.tradegecko.com/supply-chain-management-software</p>
-        <p>I'm going to my cybersecurity project. Good luck guys :)</p>
       </div>
     )
   }

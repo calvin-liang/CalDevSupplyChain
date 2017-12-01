@@ -1,0 +1,137 @@
+[
+  {
+    "uuid": "7d20f03a-fe05-4569-90ef-b89bba11f548",
+    "displayId": "B89BBA11F548",
+    "userUuid": "28968fa1-df8e-42e5-92cd-3a14123a831f",
+    "agentUuid": "cfc12d37-91d0-480d-97e1-625140823110",
+    "sku": "ABC001",
+    "orderType": "SAMPLE",
+    "orderStatus": "PENDING",
+    "items": [
+      {
+        "uuid": "a1f540e5-1b58-426e-8b1d-425d2298dc90",
+        "displayId": "425D2298DC90",
+        "color": "Black",
+        "description": "Black Jacket",
+        "fabric": "Jacket",
+        "quantity": {
+          "XS": 1,
+          "S": 1,
+          "M": 1,
+          "L": 1
+        },
+        "price": 1,
+        "note": "Make sure silver jacket is in good quality!"
+      },
+      {
+        "uuid": "e68de8dc-beb5-4609-88bf-e77efe76d11c",
+        "displayId": "E77EFE76D11C",
+        "color": "Green",
+        "description": "Green Jacket",
+        "fabric": "Jacket",
+        "quantity": {
+          "XS": 2,
+          "S": 2,
+          "M": 2,
+          "L": 2
+        },
+        "price": 2,
+        "note": "Make sure black jacket is in good quality!"
+      }
+    ],
+    "currency": "GBP",
+    "totalPrice": 1000,
+    "shippingInstruction": "Ship to England",
+    "orderNote": "Please make sure the quality is good!"
+  },
+  {
+    "uuid": "7fc74ebc-68ef-4abf-b021-ef0c13fc1bd4",
+    "displayId": "EF0C13FC1BD4",
+    "userUuid": "28968fa1-df8e-42e5-92cd-3a14123a831f",
+    "agentUuid": "cfc12d37-91d0-480d-97e1-625140823110",
+    "sku": "ABC002",
+    "orderType": "SAMPLE",
+    "orderStatus": "PENDING",
+    "items": [
+      {
+        "uuid": "39f33beb-db28-441b-a09b-8df40676e8a8",
+        "displayId": "8DF40676E8A8",
+        "color": "Black",
+        "description": "Black Jacket",
+        "fabric": "Jacket",
+        "quantity": {
+          "XS": 3,
+          "S": 1,
+          "M": 1,
+          "L": 1
+        },
+        "price": 3,
+        "note": "Make sure silver jacket is in good quality!"
+      },
+      {
+        "uuid": "3d1201f8-c6fb-4620-a9c3-2495d97589d5",
+        "displayId": "2495D97589D5",
+        "color": "Green",
+        "description": "Green Jacket",
+        "fabric": "Jacket",
+        "quantity": {
+          "XS": 4,
+          "S": 2,
+          "M": 2,
+          "L": 2
+        },
+        "price": 4,
+        "note": "Make sure black jacket is in good quality!"
+      }
+    ],
+    "currency": "GBP",
+    "totalPrice": 10000,
+    "shippingInstruction": "Ship to England",
+    "orderNote": "Please make sure the quality is good!"
+  },
+  {
+    "uuid": "e967fb14-f34b-4949-8ac1-79045cafcc49",
+    "displayId": "79045CAFCC49",
+    "userUuid": "28968fa1-df8e-42e5-92cd-3a14123a831f",
+    "agentUuid": "cfc12d37-91d0-480d-97e1-625140823110",
+    "sku": "ABC003",
+    "orderType": "SAMPLE",
+    "orderStatus": "PENDING",
+    "items": [
+      {
+        "uuid": "d9d5310c-633e-447a-b98c-1b2b19d07d93",
+        "displayId": "1B2B19D07D93",
+        "color": "Red",
+        "description": "red Jacket",
+        "fabric": "Jacket",
+        "quantity": {
+          "XS": 5,
+          "S": 1,
+          "M": 1,
+          "L": 1
+        },
+        "price": 5,
+        "note": "Make sure silver jacket is in good quality!"
+      },
+      {
+        "uuid": "7b028599-9afc-4862-afe3-4ddad82c7bea",
+        "displayId": "4DDAD82C7BEA",
+        "color": "Green",
+        "description": "Green Jacket",
+        "fabric": "Jacket",
+        "quantity": {
+          "XS": 6,
+          "S": 2,
+          "M": 2,
+          "L": 2
+        },
+        "price": 6,
+        "note": "Make sure black jacket is in good quality!"
+      }
+    ],
+    "currency": "GBP",
+    "totalPrice": 100,
+    "shippingInstruction": "Ship to England",
+    "orderNote": "Please make sure the quality is good!"
+  }
+]
