@@ -26,7 +26,7 @@ const styles = theme => ({
 class OrderType extends React.Component {
   state = {
     age: '',
-    name: '',
+    name: 10,
   };
 
   handleChange = name => event => {
@@ -46,7 +46,7 @@ class OrderType extends React.Component {
         <FormControl className={classes.formControl}>
           <InputLabel htmlFor="age-simple">Order Type</InputLabel>
           <Select
-            value={this.state.age}
+            value={this.state.name}
             onChange={this.handleChange('age')}
             input={<Input id="age-simple" />}
           >
