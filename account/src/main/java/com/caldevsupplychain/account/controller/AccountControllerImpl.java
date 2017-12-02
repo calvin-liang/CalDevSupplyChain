@@ -126,7 +126,7 @@ public class AccountControllerImpl implements AccountController {
 
 		log.debug("Success create jwt token. jwtToken={}", jwtToken.getToken());
 
-		return new ResponseEntity<>(jwtService.createJwtHeader(jwtToken.getToken()), HttpStatus.OK);
+		return new ResponseEntity<>(userMapper.toWS(user), jwtService.createJwtHeader(jwtToken.getToken()), HttpStatus.OK);
 	}
 
 	@PostMapping("/users/forgot-password")

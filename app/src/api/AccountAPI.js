@@ -15,11 +15,11 @@ export const activateAccount = (token) => {
   return axios.get(`${API_ROOT}/account/activate/${token}`)
 }
 
-export const login = (loginData) => {
+export const login = (userData) => {
   return axios.post(`${API_ROOT}/account/issue-token`, '', {
     auth: {
-      username: loginData.username,
-      password: loginData.password
+      username: userData.emailAddress,
+      password: userData.password
     }
   })
 }

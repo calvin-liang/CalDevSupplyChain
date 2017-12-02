@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
 import SignupForm from '../form/SignupForm';
-import ActivationEmailDialog from '../dialog/ActivationEmailDialog'
 import Dialog, {
   DialogActions,
   DialogContent,
@@ -16,7 +15,7 @@ import { compose } from 'recompose';
 
 
 const styles = theme => ({
-  signupButton: {    
+  signupButton: {
     color: "black",
     backgroundColor: "#58D3F7",
     fontFamily: "Roboto",
@@ -27,7 +26,6 @@ const styles = theme => ({
   },
 })
 
-
 class SignupButton extends Component {
   state = {
     open: false,
@@ -35,9 +33,8 @@ class SignupButton extends Component {
 
   componentWillReceiveProps(nextProps){
     if(this.props !== nextProps){
-      // this.setState({open: !nextProps.loader.isLoading && !nextProps.successSentEmailActivation })
-      let closeCondition = nextProps.loader.isLoading ? true : nextProps.successSentEmailActivation ? true : nextProps.signupCompleted ? true : false
-      this.setState({open: !closeCondition })
+      // this.setState({open: !(nextProps.loggedIn || nextProps.success) })
+      this.setState({open: !nextProps.success})
     }
   }
 
@@ -68,7 +65,6 @@ class SignupButton extends Component {
         >
           <SignupForm/>
         </Dialog>
-        {this.props.successSentEmailActivation && <ActivationEmailDialog/>}
       </div>
     );
   }
@@ -77,13 +73,13 @@ class SignupButton extends Component {
 function mapStateToProps(state) {
 
     const { loader } = state
-    const { successSentEmailActivation } = state.notification
-    const { signupCompleted } = state.signup
+    const { success } = state.signup
+    const { loggedIn } = state.authentication
 
     return {
       loader,
-      successSentEmailActivation,
-      signupCompleted,
+      loggedIn,
+      success,
     }
 }
 

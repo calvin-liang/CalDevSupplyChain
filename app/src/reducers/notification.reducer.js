@@ -2,11 +2,14 @@ import { notificationConstant } from '../constants';
 
 export function notification(state = {}, action) {
   switch (action.type) {
-    case notificationConstant.SIGNUP_EMAIL_ACTIVATION_SENT:
+    case notificationConstant.SEND:
       return {
-        successSentEmailActivation: true
+        send: true,
+        iconName: action.iconName,
+        title: action.title,
+        contentText: action.contentText
       }
-    case notificationConstant.RESET_SIGNUP_EMAIL_ACTIVATION:
+    case notificationConstant.CLEAR:
       return {}
     default:
       return state

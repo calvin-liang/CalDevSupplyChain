@@ -34,56 +34,6 @@ a {
 /* Text */
 
 /*  HomePage */
-/*.home-container {
-}
-
-.home-app-bar-root {
-  display: flex;
-  height: 60px;
-}
-
-.home-navbar-logo {
-  color: #58D3F7;
-  font-size: 24px;
-  font-weight: 500;
-  line-height: 32px;
-  margin-left: 55px;
-  width: 30%;
-  box-orient: horizontal;
-  box-direction: normal;
-  flex-direction: row;
-}
-
-.home-navbar {
-  display: flex;
-  width: 50%;
-  height: 100%;
-}
-
-.home-navbar-menu-text {
-  padding-left: 20px;
-  padding-right: 20px;
-  font-size: 18px;
-  font-style: normal;
-  font-weight: 300;
-  box-orient: horizontal;
-  box-direction: normal;
-  flex-direction: row;
-  box-align: center;
-  align-items: center;
-  transition: color 0.2s ease-out;
-}
-
-a.home-navbar-menu-text:hover {
-  color: #66dbf9;
-}
-
-.home-navbar-button {
-  display: flex;
-  width: 20%;
-}*/
-
-
 .home-background-video-container {
   position: relative;
   overflow: hidden;
@@ -125,18 +75,6 @@ a.home-navbar-menu-text:hover {
   font-size: 30px;
   font-weight: 350;
 }
-
-/*.home-feature-item-container {
-  padding-left: 80px;
-  padding-right: 80px;
-}*/
-
-/*.home-features-title h3 {
-  width: 100%;
-  height: 100%;
-  font-size: 22px;
-  font-weight: 550;
-}*/
 
 .home-features-icon {
   height: 35px;
@@ -188,7 +126,6 @@ a.home-navbar-menu-text:hover {
 }
 
 .signup-form-body-container {
-  /*height: 80%;*/
 }
 
 .form-text-field-container {
@@ -208,8 +145,7 @@ a.home-navbar-menu-text:hover {
   z-index: 9999;
   border: 2px;
   border-radius: 10px;
-  background: #22252a;
-  /*background: url('../img/loaderred.gif') 50% 50% no-repeat rgb(249,249,249);*/
+  background: #22252a;  
 }
 
 /* Login form css */

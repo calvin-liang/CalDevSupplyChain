@@ -8,14 +8,13 @@ import Button from 'material-ui/Button';
 import TextField from 'material-ui/TextField';
 import Snackbar from 'material-ui/Snackbar';
 import Fade from 'material-ui/transitions/Fade';
-import ActivationEmailDialog from '../dialog/ActivationEmailDialog'
 import Card, { CardHeader, CardActions, CardContent, CardMedia } from 'material-ui/Card';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import { FormControl } from 'material-ui/Form';
 import { InputAdornment } from 'material-ui/Input';
 import { LinearProgress, CircularProgress } from 'material-ui/Progress';
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
-import { Visibility, VisibilityOff, Warning } from 'material-ui-icons';
+import { Visibility, VisibilityOff } from 'material-ui-icons';
 import { validateEmail, history } from '../../util';
 import { compose } from 'recompose';
 import { userActions, alertActions, notificationActions } from '../../actions';
@@ -183,15 +182,9 @@ class SignupForm extends Component {
         emailError: false,
         passwordError: false,
 
-        open: true,
+        open: false,
 
       }
-  }
-
-  componentWillReceiveProps(nextProps){
-    if(this.props !== nextProps){
-      this.setState({open: !nextProps.signupSubmitted })
-    }
   }
 
   getButtonName = () => {
@@ -239,7 +232,6 @@ class SignupForm extends Component {
     if(!formError && !this.props.signing) {
       this.props.dispatch(userActions.signup({username, emailAddress, password}))
     }
-
   };
 
   handleCloseSignupForm = () =>  {
@@ -249,7 +241,7 @@ class SignupForm extends Component {
 
   render() {
 
-    const { classes, user, signing, error } = this.props
+    const { classes, user, error } = this.props
 
     const submitButtonClassName = classNames({
       [classes.submitButton]: !this.props.signing || this.props.success,
@@ -274,14 +266,15 @@ class SignupForm extends Component {
               />
           ))
         }
-        {!this.state.open ? null
-          : <div className="signup-form">
-            {this.props.signing && <LinearProgress style={{backgroundColor: "#b2edfc"}}
-              classes={{
-                primaryColorBar: classes.overridePrimaryColorBar
-              }}
-            >
-            </LinearProgress>}
+          <div className="signup-form">
+            {this.props.signing &&
+              <LinearProgress style={{backgroundColor: "#b2edfc"}}
+                classes={{
+                  primaryColorBar: classes.overridePrimaryColorBar
+                }}
+              >
+              </LinearProgress>
+            }
             <form onSubmit={this.handleSignupFormSubmit}>
               <Card className="signup-form-root">
                 <div className="signup-form-field-container">
@@ -421,7 +414,6 @@ class SignupForm extends Component {
             </Card>
             </form>
           </div>
-        }
       </MuiThemeProvider>
     )
   }
@@ -429,11 +421,9 @@ class SignupForm extends Component {
 
 function mapStateToProps(state) {
     const { error } = state.alert
-    const { signupSubmitted } = state.signup
 
     return {
       error,
-      signupSubmitted,
       ...state.signup
     }
 }

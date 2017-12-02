@@ -75,8 +75,6 @@ public class JwtServiceImpl implements JwtService {
 				.getBody();
 
 
-
-
 		long currentTime = System.currentTimeMillis();
 		boolean checkIntegrity = claims.getId().equals(uuid);
 		boolean checkTimeRange = claims.getNotBefore().getTime() <= currentTime && currentTime < claims.getExpiration().getTime();

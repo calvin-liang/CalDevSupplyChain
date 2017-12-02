@@ -8,15 +8,10 @@ export function signup(state = {}, action) {
       }
     case userConstants.SIGNUP_SUCCESS:
       return {
-          success: true,
-          user: action.user,
-       }
-     case userConstants.RESET_SUCCESS_SIGNUP:
-       return {
-          signupCompleted: true,
-          user: action.user,
-        }
-    case userConstants.RESET_SIGNUP_FORM:
+        success: true,
+        user: action.user,
+      }
+    case userConstants.SIGNUP_FAILURE:
       return {}
     default:
       return state

@@ -2,25 +2,24 @@ import { notificationConstant } from '../constants';
 import { loaderActions }  from './loader.actions'
 
 export const notificationActions = {
-    sendSignupEmailActivation,
+    send,
+    clear,
 };
 
-function sendSignupEmailActivation() {
+function send(iconName, title, contentText, delay) {
     return dispatch => {
       dispatch(loaderActions.load())
       setTimeout(() => {
         dispatch(loaderActions.clear())
-        dispatch(success())
-      }, 3000)
-      setTimeout(() => {
-        dispatch(reset())
-      }, 5000)
-
+        dispatch(send({iconName, title, contentText}))
+      }, delay)
     }
-
-    // function request() { return { type: notificationConstant.SIGNUP_EMAIL_ACTIVATION_REQUEST }}
-    function success() { return { type: notificationConstant.SIGNUP_EMAIL_ACTIVATION_SENT }}
-    function reset() { return { type: notificationConstant.RESET_SIGNUP_EMAIL_ACTIVATION }}
+    function send(props) { return { type: notificationConstant.SEND, ...props}}
 }
 
-// function clear() { return { type: notificationConstant.RESET_SIGNUP_EMAIL_ACTIVATION }}
+function clear() {
+  return dispatch => {
+    dispatch(clear())
+  }
+  function clear() {return {type: notificationConstant.CLEAR}}
+}
