@@ -20,6 +20,7 @@ spring:
       ddl-auto: none
       naming-strategy: org.springframework.boot.orm.jpa.hibernate.SpringNamingStrategy
       dialect: org.hibernate.dialect.MySQL5Dialect
+      format_sql: true
     show-sql: false
   jackson:
     serialization:
@@ -28,12 +29,17 @@ spring:
 jwt:
   header:
     issuer: caldevsupplychain
-    token-prefix: Bearer
-    auth: Authorization
     expire-time-range: 3600000
 
 api:
   version: v1
   client-port: 3000
   protocol: http
+
+logging:
+  level:
+    org:
+      springframework.web: INFO
+      hibernate: INFO
+
 

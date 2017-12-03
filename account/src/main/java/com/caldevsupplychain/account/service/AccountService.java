@@ -22,6 +22,4 @@ public interface AccountService {
 	Optional<UserBean> findByEmailAddress(String emailAddress);
 
 	Optional<UserBean> findByToken(String token);
-
-	Optional<UserBean> findById(Long id);
 }

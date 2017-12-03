@@ -28,7 +28,7 @@ public class ApiErrorsExceptionHandler extends ResponseEntityExceptionHandler {
 	@ExceptionHandler({JwtException.class})
 	public ResponseEntity<?> handleJwtAuthenticationException(JwtException e) {
 
-		log.error("Error message={} stack_trace={}", e.getMessage(), e.getStackTrace());
+		log.error("Unexpected error", e);
 
 		return new ResponseEntity<Object>(new ApiErrorsWS(ErrorCode.JWT_EXCEPTION.name(), e.getMessage()), HttpStatus.UNAUTHORIZED);
 	}
@@ -36,7 +36,7 @@ public class ApiErrorsExceptionHandler extends ResponseEntityExceptionHandler {
 	@ExceptionHandler({ShiroException.class})
 	public ResponseEntity<?> handleAuthenticationException(ShiroException e) {
 
-		log.error("Error message={} stack_trace={}", e.getMessage(), e.getStackTrace());
+		log.error("Unexpectd error: ", e);
 
 		if (e instanceof UnauthenticatedException) {
 			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.UNAUTHENTICATION.name(), e.getMessage()), HttpStatus.UNAUTHORIZED);
@@ -46,7 +46,6 @@ public class ApiErrorsExceptionHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(new ApiErrorsWS(e.getClass().getSimpleName(), e.getMessage()), HttpStatus.UNAUTHORIZED);
 	}
 
-	// util
 	public List<ErrorWS> generateErrorWSList(BindingResult errors) {
 		return errors.getFieldErrors()
 				.stream()

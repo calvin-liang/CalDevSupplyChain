@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import lombok.extern.slf4j.Slf4j;
 
-import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -32,9 +31,6 @@ public class ItemValidator implements Validator {
 
 	@Override
 	public void validate(Object o, Errors errors) {
-
-		String currentUserUuid = (String) SecurityUtils.getSubject().getPrincipal();
-
 		Optional<UserBean> userBean = contextUtil.currentUser();
 
 		ItemWS itemWS = (ItemWS) o;
@@ -76,6 +72,5 @@ public class ItemValidator implements Validator {
 		}
 		return allZero;
 	}
-
 }
 

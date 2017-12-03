@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.caldevsupplychain.account.annotation.RequiresJwtAuthentication;
 import com.caldevsupplychain.account.jwt.service.JwtService;
 import com.caldevsupplychain.account.jwt.token.JWTAuthenticationToken;
 import com.caldevsupplychain.account.service.AccountService;
@@ -112,7 +111,6 @@ public class AccountControllerImpl implements AccountController {
 	@PostMapping("/issue-token")
 	@RequiresAuthentication
 	public ResponseEntity<?> issueToken() {
-
 		Optional<UserBean> userBean = contextUtil.currentUser();
 
 		if (!userBean.isPresent()) {
@@ -155,7 +153,6 @@ public class AccountControllerImpl implements AccountController {
 	}
 
 	@PutMapping("/users/{uuid}")
-	@RequiresJwtAuthentication
 	@RequiresPermissions("account:update")
 	public ResponseEntity<?> updateUser(@PathVariable("uuid") String uuid, @Validated @RequestBody UserWS userWS) {
 		BindException errors = new BindException(userWS, "UserWS");
@@ -198,7 +195,6 @@ public class AccountControllerImpl implements AccountController {
 	}
 
 	@GetMapping("/users")
-	@RequiresJwtAuthentication
 	@RequiresPermissions("account:admin")
 	public ResponseEntity<?> getAllUsers() {
 		List<UserBean> userBeans = accountService.getAllUsers();
