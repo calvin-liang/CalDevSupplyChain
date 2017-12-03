@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.caldevsupplychain.account.jwt.token.JWTAuthenticationToken;
 import com.caldevsupplychain.account.vo.UserBean;
+import com.google.common.collect.Lists;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.CompressionCodecs;
 import io.jsonwebtoken.Jwts;
@@ -56,6 +57,7 @@ public class JwtServiceImpl implements JwtService {
 	public HttpHeaders createJwtHeader(String jwtToken) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.set(AUTHORIZATION_HEADER, AUTH_SCHEMA + " " + jwtToken);
+		headers.setAccessControlExposeHeaders(Lists.newArrayList(AUTHORIZATION_HEADER));
 		return headers;
 	}
 
