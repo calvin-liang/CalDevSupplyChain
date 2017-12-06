@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "autosuggest-highlight": "^3.1.1",
     "axios": "^0.16.2",
     "classnames": "^2.2.5",
     "jss": "^9.0.0",
@@ -10,7 +11,9 @@
     "material-ui": "^1.0.0-beta.21",
     "material-ui-icons": "^1.0.0-beta.15",
     "react": "^16.0.0",
+    "react-autosuggest": "^9.3.2",
     "react-dom": "^16.0.0",
+    "react-file-input": "^0.2.5",
     "react-jss": "^7.2.0",
     "react-loading": "^1.0.2",
     "react-redux": "^5.0.6",

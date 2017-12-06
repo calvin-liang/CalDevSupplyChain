@@ -59,7 +59,7 @@ function login(emailAddress, password) {
                     }, 3000)
                   }
             })
-            .catch(error => {              
+            .catch(error => {
               if(error.response && error.response.data){
                 dispatch(failure())
                 dispatch(alertActions.error(error.response.data.errors))

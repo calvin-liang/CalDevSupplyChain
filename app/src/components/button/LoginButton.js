@@ -8,6 +8,7 @@ import Dialog, {DialogActions, DialogContent, DialogContentText, DialogTitle} fr
 import {withStyles} from 'material-ui/styles';
 import {connect} from 'react-redux';
 import {compose} from 'recompose';
+import {history} from '../../util';
 
 const styles = theme => ({
   loginButton: {
@@ -27,9 +28,16 @@ const styles = theme => ({
 })
 
 class LoginButton extends Component {
-  state = {
-    open: false
-  };
+
+  constructor(props) {
+      super(props);
+
+      // const needLogin = history.location && history.location.state && history.location.state.needLogin
+      this.state = {
+        open: false || props.openLoginButton
+      };
+
+  }
 
   handleClickOpen = () => {
     this.setState({open: true});

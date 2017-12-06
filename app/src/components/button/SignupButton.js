@@ -33,7 +33,6 @@ class SignupButton extends Component {
 
   componentWillReceiveProps(nextProps){
     if(this.props !== nextProps){
-      // this.setState({open: !(nextProps.loggedIn || nextProps.success) })
       this.setState({open: !nextProps.success})
     }
   }

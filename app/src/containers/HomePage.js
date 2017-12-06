@@ -16,6 +16,7 @@ import AccountCircle from 'material-ui-icons/AccountCircle';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import { userActions } from '../actions';
+import {history} from '../util';
 import '../index.css'
 
 const styles = theme => ({
@@ -23,9 +24,12 @@ const styles = theme => ({
     flexGrow: 1
   },
   root: {
-    flexGrow: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
     height: '100%',
-    width: '100%'
+    // height: '100%',
+    // height: '100vh',
   },
   appBarContainer: {
     width: '100%'
@@ -70,7 +74,12 @@ const styles = theme => ({
     flex: 1,
     paddingLeft: theme.spacing.unit * 10.5,
     paddingRight: theme.spacing.unit * 10.5
-  }
+  },
+  menuItem: {
+   '&:focus': {
+     background: '#5ed4f5',
+   },
+ },
 })
 
 const style = {
@@ -108,8 +117,19 @@ const url = {
 
 class HomePage extends Component {
 
-  state = {
-    anchorEl: null,
+  constructor(props) {
+      super(props);
+
+      this.state = {
+        anchorEl: null,
+        openLoginButton: false
+      }
+  }
+
+  componentWillMount(){
+    const {location} = history
+    const needLogin = location.state && (location.path !== location.state.from) && location.state.needLogin
+    this.setState({openLoginButton: needLogin})
   }
 
   handleAccountIconMenu = e => {
@@ -161,7 +181,7 @@ class HomePage extends Component {
               <Grid item xs>
                 <Grid container spacing={0} alignItems='center' justify='center'>
                   <Grid item xs>
-                    {!this.props.loggedIn && <LoginButton></LoginButton>}
+                    {!this.props.loggedIn && <LoginButton openLoginButton={this.state.openLoginButton}></LoginButton>}
                   </Grid>
                   <Grid item xs>
                     {!localStorage.getItem('user')
@@ -190,8 +210,8 @@ class HomePage extends Component {
                             open={accountIconMenuOpen}
                             onRequestClose={this.handleAccountIconMenuRequestClose}
                           >
-                            <MenuItem onClick={this.handleAccountIconMenuRequestClose}>Edit Profile</MenuItem>
-                            <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
+                            <MenuItem className={classes.menuItem} onClick={this.handleAccountIconMenuRequestClose}>Edit Profile</MenuItem>
+                            <MenuItem className={classes.menuItem} onClick={this.handleLogout}>Logout</MenuItem>
                           </Menu>
                         </div>
                       )
@@ -313,6 +333,9 @@ class HomePage extends Component {
             </Paper>
           </Grid>
         </Grid>
+      </div>
+      <div class="footer">
+        <p>Copyright © 2017 Design A Difference Inc</p>
       </div>
     </div>)
   }
