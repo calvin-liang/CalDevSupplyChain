@@ -13,6 +13,8 @@ import {connect} from 'react-redux';
 import {alertActions, notificationActions} from '../actions';
 import OrderPage from './OrderPage';
 import CreateOrderPage from './CreateOrderPage';
+import ContactPage from './ContactPage';
+import InventoryPage from './InventoryPage';
 
 const styles = theme => ({});
 
@@ -43,6 +45,8 @@ class App extends Component {
               <PrivateRoute exact path="/dashboard" component={DashboardPage}/>
               <PrivateRoute exact path="/dashboard/orders" component={OrderPage}/>
               <PrivateRoute exact path="/dashboard/orders/new" component={CreateOrderPage}/>
+              <PrivateRoute exact path="/dashboard/contact" component={ContactPage}/>
+              <PrivateRoute exact path="/dashboard/inventory" component={InventoryPage}/>
             </Switch>
           </div>
         </Router>

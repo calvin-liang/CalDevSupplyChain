@@ -8,9 +8,7 @@ import Dialog from 'material-ui/Dialog';
 import {history} from '../util';
 import IconButton from 'material-ui/IconButton';
 import StarBorder from 'material-ui-icons/StarBorder';
-import Paper1 from '../components/dashpage/part1/Paper1';
-import Paper2 from '../components/dashpage/part2/Paper2';
-import Paper3 from '../components/dashpage/part3/Paper3';
+import FullWidthTabs from '../components/invpage/FullWidthTabs';
 
 const styles = theme => ({
   root: {
@@ -77,7 +75,7 @@ const styles = theme => ({
 
 });
 
-class DashboardPage extends React.Component {
+class InventoryPage extends React.Component {
   state = {
     mobileOpen: false,
     nestedAccountListOpen: false,
@@ -96,16 +94,16 @@ class DashboardPage extends React.Component {
     return (
       <div className={classes.root}>
         <DashboardFrame
-          appBarTitle={`Dashboard`}
+          appBarTitle={`Inventory`}
           content={
             <div className={classes.subSectionRootContainer}>
               <Grid container alignItems="center" justify="center" className={classes.subSectionContainer}>
                 <Grid item xs={2}>
-                  <Typography className={classes.subSectionTitle} align="left" type="body">Dashboard</Typography>
+                  <Typography className={classes.subSectionTitle} align="left" type="body">Inventory</Typography>
                 </Grid>
                 <Grid item xs>
                     <SearchBar
-                      placeholder={`🔍  Search...`}
+                      placeholder={`🔍  Search an inventory...`}
                     />
                 </Grid>
                 <Grid item xs={5}>
@@ -129,17 +127,8 @@ class DashboardPage extends React.Component {
               </Grid>
 
             <Grid container className={classes.subBodyContainer}>
-            <Grid item xs={12}>
-              <Paper1 />
+              <FullWidthTabs />
             </Grid>
-            <Grid item xs={12}>
-                  <Paper2 />
-            </Grid>
-            <Grid item xs={12}>
-                  <Paper3 />
-            </Grid>
-            </Grid>
-
             </div>
           }
         />
@@ -148,4 +137,10 @@ class DashboardPage extends React.Component {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(DashboardPage);
+/* <main>
+  <Typography type="headline" noWrap style={{color: 'red'}}>
+    {'Dashboard'}
+  </Typography>
+</main> */
+
+export default withStyles(styles, { withTheme: true })(InventoryPage);

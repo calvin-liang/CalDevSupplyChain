@@ -8,7 +8,8 @@ import Dialog from 'material-ui/Dialog';
 import {history} from '../util';
 import IconButton from 'material-ui/IconButton';
 import StarBorder from 'material-ui-icons/StarBorder';
-
+import BasicTabs from '../components/orderpage/BasicTabs';
+import FullWidthTabs from '../components/orderpage/FullWidthTabs';
 const styles = theme => ({
   root: {
     display: 'flex',
@@ -40,6 +41,7 @@ const styles = theme => ({
   subSectionRootContainer: {
     width: '100vw',
     backgroundColor: theme.palette.background.default,
+    // backgroundColor: "red",
     paddingTop: theme.spacing.unit * 0.5,
     paddingBottom: theme.spacing.unit * 0.5,
     marginTop: 56,
@@ -58,6 +60,17 @@ const styles = theme => ({
   },
   subSectionTitle: {
     marginLeft: theme.spacing.unit * 2.5
+  },
+
+  bodyRootContainer: {
+    width: '100vw',
+    // backgroundColor: theme.palette.background.default,
+    backgroundColor: "red",
+    paddingTop: theme.spacing.unit * 0.5,
+    paddingBottom: theme.spacing.unit * 0.5,
+  },
+  subBodyContainer: {
+    padding: theme.spacing.unit * 0.5
   }
 
 });
@@ -112,6 +125,10 @@ class OrderPage extends React.Component {
                   </div>
                 </Grid>
               </Grid>
+
+            <Grid container className={classes.subBodyContainer}>
+              <FullWidthTabs />
+            </Grid>
             </div>
           }
         />

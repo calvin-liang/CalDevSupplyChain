@@ -1,0 +1,39 @@
+#############################################################
+#                       Data Source                         #
+#############################################################
+flyway:
+  enabled: true
+
+spring:
+  aop:
+    auto: true
+  datasource:
+    url: jdbc:mysql://localhost:3306/supply_chain?useSSL=false
+    username: root
+    password: password
+    driver-class-name: com.mysql.jdbc.Driver
+    maximumPoolSize: 10
+    testOnBorrow: true
+    validationQuery: SELECT 1
+  jpa:
+    hibernate:
+      ddl-auto: none
+      naming-strategy: org.springframework.boot.orm.jpa.hibernate.SpringNamingStrategy
+      dialect: org.hibernate.dialect.MySQL5Dialect
+    show-sql: false
+  jackson:
+    serialization:
+      write_dates_as_timestamps: false
+
+jwt:
+  header:
+    issuer: caldevsupplychain
+    token-prefix: Bearer
+    auth: Authorization
+    expire-time-range: 3600000
+
+api:
+  version: v1
+  client-port: 3000
+  protocol: http
+

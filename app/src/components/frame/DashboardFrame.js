@@ -162,6 +162,22 @@ class DashboardPage extends React.Component {
     history.push('/dashboard/orders')
   }
 
+  handleContactsClick = (e) => {
+    e.preventDefault()
+    history.push('/dashboard/contact')
+  }
+
+  handleInventoryClick = (e) => {
+    e.preventDefault()
+    history.push('/dashboard/inventory')
+  }
+
+  handleDashboardClick = (e) => {
+    e.preventDefault()
+    history.push('/dashboard')
+  }
+
+
   render() {
     const { classes, theme, children } = this.props;
 

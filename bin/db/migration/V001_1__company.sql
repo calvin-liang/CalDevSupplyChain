@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS companies (
+  id   BIGINT AUTO_INCREMENT NOT NULL,
+  company_name VARCHAR(255),
+  PRIMARY KEY (id)
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;

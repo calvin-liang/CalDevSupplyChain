@@ -8,9 +8,8 @@ import Dialog from 'material-ui/Dialog';
 import {history} from '../util';
 import IconButton from 'material-ui/IconButton';
 import StarBorder from 'material-ui-icons/StarBorder';
-import Paper1 from '../components/dashpage/part1/Paper1';
-import Paper2 from '../components/dashpage/part2/Paper2';
-import Paper3 from '../components/dashpage/part3/Paper3';
+import FullWidthTabs from '../components/contactpage/FullWidthTabs';
+import FormDialog from '../components/contactpage/FormDialog';
 
 const styles = theme => ({
   root: {
@@ -21,7 +20,7 @@ const styles = theme => ({
     zIndex: 1,
     overflow: 'hidden',
   },
-  createNewOrderButton: {
+  createNewContactButton: {
     marginLeft: theme.spacing.unit * 1,
     marginRight: theme.spacing.unit * 1,
     color: "#292c34",
@@ -77,13 +76,13 @@ const styles = theme => ({
 
 });
 
-class DashboardPage extends React.Component {
+class ContactPage extends React.Component {
   state = {
     mobileOpen: false,
     nestedAccountListOpen: false,
   };
 
-  handleCreateNewOrderButtonClick = () => {
+  handleCreateNewContactButtonClick = () => {
       history.push('/dashboard/orders/new')
   }
 
@@ -96,27 +95,21 @@ class DashboardPage extends React.Component {
     return (
       <div className={classes.root}>
         <DashboardFrame
-          appBarTitle={`Dashboard`}
+          appBarTitle={`Contacts`}
           content={
             <div className={classes.subSectionRootContainer}>
               <Grid container alignItems="center" justify="center" className={classes.subSectionContainer}>
                 <Grid item xs={2}>
-                  <Typography className={classes.subSectionTitle} align="left" type="body">Dashboard</Typography>
+                  <Typography className={classes.subSectionTitle} align="left" type="body">Contacts</Typography>
                 </Grid>
                 <Grid item xs>
                     <SearchBar
-                      placeholder={`🔍  Search...`}
+                      placeholder={`🔍  Search an contact...`}
                     />
                 </Grid>
                 <Grid item xs={5}>
                   <div className={classes.subSectionButtonContainer}>
-                    {/* <Button
-                      raised
-                      className={classes.createNewOrderButton}
-                      onClick={this.handleCreateNewOrderButtonClick}
-                    >
-                      Create New Order
-                    </Button> */}
+                    <FormDialog/>
                     <Button
                       raised
                       className={classes.helpButton}
@@ -129,17 +122,8 @@ class DashboardPage extends React.Component {
               </Grid>
 
             <Grid container className={classes.subBodyContainer}>
-            <Grid item xs={12}>
-              <Paper1 />
+              <FullWidthTabs />
             </Grid>
-            <Grid item xs={12}>
-                  <Paper2 />
-            </Grid>
-            <Grid item xs={12}>
-                  <Paper3 />
-            </Grid>
-            </Grid>
-
             </div>
           }
         />
@@ -148,4 +132,10 @@ class DashboardPage extends React.Component {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(DashboardPage);
+/* <main>
+  <Typography type="headline" noWrap style={{color: 'red'}}>
+    {'Dashboard'}
+  </Typography>
+</main> */
+
+export default withStyles(styles, { withTheme: true })(ContactPage);
