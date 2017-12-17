@@ -47,12 +47,8 @@ public class ItemValidator implements Validator {
 			errors.rejectValue("price", ErrorCode.ITEM_PRICE_EMPTY.name(), "Item price cannot be empty");
 		}
 
-		if (userBean.isPresent()) {
-			UserBean user = userBean.get();
-
-			if (!user.isAgent() && itemWS.getPrice().compareTo(BigDecimal.ZERO) != 0) {
-				errors.rejectValue("price", ErrorCode.ITEMS_PRICE_NOT_ZERO.name(), "User cannot set item price.");
-			}
+		if (!contextUtil.currentUser().get().isAgent() && itemWS.getPrice() != null && itemWS.getPrice().compareTo(BigDecimal.ZERO) != 0) {
+			errors.rejectValue("price", ErrorCode.PRICE_NOT_ZERO.name(), "User cannot set item price.");
 		}
 
 		if (quantityAllZero(itemWS.getQuantity())) {
@@ -60,17 +56,20 @@ public class ItemValidator implements Validator {
 		}
 	}
 
-	private boolean quantityAllZero(Quantity quantity) {
-		boolean allZero = false;
-		Integer XS = quantity.getXS();
-		Integer S = quantity.getS();
-		Integer M = quantity.getM();
-		Integer L = quantity.getL();
+	public void validateCreateItem(Object o, Errors errors) {
+		this.validate(o, errors);
+	}
 
-		if (XS == 0 && S == 0 && M == 0 && L == 0) {
-			allZero = true;
+	private boolean quantityAllZero(Quantity quantity) {
+		if (quantity == null) {
+			return false;
 		}
-		return allZero;
+		Integer XS = quantity.getXS() == null ? 0 : quantity.getXS();
+		Integer S = quantity.getS() == null ? 0 : quantity.getS();
+		Integer M = quantity.getM() == null ? 0 : quantity.getM();
+		Integer L = quantity.getL() == null ? 0 : quantity.getL();
+
+		return XS == 0 && S == 0 && M == 0 && L == 0;
 	}
 }
 

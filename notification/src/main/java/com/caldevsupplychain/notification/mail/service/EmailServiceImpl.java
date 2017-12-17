@@ -53,6 +53,8 @@ public class EmailServiceImpl implements EmailService {
 		content = content.contains(ROOT_URL) ? content.replace(ROOT_URL, getRootURL()).replace(TOKEN_PLACEHOLDER, token) : content.replace(TOKEN_PLACEHOLDER, token);
 		emailTemplate.setContent(content);
 
+		log.debug("Sending activation email: {}", content);
+
 		sendMimeMessage(emailTemplate);
 	}
 

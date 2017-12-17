@@ -1,16 +1,19 @@
 package com.caldevsupplychain.order.validator;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.IntStream;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
+import com.caldevsupplychain.account.util.ContextUtil;
 import com.caldevsupplychain.common.type.ErrorCode;
 import com.caldevsupplychain.order.vo.ItemWS;
 import com.caldevsupplychain.order.vo.OrderWS;
@@ -21,6 +24,8 @@ public class OrderValidator implements Validator {
 
 	@Autowired
 	private ItemValidator itemValidator;
+	@Autowired
+	private ContextUtil contextUtil;
 
 	@Override
 	public boolean supports(Class clazz) {
@@ -30,19 +35,13 @@ public class OrderValidator implements Validator {
 	@Override
 	public void validate(Object o, Errors errors) {
 		OrderWS orderWS = (OrderWS) o;
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "totalPrice", ErrorCode.ORDER_TOTAL_PRICE_EMPTY.name(), "Order total price cannot be empty.");
 
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userUuid", ErrorCode.USER_UUID_EMPTY.name(), "Order user uuid cannot empty");
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "agentUuid", ErrorCode.AGENT_UUID_EMPTY.name(), "Order agent uuid cannot empty");
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "sku", ErrorCode.SKU_EMPTY.name(), "Order SKU cannot empty");
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "currency", ErrorCode.CURRENCY_EMPTY.name(), "Order currency cannot empty");
-
-		if (orderWS.getTotalPrice() == null) {
-			errors.rejectValue("totalPrice", ErrorCode.ORDER_TOTAL_PRICE_EMPTY.name(), "Order total price cannot be empty.");
-		}
-
-		if (orderWS.getItems() == null) {
-			errors.rejectValue("items", ErrorCode.ITEMS_EMPTY.name(), "Item cannot empty");
-		}
+		contextUtil.currentUser().ifPresent(u -> {
+			if (orderWS.getTotalPrice() != null && !orderWS.getTotalPrice().equals(BigDecimal.ZERO)) {
+				errors.rejectValue("totalPrice", ErrorCode.PRICE_NOT_ZERO.name(), "User cannot set order price.");
+			}
+		});
 
 		List<ItemWS> itemWSList = orderWS.getItems();
 
@@ -55,10 +54,36 @@ public class OrderValidator implements Validator {
 							ValidationUtils.invokeValidator(itemValidator, itemWS, errors);
 						} finally {
 							errors.popNestedPath();
-
 						}
 					});
 		}
 	}
 
+	public void validateCreateOrder(Object o, Errors errors) {
+		this.validate(o, errors);
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userUuid", ErrorCode.USER_UUID_EMPTY.name(), "Order user uuid cannot empty");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "sku", ErrorCode.SKU_EMPTY.name(), "Order SKU cannot empty");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "currency", ErrorCode.CURRENCY_EMPTY.name(), "Order currency cannot empty");
+
+		OrderWS orderWS = (OrderWS) o;
+		if (orderWS.getItems() == null || orderWS.getItems().isEmpty()) {
+			errors.rejectValue("items", ErrorCode.ITEMS_EMPTY.name(), "Item cannot empty.");
+		}
+		contextUtil.currentUser().ifPresent(u -> {
+			if (!u.getUuid().equals(orderWS.getUserUuid())) {
+				errors.rejectValue("userUuid", ErrorCode.UNAUTHORIZED.name(), "Cannot create order for other users.");
+			}
+		});
+	}
+
+	public void validateUpdateOrder(Object o, Errors errors) {
+		this.validate(o, errors);
+		OrderWS orderWS = (OrderWS) o;
+		if (!StringUtils.isEmpty(orderWS.getUserUuid())) {
+			errors.rejectValue("userUuid", ErrorCode.INVALID_PAYLOAD.name(), "Cannot update userUuid.");
+		}
+		if (!StringUtils.isEmpty(orderWS.getAgentUuid()) && !contextUtil.currentUser().get().isAgent()) {
+			errors.rejectValue("agentUuid", ErrorCode.INVALID_PAYLOAD.name(), "Cannot update agentUuid");
+		}
+	}
 }

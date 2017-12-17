@@ -2,11 +2,13 @@ package com.caldevsupplychain.order.model;
 
 import lombok.Data;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @Data
 @JsonPropertyOrder({"XS", "S", "M", "L"})
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class Quantity {
 
 	private Integer XS;
