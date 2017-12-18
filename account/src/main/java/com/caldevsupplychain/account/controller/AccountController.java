@@ -15,7 +15,4 @@ public interface AccountController {
 	ResponseEntity<?> forgotPassword(UserWS userWS);
 
 	ResponseEntity<?> updateUser(String uuid, UserWS userWS);
-
-	ResponseEntity<?> getAllUsers();
-
 }

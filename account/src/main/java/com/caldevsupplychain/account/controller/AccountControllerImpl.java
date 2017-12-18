@@ -193,12 +193,4 @@ public class AccountControllerImpl implements AccountController {
 
 		return new ResponseEntity<>(userMapper.toWS(updatedUser), HttpStatus.OK);
 	}
-
-	@GetMapping("/users")
-	@RequiresPermissions("account:admin")
-	public ResponseEntity<?> getAllUsers() {
-		List<UserBean> userBeans = accountService.getAllUsers();
-		return new ResponseEntity<Object>(userMapper.toWss(userBeans), HttpStatus.OK);
-	}
-
 }

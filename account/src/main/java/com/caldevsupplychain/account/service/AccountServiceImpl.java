@@ -8,8 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.apache.shiro.authc.credential.PasswordService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +20,7 @@ import com.caldevsupplychain.account.repository.RoleRepository;
 import com.caldevsupplychain.account.repository.UserRepository;
 import com.caldevsupplychain.account.util.RoleMapper;
 import com.caldevsupplychain.account.util.UserMapper;
+import com.caldevsupplychain.account.vo.RoleName;
 import com.caldevsupplychain.account.vo.UserBean;
 import com.caldevsupplychain.common.type.ErrorCode;
 import com.google.common.base.Preconditions;
@@ -105,6 +104,16 @@ public class AccountServiceImpl implements AccountService {
 
 	@Override
 	@Transactional(readOnly = true)
+	public Optional<UserBean> findDefaultAgent() {
+		List<User> agents = userRepository.findUsersByRole(RoleName.AGENT.toString());
+		if (agents.isEmpty()) {
+			return Optional.empty();
+		}
+		return Optional.ofNullable(userMapper.toBean(agents.get(0)));
+	}
+
+	@Override
+	@Transactional(readOnly = true)
 	public Optional<UserBean> findByUuid(String uuid) {
 		User user = userRepository.findByUuid(uuid);
 		if (user != null) {
@@ -131,12 +140,5 @@ public class AccountServiceImpl implements AccountService {
 			return Optional.of(userMapper.toBean(user));
 		}
 		return Optional.empty();
-	}
-
-	@Override
-	@Transactional(readOnly = true)
-	public List<UserBean> getAllUsers() {
-		Page<User> users = userRepository.findAll(new PageRequest(0, Integer.MAX_VALUE));
-		return userMapper.usersToBeans(users.getContent());
 	}
 }

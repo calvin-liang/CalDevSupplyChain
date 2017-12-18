@@ -6,7 +6,10 @@ import java.util.List;
 
 import lombok.Data;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 @Data
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class OrderWS implements Serializable {
 
 	private static final long serialVersionUID = -8744630767752497964L;

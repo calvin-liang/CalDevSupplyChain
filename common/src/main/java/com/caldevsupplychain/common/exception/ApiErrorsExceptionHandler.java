@@ -39,9 +39,9 @@ public class ApiErrorsExceptionHandler extends ResponseEntityExceptionHandler {
 		log.error("Unexpectd error: ", e);
 
 		if (e instanceof UnauthenticatedException) {
-			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.UNAUTHENTICATION.name(), e.getMessage()), HttpStatus.UNAUTHORIZED);
+			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.UNAUTHENTICATED.name(), e.getMessage()), HttpStatus.UNAUTHORIZED);
 		} else if (e instanceof UnauthorizedException) {
-			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.UNAUTHORIZATION.name(), e.getMessage()), HttpStatus.UNAUTHORIZED);
+			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.UNAUTHORIZED.name(), e.getMessage()), HttpStatus.UNAUTHORIZED);
 		}
 		return new ResponseEntity<>(new ApiErrorsWS(e.getClass().getSimpleName(), e.getMessage()), HttpStatus.UNAUTHORIZED);
 	}

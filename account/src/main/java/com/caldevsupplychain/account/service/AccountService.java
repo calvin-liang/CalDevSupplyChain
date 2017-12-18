@@ -1,6 +1,5 @@
 package com.caldevsupplychain.account.service;
 
-import java.util.List;
 import java.util.Optional;
 
 import com.caldevsupplychain.account.vo.UserBean;
@@ -15,7 +14,11 @@ public interface AccountService {
 
 	void activateUser(long id);
 
-	List<UserBean> getAllUsers();
+	/**
+	 * Until we implement agent management, assume there's only one agent in the system
+	 * @return
+	 */
+	Optional<UserBean> findDefaultAgent();
 
 	Optional<UserBean> findByUuid(String uuid);
 

@@ -8,6 +8,12 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class ErrorWS {
+	private String field;
 	private String code;
 	private String message;
+
+	public ErrorWS(String code, String message) {
+		this.code = code;
+		this.message = code;
+	}
 }
