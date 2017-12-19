@@ -35,11 +35,11 @@ public class OrderValidator implements Validator {
 	@Override
 	public void validate(Object o, Errors errors) {
 		OrderWS orderWS = (OrderWS) o;
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "totalPrice", ErrorCode.ORDER_TOTAL_PRICE_EMPTY.name(), "Order total price cannot be empty.");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "totalPrice", ErrorCode.INVALID_PAYLOAD.name(), "Order total price cannot be empty.");
 
 		contextUtil.currentUser().ifPresent(u -> {
 			if (orderWS.getTotalPrice() != null && !orderWS.getTotalPrice().equals(BigDecimal.ZERO)) {
-				errors.rejectValue("totalPrice", ErrorCode.PRICE_NOT_ZERO.name(), "User cannot set order price.");
+				errors.rejectValue("totalPrice", ErrorCode.INVALID_PAYLOAD.name(), "User cannot set order price.");
 			}
 		});
 
@@ -61,9 +61,10 @@ public class OrderValidator implements Validator {
 
 	public void validateCreateOrder(Object o, Errors errors) {
 		this.validate(o, errors);
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userUuid", ErrorCode.USER_UUID_EMPTY.name(), "Order user uuid cannot empty");
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "sku", ErrorCode.SKU_EMPTY.name(), "Order SKU cannot empty");
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "currency", ErrorCode.CURRENCY_EMPTY.name(), "Order currency cannot empty");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userUuid", ErrorCode.INVALID_PAYLOAD.name(), "Order user uuid cannot be empty.");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "sku", ErrorCode.INVALID_PAYLOAD.name(), "Order SKU cannot be empty.");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "currency", ErrorCode.INVALID_PAYLOAD.name(), "Order currency cannot be empty.");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "orderType", ErrorCode.INVALID_PAYLOAD.name(), "Order type cannot be empty.");
 
 		OrderWS orderWS = (OrderWS) o;
 		if (orderWS.getItems() == null || orderWS.getItems().isEmpty()) {
@@ -71,7 +72,7 @@ public class OrderValidator implements Validator {
 		}
 		contextUtil.currentUser().ifPresent(u -> {
 			if (!u.getUuid().equals(orderWS.getUserUuid())) {
-				errors.rejectValue("userUuid", ErrorCode.UNAUTHORIZED.name(), "Cannot create order for other users.");
+				errors.rejectValue("userUuid", ErrorCode.INVALID_PAYLOAD.name(), "Cannot create order for other users.");
 			}
 		});
 	}

@@ -35,24 +35,24 @@ public class ItemValidator implements Validator {
 
 		ItemWS itemWS = (ItemWS) o;
 
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "color", ErrorCode.COLOR_EMPTY.name(), "Item color cannot empty");
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "description", ErrorCode.ITEM_DESCRIPTION.name(), "Item description cannot empty");
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "fabric", ErrorCode.FABRIC_EMPTY.name(), "Item fabric cannot empty");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "color", ErrorCode.INVALID_PAYLOAD.name(), "Item color cannot empty");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "description", ErrorCode.INVALID_PAYLOAD.name(), "Item description cannot empty");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "fabric", ErrorCode.INVALID_PAYLOAD.name(), "Item fabric cannot empty");
 
 		if (!Optional.ofNullable(itemWS.getQuantity()).isPresent()) {
-			errors.rejectValue("quantity", ErrorCode.QUANTITY_EMPTY.name(), "Item quantity cannot empty");
+			errors.rejectValue("quantity", ErrorCode.INVALID_PAYLOAD.name(), "Item quantity cannot be empty");
 		}
 
 		if (itemWS.getPrice() == null) {
-			errors.rejectValue("price", ErrorCode.ITEM_PRICE_EMPTY.name(), "Item price cannot be empty");
+			errors.rejectValue("price", ErrorCode.INVALID_PAYLOAD.name(), "Item price cannot be empty");
 		}
 
 		if (!contextUtil.currentUser().get().isAgent() && itemWS.getPrice() != null && itemWS.getPrice().compareTo(BigDecimal.ZERO) != 0) {
-			errors.rejectValue("price", ErrorCode.PRICE_NOT_ZERO.name(), "User cannot set item price.");
+			errors.rejectValue("price", ErrorCode.INVALID_PAYLOAD.name(), "User cannot set item price.");
 		}
 
 		if (quantityAllZero(itemWS.getQuantity())) {
-			errors.rejectValue("quantity", ErrorCode.QUANTITY_SIZE_EMPTY.name(), "Need to have at least one item quantity size");
+			errors.rejectValue("quantity", ErrorCode.INVALID_PAYLOAD.name(), "Need to have at least one item quantity size");
 		}
 	}
 
