@@ -7,6 +7,7 @@ import java.util.List;
 import lombok.Data;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.google.common.collect.Lists;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -21,7 +22,7 @@ public class OrderWS implements Serializable {
 	private String sku;
 	private OrderType orderType;
 	private OrderStatus orderStatus;
-	private List<ItemWS> items;
+	private List<ItemWS> items = Lists.newArrayList();
 	private Currency currency;
 	private BigDecimal totalPrice;
 	private String shippingInstruction;

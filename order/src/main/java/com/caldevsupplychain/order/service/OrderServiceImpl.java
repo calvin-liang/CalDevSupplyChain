@@ -1,7 +1,9 @@
 package com.caldevsupplychain.order.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -17,6 +19,7 @@ import com.caldevsupplychain.order.model.Order;
 import com.caldevsupplychain.order.repository.ItemRepository;
 import com.caldevsupplychain.order.repository.OrderRepository;
 import com.caldevsupplychain.order.util.CycleAvoidingMappingContext;
+import com.caldevsupplychain.order.util.ItemMapper;
 import com.caldevsupplychain.order.util.OrderMapper;
 import com.caldevsupplychain.order.vo.OrderBean;
 import com.caldevsupplychain.order.vo.OrderStatus;
@@ -31,7 +34,7 @@ public class OrderServiceImpl implements OrderService {
 	private OrderRepository orderRepository;
 	private ItemRepository itemRepository;
 	private OrderMapper orderMapper;
-
+	private ItemMapper itemMapper;
 
 	@Override
 	public boolean orderExists(String uuid) {
@@ -62,52 +65,36 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	@Transactional
 	public OrderBean updateOrder(String orderUuid, OrderBean orderBean) {
-
 		Order order = orderRepository.findByUuid(orderUuid);
-
 		Preconditions.checkState(order != null, ErrorCode.ORDER_NOT_FOUND);
 
 		// update order part
 		Optional.ofNullable(orderBean.getSku()).ifPresent(sku -> order.setSku(sku));
-
-		log.warn("stuck at sku?");
-
 		Optional.ofNullable(orderBean.getOrderType()).ifPresent(orderType -> order.setOrderType(orderType));
-
 		Optional.ofNullable(orderBean.getOrderStatus()).ifPresent(orderStatus -> order.setOrderStatus(orderStatus));
-
-		Optional.ofNullable(orderBean.getCurrency()).ifPresent(currency -> order.setCurrency(currency));
-
 		Optional.ofNullable(orderBean.getTotalPrice()).ifPresent(totalPrice -> order.setTotalPrice(totalPrice));
-
 		Optional.ofNullable(orderBean.getShippingInstruction()).ifPresent(shippingInstruction -> order.setShippingInstruction(shippingInstruction));
-
 		Optional.ofNullable(orderBean.getOrderNote()).ifPresent(orderNote -> order.setOrderNote(orderNote));
 
-		// update item list part
+		Map<String, Item> items = order.getItems().stream().collect(Collectors.toMap(Item::getUuid, item -> item));
 		orderBean.getItems().stream().forEach(itemBean -> {
+			if (itemBean.getUuid() != null && items.get(itemBean.getUuid()) != null ) {
+				// Update existing items
+				Item item = items.get(itemBean.getUuid());
 
-			// must have item uuid
-			Preconditions.checkState(itemBean.getUuid() != null, "Can't find itemBean with uuid = {" + itemBean.getUuid() + "}");
-
-			Item item = itemRepository.findByUuid(itemBean.getUuid());
-
-			Preconditions.checkState(item != null, ErrorCode.ITEM_NOT_FOUND.name());
-
-			Optional.ofNullable(itemBean.getColor()).ifPresent(color -> item.setColor(color));
-
-			Optional.ofNullable(itemBean.getDescription()).ifPresent(itemDescription -> item.setDescription(itemDescription));
-
-			Optional.ofNullable(itemBean.getFabric()).ifPresent(fabric -> item.setFabric(fabric));
-
-			Optional.ofNullable(itemBean.getQuantity()).ifPresent(quantity -> item.setQuantity(quantity));
-
-			Optional.ofNullable(itemBean.getPrice()).ifPresent(itemPrice -> item.setPrice(itemPrice));
-
-			Optional.ofNullable(itemBean.getNote()).ifPresent(itemNote -> item.setNote(itemNote));
-
-			item.setOrder(order);
-
+				Optional.ofNullable(itemBean.getColor()).ifPresent(color -> item.setColor(color));
+				Optional.ofNullable(itemBean.getDescription()).ifPresent(itemDescription -> item.setDescription(itemDescription));
+				Optional.ofNullable(itemBean.getFabric()).ifPresent(fabric -> item.setFabric(fabric));
+				Optional.ofNullable(itemBean.getQuantity()).ifPresent(quantity -> item.setQuantity(quantity));
+				Optional.ofNullable(itemBean.getPrice()).ifPresent(itemPrice -> item.setPrice(itemPrice));
+				Optional.ofNullable(itemBean.getNote()).ifPresent(itemNote -> item.setNote(itemNote));
+			} else {
+				// Create a new item
+				Item item = itemMapper.toItem(itemBean, new CycleAvoidingMappingContext());
+				item.setOrder(order);
+				itemRepository.save(item);
+				order.getItems().add(item);
+			}
 		});
 
 		return orderMapper.toBean(order, new CycleAvoidingMappingContext());

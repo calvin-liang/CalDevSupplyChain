@@ -2,9 +2,10 @@ package com.caldevsupplychain.order.vo;
 
 public enum OrderStatus {
 	PENDING,
+	PENDING_APPROVAL,
 	CONFIRMED,
-	IN_PROCESS,
+	PROCESSING,
 	DELIVERED,
 	FINISHED,
-	DELETED,
+	DELETED
 }

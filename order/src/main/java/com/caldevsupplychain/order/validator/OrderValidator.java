@@ -15,6 +15,7 @@ import org.springframework.validation.Validator;
 
 import com.caldevsupplychain.account.util.ContextUtil;
 import com.caldevsupplychain.common.type.ErrorCode;
+import com.caldevsupplychain.order.vo.Currency;
 import com.caldevsupplychain.order.vo.ItemWS;
 import com.caldevsupplychain.order.vo.OrderWS;
 
@@ -68,7 +69,10 @@ public class OrderValidator implements Validator {
 
 		OrderWS orderWS = (OrderWS) o;
 		if (orderWS.getItems() == null || orderWS.getItems().isEmpty()) {
-			errors.rejectValue("items", ErrorCode.ITEMS_EMPTY.name(), "Item cannot empty.");
+			errors.rejectValue("items", ErrorCode.INVALID_PAYLOAD.name(), "Item cannot empty.");
+		}
+		if (!orderWS.getCurrency().equals(Currency.USD)) {
+			errors.rejectValue("currency", ErrorCode.INVALID_PAYLOAD.name(), "Only support USD.");
 		}
 		contextUtil.currentUser().ifPresent(u -> {
 			if (!u.getUuid().equals(orderWS.getUserUuid())) {
@@ -83,8 +87,13 @@ public class OrderValidator implements Validator {
 		if (!StringUtils.isEmpty(orderWS.getUserUuid())) {
 			errors.rejectValue("userUuid", ErrorCode.INVALID_PAYLOAD.name(), "Cannot update userUuid.");
 		}
-		if (!StringUtils.isEmpty(orderWS.getAgentUuid()) && !contextUtil.currentUser().get().isAgent()) {
-			errors.rejectValue("agentUuid", ErrorCode.INVALID_PAYLOAD.name(), "Cannot update agentUuid");
+		if (!contextUtil.currentUser().get().isAgent()) {
+			if (!StringUtils.isEmpty(orderWS.getAgentUuid())) {
+				errors.rejectValue("agentUuid", ErrorCode.INVALID_PAYLOAD.name(), "Cannot update agentUuid.");
+			}
+			if (orderWS.getOrderStatus() != null) {
+				errors.rejectValue("orderStatus", ErrorCode.INVALID_PAYLOAD.name(), "User cannot update order status.");
+			}
 		}
 	}
 }

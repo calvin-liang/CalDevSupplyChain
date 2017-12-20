@@ -94,7 +94,7 @@ public class JwtServiceImpl implements JwtService {
 				.getBody()
 				.getSubject();
 		} catch (RuntimeException e) {
-			log.error("Unable to parse JWT token.", e);
+			log.warn("Unable to parse JWT token: {}", e.getMessage());
 			return null;
 		}
 	}

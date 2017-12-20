@@ -4,9 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 @Getter
 @Setter
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ErrorWS {
 	private String field;
 	private String code;
@@ -14,6 +17,6 @@ public class ErrorWS {
 
 	public ErrorWS(String code, String message) {
 		this.code = code;
-		this.message = code;
+		this.message = message;
 	}
 }
