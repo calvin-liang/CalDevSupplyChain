@@ -15,6 +15,7 @@ public class Quantity {
 	private Integer S;
 	private Integer M;
 	private Integer L;
+	private Integer XL;
 
 	@JsonProperty("XS")
 	public void setXS(Integer XS) {
@@ -36,4 +37,8 @@ public class Quantity {
 		this.L = L;
 	}
 
+	@JsonProperty("XL")
+	public void setXL(Integer XL) {
+		this.XL = XL;
+	}
 }

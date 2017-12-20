@@ -29,12 +29,14 @@ import com.caldevsupplychain.account.vo.UserBean;
 import com.caldevsupplychain.common.exception.ApiErrorsExceptionHandler;
 import com.caldevsupplychain.common.type.ErrorCode;
 import com.caldevsupplychain.common.ws.ApiErrorsWS;
-import com.caldevsupplychain.common.ws.ErrorWS;
+import com.caldevsupplychain.order.service.ItemService;
 import com.caldevsupplychain.order.service.OrderService;
 import com.caldevsupplychain.order.util.CycleAvoidingMappingContext;
 import com.caldevsupplychain.order.util.OrderMapper;
 import com.caldevsupplychain.order.validator.OrderValidator;
+import com.caldevsupplychain.order.vo.ItemWS;
 import com.caldevsupplychain.order.vo.OrderBean;
+import com.caldevsupplychain.order.vo.OrderStatus;
 import com.caldevsupplychain.order.vo.OrderWS;
 import io.swagger.annotations.Api;
 
@@ -48,6 +50,7 @@ public class OrderControllerImpl implements OrderController {
 	private ContextUtil contextUtil;
 
 	private OrderService orderService;
+	private ItemService itemService;
 	private AccountService accountService;
 
 	private OrderValidator orderValidator;
@@ -75,31 +78,38 @@ public class OrderControllerImpl implements OrderController {
 
 		OrderBean orderBean = orderMapper.toBean(orderWS, new CycleAvoidingMappingContext());
 		orderBean.setAgentUuid(agent.get().getUuid());
+		if (contextUtil.currentUser().get().isAgent()) {
+			orderBean.setOrderStatus(OrderStatus.PENDING_APPROVAL);
+		} else {
+			// Order created by end user.
+			orderBean.setOrderStatus(OrderStatus.PENDING);
+		}
 
 		OrderBean order = orderService.createOrder(orderBean);
 
 		return new ResponseEntity<>(orderMapper.toWS(order, new CycleAvoidingMappingContext()), HttpStatus.OK);
 	}
 
-	@PutMapping("/order/{uuid}")
+	@PutMapping("/{uuid}")
 	@RequiresAuthentication
 	@RequiresPermissions("order:update")
 	public ResponseEntity<?> updateOrder(@PathVariable("uuid") String orderUuid, @Validated @RequestBody OrderWS orderWS) {
-
-		if (!orderService.orderExists(orderUuid)) {
-			log.error("Error in update order. Fail in finding order uuid={}", orderUuid);
-			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.ORDER_NOT_FOUND.name(), "Cannot find order by uuid"), HttpStatus.NOT_FOUND);
-		}
-
 		BindException errors = new BindException(orderWS, "OrderWS");
 		orderValidator.validateUpdateOrder(orderWS, errors);
-
-		if (errors.hasErrors()) {
-			log.error("Error in update order. Fail in update order validation fields. orderWS={}", orderWS.toString());
-			List<ErrorWS> errorWSList = apiErrorsExceptionHandler.generateErrorWSList(errors);
-			return new ResponseEntity<>(new ApiErrorsWS(errorWSList), HttpStatus.UNPROCESSABLE_ENTITY);
+		if (!orderUuid.equals(orderWS.getUuid())) {
+			errors.rejectValue("uuid", ErrorCode.INVALID_PAYLOAD.name(), "Order uuid does not match.");
 		}
-
+		if (errors.hasErrors()) {
+			return new ResponseEntity<>(new ApiErrorsWS(errors), HttpStatus.UNPROCESSABLE_ENTITY);
+		}
+		if (!orderService.orderExists(orderUuid)) {
+			return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.ORDER_NOT_FOUND.name(), String.format("Cannot find order with uuid=%s.", orderUuid)), HttpStatus.NOT_FOUND);
+		}
+		for (ItemWS item: orderWS.getItems()) {
+			if (item.getUuid() != null && !itemService.orderItemExists(orderUuid, item.getUuid())) {
+				return new ResponseEntity<>(new ApiErrorsWS(ErrorCode.ITEM_NOT_FOUND.name(), String.format("Cannot find item with uuid=%s.", item.getUuid())), HttpStatus.NOT_FOUND);
+			}
+		}
 		OrderBean orderBean = orderMapper.toBean(orderWS, new CycleAvoidingMappingContext());
 
 		OrderBean order = orderService.updateOrder(orderUuid, orderBean);
@@ -107,7 +117,7 @@ public class OrderControllerImpl implements OrderController {
 		return new ResponseEntity<>(orderMapper.toWS(order, new CycleAvoidingMappingContext()), HttpStatus.OK);
 	}
 
-	@DeleteMapping("/order/{uuid}")
+	@DeleteMapping("/{uuid}")
 	@RequiresAuthentication
 	@RequiresPermissions("order:update")
 	public ResponseEntity<?> deleteOrder(@PathVariable("uuid") String orderUuid) {
@@ -124,7 +134,7 @@ public class OrderControllerImpl implements OrderController {
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
-	@GetMapping("/order/{uuid}")
+	@GetMapping("/{uuid}")
 	@RequiresAuthentication
 	@RequiresPermissions("order:read")
 	public ResponseEntity<?> readOrder(@PathVariable("uuid") String orderUuid) {
